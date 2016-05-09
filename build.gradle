@@ -20,7 +20,6 @@ war {
 }
 
 configurations {
-    runtime.exclude module: 'spring-boot-starter-tomcat'
     providedRuntime
     provided
 }
@@ -36,20 +35,25 @@ task wrapper(type: Wrapper) {
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.18'
     compile("org.springframework.boot:spring-boot-starter-web") {
     }
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     //gson support
     compile('com.google.code.gson:gson:2.6.2')
+
+    //swagger UI
+    compile 'io.springfox:springfox-swagger2:2.4.0'
+    compile 'io.springfox:springfox-swagger-ui:2.4.0'
 
     // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
