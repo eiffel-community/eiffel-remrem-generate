@@ -41,6 +41,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -59,7 +60,7 @@ dependencies {
     // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
-    compile files('libs/shared-1.0-SNAPSHOT-all.jar')
+    compile 'com.github.Ericsson:eiffel-remrem-shared:0.1'
     providedRuntime files('libs/eiffel3messaging-1.0-SNAPSHOT-all.jar')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
