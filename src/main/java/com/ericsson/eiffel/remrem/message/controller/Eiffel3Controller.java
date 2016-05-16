@@ -16,12 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Profile("eiffel3")
-@RestController @RequestMapping("/eiffel3") public class Eiffel3Controller {
+@Profile("eiffel3") @RestController @RequestMapping("/eiffel3") public class Eiffel3Controller {
 
-    @Autowired
-    @Qualifier("eiffel3")
-    private MsgService msgService;
+    @Autowired @Qualifier("eiffel3") private MsgService msgService;
 
     JsonParser parser = new JsonParser();
     Gson gson = new Gson();
@@ -30,7 +27,7 @@ import java.util.Map;
     public JsonElement generateMsg(@RequestParam("msgType") String msgType,
         @RequestBody JsonObject bodyJson) {
         Map testMap = gson.fromJson(bodyJson.get("eventParams"), Map.class);
-        return parser.parse(msgService
-            .generateMsg(msgType, bodyJson.get("msgParams").getAsJsonObject(), testMap));
+        return parser.parse(
+            msgService.generateMsg(msgType, bodyJson.get("msgParams").getAsJsonObject(), testMap));
     }
 }

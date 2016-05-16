@@ -14,7 +14,7 @@ import java.util.Arrays;
         ApplicationContext ctx = SpringApplication.run(App.class, args);
 
         System.out.println("Let's inspect active profiles:");
-        for(String envNames: ctx.getEnvironment().getActiveProfiles()) {
+        for (String envNames : ctx.getEnvironment().getActiveProfiles()) {
             System.out.println(envNames);
         }
 
