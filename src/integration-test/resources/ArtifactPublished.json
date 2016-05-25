@@ -1,0 +1,28 @@
+{"msgParams": {
+  "meta": {
+    "type": "EiffelArtifactPublishedEvent",
+    "version": "1.0",
+    "time": 1234567890,
+    "domainId": "example.domain",
+    "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee0"
+  }
+},
+  "eventParams": {
+    "data": {
+      "locations": [
+        {
+          "type": "ARTIFACTORY",
+          "uri": "https://one.place"
+        },
+        {
+          "type": "PLAIN",
+          "uri": "http://another.com"
+        }
+      ]
+    },
+    "links": {
+      "context": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+      "artifact": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee2"
+    }
+  }
+}
