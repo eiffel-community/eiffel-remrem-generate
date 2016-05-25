@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
     }
 }
 
@@ -134,4 +134,7 @@ dependencies {
     // In order to get embedded app container to work
     integrationTestCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
     integrationTestCompile 'org.slf4j:slf4j-api:1.7.18'
+
+    // Will be used to package contents of third party libs
+    runtime fileTree(dir: 'libs', include: '*.jar')
 }
