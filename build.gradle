@@ -37,9 +37,7 @@ configurations {
     provided
 
     integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime {
-        exclude module: 'logback.classic'
-    }
+    integrationTestRuntime.extendsFrom testRuntime
 }
 
 sourceSets {
