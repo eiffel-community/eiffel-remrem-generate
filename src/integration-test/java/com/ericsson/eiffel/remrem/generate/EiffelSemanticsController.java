@@ -2,6 +2,7 @@ package com.ericsson.eiffel.remrem.generate;
 
 import com.google.gson.JsonParser;
 
+import com.ericsson.eiffel.remrem.generate.App;
 import com.jayway.restassured.RestAssured;
 
 import org.apache.http.HttpStatus;
