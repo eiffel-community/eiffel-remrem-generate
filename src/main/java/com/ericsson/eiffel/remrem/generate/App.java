@@ -1,4 +1,4 @@
-package com.ericsson.eiffel.remrem.message;
+package com.ericsson.eiffel.remrem.generate;
 
 
 import org.springframework.boot.SpringApplication;
