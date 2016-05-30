@@ -1,6 +1,6 @@
 # eiffel-remrem-generate
-[![Build Status](https://travis-ci.org/Ericsson/eiffel-remrem-generate.svg?branch=master)](https://travis-ci.org/Ericsson/eiffel-remrem-message)
-[![Coverage Status](https://coveralls.io/repos/github/Ericsson/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/Ericsson/eiffel-remrem-message?branch=master)
+[![Build Status](https://travis-ci.org/Ericsson/eiffel-remrem-generate.svg?branch=master)](https://travis-ci.org/Ericsson/eiffel-remrem-generate)
+[![Coverage Status](https://coveralls.io/repos/github/Ericsson/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/Ericsson/eiffel-remrem-generate?branch=master)
 [![](https://jitpack.io/v/Ericsson/eiffel-remrem-generate.svg)](https://jitpack.io/#Ericsson/eiffel-remrem-generate)
 
 ## Compatibility
