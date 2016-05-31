@@ -19,7 +19,7 @@ plugins{
 apply plugin: 'war'
 
 war {
-    baseName = 'remrem-message'
+    baseName = 'remrem-generate'
     version =  '0.5.0'
 }
 
@@ -88,7 +88,6 @@ repositories {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.18'
     compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
@@ -106,8 +105,8 @@ dependencies {
     // end::actuator[]
 
     //Injectable Message Library and its Implementation
-    compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.2'
-    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.1'
+    compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'
+    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.2'
 
     //compileOnly is supported in gradle 2.12 but it might be required
     // in cucumber folder
@@ -133,7 +132,6 @@ dependencies {
 
     // In order to get embedded app container to work
     integrationTestCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
-    integrationTestCompile 'org.slf4j:slf4j-api:1.7.18'
 
     // Will be used to package contents of third party libs
     runtime fileTree(dir: 'libs', include: '*.jar')

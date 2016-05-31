@@ -1,7 +1,9 @@
-package com.ericsson.eiffel.remrem.message;
+package com.ericsson.eiffel.remrem.generate;
 
 import com.google.gson.JsonParser;
+
 import com.jayway.restassured.RestAssured;
+
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.Before;

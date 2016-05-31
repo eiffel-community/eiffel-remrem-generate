@@ -1,4 +1,4 @@
-package com.ericsson.eiffel.remrem.message.config;
+package com.ericsson.eiffel.remrem.generate.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
