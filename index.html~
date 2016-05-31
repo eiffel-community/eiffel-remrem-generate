@@ -53,10 +53,10 @@ or deploy it in tomcat</p>
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
-<p><li>url: hostname/eiffelsemantics?msgType=&lt;message type&gt;</li>
-<li>message type should be one of the following: eiffelartifactpublished, eiffelactivityfinished</li>
-<li>use POST method</li>
-<li>body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></li>
+<p>url: hostname/eiffelsemantics?msgType=&lt;message type&gt;<br>
+message type should be one of the following: eiffelartifactpublished, eiffelactivityfinished<br>
+use POST method<br>
+body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
