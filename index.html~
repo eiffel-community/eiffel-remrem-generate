@@ -47,22 +47,21 @@
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>java -jar eiffel-remrem-generate-version.war
+<p><pre><code>$ java -jar eiffel-remrem-generate-&lt;version&gt;.war</code></pre><br>
 or deploy it in tomcat</p>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>url: hostname/eiffelsemantics?msgType=
-use POST method
-body: please follow <a href="https://github.com/Ericsson/eiffel/tree/topic-d
-rop1/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-vocabulary">eiffel vocabulary</a></p>
+<p>url: hostname/eiffelsemantics?msgType=&lt;message type&gt;<br>
+message type should be one of the following: eiffelartifactpublished, eiffelactivityfinished<br>
+use POST method<br>
+body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
-<p>example:<br>
-    $ curl -H "Content-Type: application/json" -X POST -d '
+<p>example:<pre><code>$ curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
   "meta": {
     "type": "EiffelActivityFinishedEvent",
@@ -103,7 +102,7 @@ rop1/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/
       "flowContext": "flowContext"
     }
   }
-}' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
+}' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</code></pre></p>
       </section>
     </div>
 
