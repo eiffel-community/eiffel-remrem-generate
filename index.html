@@ -147,10 +147,67 @@ or deploy it in tomcat</p>
 <h2>
 <a id="exceptions" class="anchor" href="#exceptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exceptions</h2>
 
-<p>
-<ul>
-<li>"org.springframework.http.converter.HttpMessageNotReadableException" is caused by invalid json</li>
-<li>"Cannot validate given JSON string" is caused by not using eiffel syntax such as missing required fields, or having additional properties in input</li>
+<h4><a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Invalid Json</h4>
+response
+<pre><code>{
+  "timestamp": "Jun 1, 2016 2:40:10 PM",
+  "status": 400,
+  "error": "Bad Request",
+  "exception": "org.springframework.http.converter.HttpMessageNotReadableException",
+  "message": "Could not read JSON: com.google.gson.stream.MalformedJsonException: Unterminated object at line 28 column 12 path $.eventParams.data.persistentLogs[0].name; nested exception is com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Unterminated object at line 28 column 12 path $.eventParams.data.persistentLogs[0].name",
+  "path": "/eiffelsemantics"
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Incorrect Eiffel Syntax</h4>
+<p>Example: event missing links<br>
+input event
+<pre><code>{
+"msgParams": {
+  "meta": {
+    "type": "EiffelActivityFinishedEvent",
+    "domainId": "example.domain",
+    "tags": ["tag1", "tag2"],
+    "source": {
+      "host": "host",
+      "name": "name",
+      "uri": "http://java.sun.com/j2se/1.3/",
+      "serializer": {
+        "groupId": "G",
+        "artifactId": "A",
+        "version": "V"
+      }
+    }
+  }
+},
+  "eventParams": {
+    "data": {
+      "outcome": {
+        "conclusion": "TIMED_OUT",
+        "description": "Compilation timed out."
+      },
+      "persistentLogs": [
+        {
+          "name": "firstLog",
+          "uri": "http://myHost.com/firstLog"
+        },
+        {
+          "name": "otherLog",
+          "uri": "isbn:0-486-27557-4"
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+response
+<pre><code>{
+{
+  "message": "Cannot validate given JSON string",
+  "cause": "com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException: com.github.fge.jsonschema.core.report.ListProcessingReport: failure--- BEGIN MESSAGES ---error: object has missing required properties <mark>([\"links\"])</mark>    level: \"error\"    schema: {\"loadingURI\":\"#\",\"pointer\":\"\"}    instance: {\"pointer\":\"\"}    domain: \"validation\"    keyword: \"required\"    required: [\"data\",\"links\",\"meta\"]    missing: [\"links\"]---  END MESSAGES  ---"
+}
+</code></pre>
+
+</p>
 </ul>
 </p>
 
