@@ -91,6 +91,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
+
+    //ServletException requires compile time servlet dependency but it causes problems
+    //when deployed if exist on war run time.. hence provided but also compileOnly
+    compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     //gson support
@@ -124,11 +128,11 @@ dependencies {
     }
 
     //Cloud is enabled via dependency but disabled via config
-    compile('org.springframework.cloud:spring-cloud-starter-consul-all:1.0.0.RELEASE') {
+/*    compile('org.springframework.cloud:spring-cloud-starter-consul-all:1.0.0.RELEASE') {
         exclude group: 'io.reactivex', module: 'rxjava'
 
     }
-    compile group: 'io.reactivex', name: 'rxjava', version: '1.1.5'
+    compile group: 'io.reactivex', name: 'rxjava', version: '1.1.5'*/
 
     // In order to get embedded app container to work
     integrationTestCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
