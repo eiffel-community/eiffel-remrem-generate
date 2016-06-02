@@ -25,6 +25,7 @@ public class EiffelSemanticsController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public JsonElement generateMsg(@RequestParam("msgType") String msgType,
         @RequestBody JsonObject bodyJson) {
+        assert msgService != null;
         return parser.parse(msgService.generateMsg(msgType, bodyJson));
     }
 }
