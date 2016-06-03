@@ -30,6 +30,7 @@ jacocoTestReport {
         html.enabled = true
         html.destination "${buildDir}/jacocoHtml"
     }
+    executionData = files('build/jacoco/jacocoTest.exec', 'build/jacoco/test.exec')
 }
 
 configurations {
@@ -66,8 +67,7 @@ task wrapper(type: Wrapper) {
 
 task integrationTest(type: Test) {
     jacoco {
-        //destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        destinationFile = file("$buildDir/jacoco/integrationTest.exec")
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/classes/integrationTest")
     }
     testClassesDir = sourceSets.integrationTest.output.classesDir
@@ -140,3 +140,4 @@ dependencies {
     // Will be used to package contents of third party libs
     runtime fileTree(dir: 'libs', include: '*.jar')
 }
+
