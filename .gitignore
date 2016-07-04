@@ -9,3 +9,4 @@ out/
 
 # Can be used for repackaging with semantic information
 libs/
+/bin/
