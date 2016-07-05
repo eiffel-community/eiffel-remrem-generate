@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -18,6 +19,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -42,7 +44,7 @@ public class CLI {
 		options.addOption("h", "help", false, "show help.");
 		options.addOption("f", "content_file", true, "message content file");
 		options.addOption("t", "message_type", true, "message type, mandatory if -f is given");
-//		options.addOption("r", "response_file", true, "file to store the response in");
+		options.addOption("r", "response_file", true, "file to store the response in, mandatory if -f is given");
 		return options;
 	}
 
@@ -76,10 +78,12 @@ public class CLI {
 				help(options);
 			}
 			
-			if (commandLine.hasOption("f") && commandLine.hasOption("t")) {
+			if (commandLine.hasOption("f") && commandLine.hasOption("t") &&
+					commandLine.hasOption("r")) {
 				String filePath = commandLine.getOptionValue("f");
+				String responseFilePath = commandLine.getOptionValue("r");
 				String msgType = commandLine.getOptionValue("t");
-				handleContentFile(msgType, filePath);
+				handleContentFile(msgType, filePath, responseFilePath);
 			}
 		} catch (Exception e) {
 			help(options);
@@ -87,7 +91,8 @@ public class CLI {
 		return startService;
 	}
 	
-	public void handleContentFile(String msgType, String filePath) {
+	public void handleContentFile(String msgType, String filePath,
+									String responseFilePath) {
 		JsonParser parser = new JsonParser();
 		MsgService msgService = new SemanticsService();
 		try {
@@ -95,6 +100,11 @@ public class CLI {
 			String fileContent = new String(fileBytes);
 			JsonObject bodyJson = parser.parse(fileContent).getAsJsonObject();
 			JsonElement returnJson = parser.parse(msgService.generateMsg(msgType, bodyJson));
+			Gson gson = new Gson();
+			String returnJsonStr = gson.toJson(returnJson);
+			try(  PrintWriter out = new PrintWriter( responseFilePath )  ){
+			    out.println( returnJsonStr );
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
