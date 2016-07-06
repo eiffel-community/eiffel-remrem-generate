@@ -89,7 +89,7 @@ repositories {
 }
 
 dependencies {
-	compile('com.jayway.restassured:rest-assured:2.3.2')
+    compile('com.jayway.restassured:rest-assured:2.3.2')
     compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
