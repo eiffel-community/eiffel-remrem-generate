@@ -14,8 +14,6 @@ import org.apache.commons.cli.Options;
 
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -38,7 +36,8 @@ public class CLI {
         Options options = new Options();
         options.addOption("h", "help", false, "show help.");
         options.addOption("f", "content_file", true, "message content file");
-        options.addOption("t", "message_type", true, "message type, mandatory if -f is given");
+        options.addOption("json", "json_content", true, "json content");
+        options.addOption("t", "message_type", true, "message type, mandatory if -f or -json is given");
         options.addOption("r", "response_file", true, "file to store the response in, optional");
         return options;
     }
@@ -69,22 +68,40 @@ public class CLI {
                 startService = false;
             }
 
-            if (commandLine.hasOption("h")) {
-                help(options);
-            }
-            
             if (commandLine.hasOption("f") && commandLine.hasOption("t")) {
-                String filePath = commandLine.getOptionValue("f");
-                String responseFilePath = null; 
-                if (commandLine.hasOption("r"))
-                    responseFilePath = commandLine.getOptionValue("r");
-                String msgType = commandLine.getOptionValue("t");
-                handleContentFile(msgType, filePath, responseFilePath);
+            	handleFileArgs(commandLine);
+            } else if (commandLine.hasOption("json") && commandLine.hasOption("t")) {
+            	handleJsonArgs(commandLine);
+            }else {
+                help(options);
             }
         } catch (Exception e) {
             help(options);
         }
         return startService;
+    }
+    
+    private void handleFileArgs(CommandLine commandLine) {
+    	String filePath = commandLine.getOptionValue("f");       
+        String jsonContent = readJsonContent(filePath);
+        handleJsonString(jsonContent, commandLine);
+    }
+    
+    private String readJsonContent(String filePath) {
+		try {
+			JsonParser parser = new JsonParser();
+			byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+	        return new String(fileBytes);	    
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+    
+    private void handleJsonArgs(CommandLine commandLine) {
+    	String jsonContent = commandLine.getOptionValue("json");
+    	handleJsonString(jsonContent, commandLine);
     }
     
     /**
@@ -93,18 +110,18 @@ public class CLI {
      * @param filePath the file path where the message content resides
      * @param responseFilePath the file path where to store the prepared message, stdout if null
      */
-    public void handleContentFile(String msgType,
-                                  String filePath,
-                                  String responseFilePath) {
-        JsonParser parser = new JsonParser();
+    private void handleJsonString(String jsonString,
+    							  CommandLine commandLine) {
+        
         MsgService msgService = new SemanticsService();
+        String responseFilePath = null; 
+        if (commandLine.hasOption("r"))
+            responseFilePath = commandLine.getOptionValue("r");
+        String msgType = commandLine.getOptionValue("t");
         try {
-            byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
-            String fileContent = new String(fileBytes);
-            JsonObject bodyJson = parser.parse(fileContent).getAsJsonObject();
-            JsonElement returnJson = parser.parse(msgService.generateMsg(msgType, bodyJson));
-            Gson gson = new Gson();
-            String returnJsonStr = gson.toJson(returnJson);
+        	JsonParser parser = new JsonParser();
+        	JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
+        	String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
             if (responseFilePath != null) {
                 try(  PrintWriter out = new PrintWriter( responseFilePath )  ){
                     out.println( returnJsonStr );
