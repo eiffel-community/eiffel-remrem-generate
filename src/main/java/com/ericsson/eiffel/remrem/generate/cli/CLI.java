@@ -18,6 +18,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
+ * Class for interpreting the passed arguments from command line.
+ * Parse method returns true, meaning we need to start the service afterwards, if no argument
+ * is given. The same method returns false, meaning we do not start the service afterwards, if any
+ * argument is given. If an argument is given that it is not recognized we print help
  * @author evasiba
  *
  */
@@ -81,15 +85,23 @@ public class CLI {
         return startService;
     }
     
+    /**
+     * Reads the content from the given file and sends it to message service
+     * @param commandLine
+     */
     private void handleFileArgs(CommandLine commandLine) {
     	String filePath = commandLine.getOptionValue("f");       
-        String jsonContent = readJsonContent(filePath);
+        String jsonContent = readFileContent(filePath);
         handleJsonString(jsonContent, commandLine);
     }
     
-    private String readJsonContent(String filePath) {
+    /**
+     * Read file content as String
+     * @param filePath
+     * @return
+     */
+    private String readFileContent(String filePath) {
 		try {
-			JsonParser parser = new JsonParser();
 			byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
 	        return new String(fileBytes);	    
 		} catch (IOException e) {
@@ -99,13 +111,17 @@ public class CLI {
 		return null;
     }
     
+    /**
+     * Read passed json string from command line and sends it to message service
+     * @param commandLine
+     */
     private void handleJsonArgs(CommandLine commandLine) {
     	String jsonContent = commandLine.getOptionValue("json");
     	handleJsonString(jsonContent, commandLine);
     }
     
     /**
-     * Handle message from file
+     * Send the given json string to message service
      * @param msgType the Eiffel message type
      * @param filePath the file path where the message content resides
      * @param responseFilePath the file path where to store the prepared message, stdout if null
