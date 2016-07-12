@@ -11,11 +11,19 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.SLF4JLog;
+import org.apache.commons.logging.impl.SLF4JLogFactory;
+import org.slf4j.LoggerFactory;
 
-import com.ericsson.eiffel.remrem.semantics.SemanticsService;
+import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
+//import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 /**
  * Class for interpreting the passed arguments from command line.
@@ -28,8 +36,8 @@ import com.google.gson.JsonParser;
 public class CLI {
     private Options options=null;
 
-    public CLI() {
-        options = createCLIOptions();
+    public CLI() {    	
+    	options = createCLIOptions();
     }
 
     /**
@@ -43,6 +51,7 @@ public class CLI {
         options.addOption("json", "json_content", true, "json content");
         options.addOption("t", "message_type", true, "message type, mandatory if -f or -json is given");
         options.addOption("r", "response_file", true, "file to store the response in, optional");
+        options.addOption("d", "debug", false, "enable debug traces");
         return options;
     }
 
@@ -70,19 +79,41 @@ public class CLI {
             Option[] existingOptions = commandLine.getOptions(); 
             if (existingOptions.length > 0) {
                 startService = false;
-            }
-
-            if (commandLine.hasOption("f") && commandLine.hasOption("t")) {
-            	handleFileArgs(commandLine);
-            } else if (commandLine.hasOption("json") && commandLine.hasOption("t")) {
-            	handleJsonArgs(commandLine);
-            }else {
-                help(options);
+                handleOptions(commandLine);
             }
         } catch (Exception e) {
+        	e.printStackTrace();
             help(options);
         }
         return startService;
+    }
+    
+    /**
+     * @param commandLine
+     */
+    private void handleLogging(CommandLine commandLine) {
+    	if (!commandLine.hasOption("-d")) { 
+    		//Eiffel 3 messaging logs to stdout but since we also write
+    		//to stdout we need to turn off logging unless specified by the user
+    		System.setProperty("logging.level.root", "OFF");
+    		Logger log = (Logger) LoggerFactory.getLogger("ROOT");
+    		log.setLevel(Level.OFF);
+    	}
+    }
+    
+    /**
+     * Delegates actions depending on the passed arguments
+     * @param commandLine command line arguments
+     */
+    private void handleOptions(CommandLine commandLine) {
+    	handleLogging(commandLine);
+        if (commandLine.hasOption("f") && commandLine.hasOption("t")) {
+        	handleFileArgs(commandLine);
+        } else if (commandLine.hasOption("json") && commandLine.hasOption("t")) {
+        	handleJsonArgs(commandLine);
+        }else {
+            help(options);
+        }
     }
     
     /**
@@ -129,7 +160,8 @@ public class CLI {
     private void handleJsonString(String jsonString,
     							  CommandLine commandLine) {
         
-        MsgService msgService = new SemanticsService();
+//        MsgService msgService = new SemanticsService();
+        MsgService msgService = new Eiffel3Service();
         String responseFilePath = null; 
         if (commandLine.hasOption("r"))
             responseFilePath = commandLine.getOptionValue("r");
