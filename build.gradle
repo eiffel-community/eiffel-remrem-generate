@@ -20,7 +20,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.5.1'
+    version =  '0.5.2'
 }
 
 
