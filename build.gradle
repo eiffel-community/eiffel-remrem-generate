@@ -89,7 +89,6 @@ repositories {
 }
 
 dependencies {
-    compile files('/home/evasiba/git/eiffel3messaging/build/libs/remrem-eiffel3messaging-1.2.jar')
     compile('com.jayway.restassured:rest-assured:2.3.2')
     compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
