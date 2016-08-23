@@ -11,12 +11,14 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.SLF4JLog;
-import org.apache.commons.logging.impl.SLF4JLogFactory;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
 
-import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
+//import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
 //import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
@@ -33,13 +35,26 @@ import ch.qos.logback.classic.Logger;
  * @author evasiba
  *
  */
-public class CLI {
+@Component
+@ComponentScan(basePackages = "com.ericsson.eiffel.remrem")
+public class CLI implements CommandLineRunner{
     private Options options=null;
+    @Autowired 
+    @Qualifier("eiffel3") 
+    private MsgService msgService;
 
     public CLI() {    	
     	options = createCLIOptions();
     }
 
+    @Override
+	public void run(String... args) throws Exception {
+		// TODO Auto-generated method stub
+		boolean startService = parse(args);
+		if (!startService)
+			return;
+	}
+    
     /**
      * Creates the options needed by command line interface
      * @return the options this CLI can handle
@@ -164,7 +179,7 @@ public class CLI {
     							  CommandLine commandLine) {
         
 //        MsgService msgService = new SemanticsService();
-        MsgService msgService = new Eiffel3Service();
+//        MsgService msgService = new Eiffel3Service();
         String responseFilePath = null; 
         if (commandLine.hasOption("r"))
             responseFilePath = commandLine.getOptionValue("r");
