@@ -43,7 +43,7 @@ public class CLI implements CommandLineRunner{
     @Qualifier("eiffel3") 
     private MsgService msgService;
 
-    public CLI() {    	
+    public CLI() {       	
     	options = createCLIOptions();
     }
 
