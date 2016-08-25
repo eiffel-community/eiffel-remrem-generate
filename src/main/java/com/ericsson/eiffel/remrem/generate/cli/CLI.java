@@ -31,7 +31,9 @@ import ch.qos.logback.classic.Logger;
  * Class for interpreting the passed arguments from command line.
  * Parse method returns true, meaning we need to start the service afterwards, if no argument
  * is given. The same method returns false, meaning we do not start the service afterwards, if any
- * argument is given. If an argument is given that it is not recognized we print help
+ * argument is given. If an argument is given that it is not recognized we print help.
+ * Only Eiffel3 messaging is supported right now by default. 
+ * Comment out @Qualifier("eiffel3") and activate @Qualifier("eiffel-semantics") if you want semantics 
  * @author evasiba
  *
  */
@@ -41,6 +43,7 @@ public class CLI implements CommandLineRunner{
     private Options options=null;
     @Autowired 
     @Qualifier("eiffel3") 
+//    @Qualifier("eiffel-semantics")
     private MsgService msgService;
 
     public CLI() {       	
