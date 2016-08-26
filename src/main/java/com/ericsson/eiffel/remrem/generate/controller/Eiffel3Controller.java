@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-//@Profile("eiffel3") @RestController @RequestMapping("/eiffel3") 
+@Profile("eiffel3") @RestController @RequestMapping("/eiffel3") 
 public class Eiffel3Controller {
 
     @Autowired @Qualifier("eiffel3") private MsgService msgService;

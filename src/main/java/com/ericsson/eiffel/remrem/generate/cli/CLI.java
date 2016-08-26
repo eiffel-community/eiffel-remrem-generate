@@ -18,8 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
 
-//import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
-//import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
