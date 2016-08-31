@@ -2,6 +2,7 @@ package com.ericsson.eiffel.remrem.generate;
 
 
 import org.apache.commons.cli.Options;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -22,6 +23,8 @@ public class App extends SpringBootServletInitializer {
     
     private static void startService(String[] args) {
     	SpringApplication application = new SpringApplication(App.class);
+    	application.setBannerMode(Banner.Mode.OFF);
+    	application.setLogStartupInfo(false);
     	// We do not start web service if any arguments are passed
     	if (args.length > 0)
     		application.setWebEnvironment(false);

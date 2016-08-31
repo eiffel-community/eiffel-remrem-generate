@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
 
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -40,9 +41,7 @@ import ch.qos.logback.classic.Logger;
 public class CLI implements CommandLineRunner{
     private Options options=null;
     @Autowired 
-    @Qualifier("eiffel3") 
-//    @Qualifier("eiffel-semantics")
-    private MsgService msgService;
+    private MsgService[] msgServices;
 
     public CLI() {       	
     	options = createCLIOptions();
@@ -68,6 +67,7 @@ public class CLI implements CommandLineRunner{
         options.addOption("t", "message_type", true, "message type, mandatory if -f or -json is given");
         options.addOption("r", "response_file", true, "file to store the response in, optional");
         options.addOption("d", "debug", false, "enable debug traces");
+        options.addOption("mp", "messaging_protocol", true, "name of messaging protocol to be used, e.g. eiffel3, semantics");
         return options;
     }
 
@@ -79,7 +79,7 @@ public class CLI implements CommandLineRunner{
         // This prints out some help
         HelpFormatter formater = new HelpFormatter();
         formater.printHelp("java -jar", options);
-        System.exit(0);
+        System.exit(1);
     }
 
     /**
@@ -157,6 +157,7 @@ public class CLI implements CommandLineRunner{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(-2);
 		}
 		return null;
     }
@@ -179,8 +180,6 @@ public class CLI implements CommandLineRunner{
     private void handleJsonString(String jsonString,
     							  CommandLine commandLine) {
         
-//        MsgService msgService = new SemanticsService();
-//        MsgService msgService = new Eiffel3Service();
         String responseFilePath = null; 
         if (commandLine.hasOption("r"))
             responseFilePath = commandLine.getOptionValue("r");
@@ -188,6 +187,7 @@ public class CLI implements CommandLineRunner{
         try {
         	JsonParser parser = new JsonParser();
         	JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
+        	MsgService msgService = getMessageService(commandLine);
         	String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
             if (responseFilePath != null) {
                 try(  PrintWriter out = new PrintWriter( responseFilePath )  ){
@@ -199,6 +199,30 @@ public class CLI implements CommandLineRunner{
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            System.exit(-1);
         }
+    }
+    
+    private MsgService getMessageService(CommandLine commandLine) {
+    	if (commandLine.hasOption("mp")) {
+    		String protocol = commandLine.getOptionValue("mp");
+    		for (MsgService service : msgServices) {
+    			boolean isEiffel3 = (protocol.equals("eiffel3"));
+    			boolean isEiffel3Service = service.getClass().getName().endsWith("Eiffel3Service"); 
+    			if (isEiffel3 && isEiffel3Service)
+    				return service;
+    			
+    		}
+    	} else {
+    		System.out.println( "No protocol has been specified. Semantics is used as default");
+    		for (MsgService service : msgServices) {
+    			if (service instanceof SemanticsService)
+    				return service;
+    		}
+    	}
+    	
+    	System.out.println( "No protocol service has been found registered.");
+    	System.exit(-3);
+    	return null;
     }
 }
