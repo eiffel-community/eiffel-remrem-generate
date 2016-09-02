@@ -131,6 +131,7 @@ public class CLI implements CommandLineRunner{
         } else if (commandLine.hasOption("json") && commandLine.hasOption("t")) {
         	handleJsonArgs(commandLine);
         }else {
+        	System.out.println("Nothing to do with the options you passed.");
             help(options);
         }
     }
@@ -189,6 +190,7 @@ public class CLI implements CommandLineRunner{
         	JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
         	MsgService msgService = getMessageService(commandLine);
         	String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
+        	returnJsonStr = "[" + returnJsonStr + "]";
             if (responseFilePath != null) {
                 try(  PrintWriter out = new PrintWriter( responseFilePath )  ){
                     out.println( returnJsonStr );
@@ -196,7 +198,7 @@ public class CLI implements CommandLineRunner{
             } else {
                 System.out.println( returnJsonStr );
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             System.exit(-1);
