@@ -20,7 +20,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.5.4'
+    version =  '0.5.5'
 }
 
 
@@ -50,6 +50,10 @@ sourceSets {
         }
         resources.srcDir file('src/integration-test/resources')
     }
+}
+
+processResources {
+    expand(project.properties)
 }
 
 install.dependsOn assemble

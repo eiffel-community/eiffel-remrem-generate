@@ -88,6 +88,7 @@ public class CLI implements CommandLineRunner{
      * @return if the service should start or not
      */
     public boolean parse(String[] args) {
+    	Logger log = (Logger) LoggerFactory.getLogger("ROOT");
         CommandLineParser parser = new DefaultParser(); 
         boolean startService = true;
         try {
