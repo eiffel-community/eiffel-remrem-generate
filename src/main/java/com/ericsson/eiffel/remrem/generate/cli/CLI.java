@@ -13,7 +13,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
@@ -31,8 +30,6 @@ import ch.qos.logback.classic.Logger;
  * Parse method returns true, meaning we need to start the service afterwards, if no argument
  * is given. The same method returns false, meaning we do not start the service afterwards, if any
  * argument is given. If an argument is given that it is not recognized we print help.
- * Only Eiffel3 messaging is supported right now by default. 
- * Comment out @Qualifier("eiffel3") and activate @Qualifier("eiffel-semantics") if you want semantics 
  * @author evasiba
  *
  */

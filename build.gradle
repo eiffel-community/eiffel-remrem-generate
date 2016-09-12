@@ -116,7 +116,7 @@ dependencies {
 
     //Injectable Message Library and its Implementation
     compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'
-    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.0'
+    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.3'
 
     //compileOnly is supported in gradle 2.12 but it might be required
     // in cucumber folder
