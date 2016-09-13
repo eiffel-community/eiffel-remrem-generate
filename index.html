@@ -126,7 +126,7 @@ or deploy it in tomcat</p>
 
 <p>With input from the example file shown above and output to a file:</p>
 
-<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished.json -r output.json</p>
+<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished -r output.json</p>
 
 <p>Gives:</p>
 
@@ -184,11 +184,15 @@ or deploy it in tomcat</p>
 
 <p>Same example but output the result on the console:</p>
 
-<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished.json</p>
+<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished</p>
 
 <p>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"<a href="http://myHost.com/firstLog%22%7D,%7B%22name%22:%22otherLog%22,%22uri%22:%22isbn:0-486-27557-4%22%7D%5D%7D,%22links%22:%7B%22activityExecution%22:%22aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1%22,%22flowContext%22:%22flowContext%22,%22causes%22:%5B%22cause1%22,%22cause2%22%5D%7D,%22meta%22:%7B%22domainId%22:%22example.domain%22,%22id%22:%22651e1653-313d-4530-ba5a-3f1ff30890a9%22,%22type%22:%22eiffelactivityfinished%22,%22version%22:%220.1.0%22,%22time%22:1473768454242,%22tags%22:%5B%22tag1%22,%22tag2%22%5D,%22source%22:%7B%22host%22:%22host%22,%22name%22:%22name%22,%22uri%22:%22http://java.sun.com/j2se/1.3/%22,%22serializer%22:%7B%22groupId%22:%22G%22,%22artifactId%22:%22A%22,%22version%22:%22V%22%7D">http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":{"activityExecution":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","flowContext":"flowContext","causes":["cause1","cause2"]},"meta":{"domainId":"example.domain","id":"651e1653-313d-4530-ba5a-3f1ff30890a9","type":"eiffelactivityfinished","version":"0.1.0","time":1473768454242,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}</a>}}}]</p>
 
 <p>Same example, but this time the data is supplied as a command line argument:</p>
+
+<p>$ java -jar generate.war -t eiffelactivityfinished -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","domainId": "example.domain","tags": ["tag1", "tag2"],"source": {"host": "host","name": "name","uri": "<a href="http://java.sun.com/j2se/1.3/%22,%22serializer">http://java.sun.com/j2se/1.3/","serializer</a>": {"groupId": "G","artifactId": "A",       "version": "V"}}}},"eventParams": {"data": {"outcome": {"conclusion": "TIMED_OUT","description": "Compilation timed out."},"persistentLogs": [{"name": "firstLog","uri": "<a href="http://myHost.com/firstLog%22%7D,%7B%22name">http://myHost.com/firstLog"},{"name</a>": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": {"activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","causes": ["cause1", "cause2"],"flowContext": "flowContext"}}}</p>
+
+<p>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"<a href="http://myHost.com/firstLog%22%7D,%7B%22name%22:%22otherLog%22,%22uri%22:%22isbn:0-486-27557-4%22%7D%5D%7D,%22links%22:%7B%22activityExecution%22:%22aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1%22,%22flowContext%22:%22flowContext%22,%22causes%22:%5B%22cause1%22,%22cause2%22%5D%7D,%22meta%22:%7B%22domainId%22:%22example.domain%22,%22id%22:%22651e1653-313d-4530-ba5a-3f1ff30890a9%22,%22type%22:%22eiffelactivityfinished%22,%22version%22:%220.1.0%22,%22time%22:1473768454242,%22tags%22:%5B%22tag1%22,%22tag2%22%5D,%22source%22:%7B%22host%22:%22host%22,%22name%22:%22name%22,%22uri%22:%22http://java.sun.com/j2se/1.3/%22,%22serializer%22:%7B%22groupId%22:%22G%22,%22artifactId%22:%22A%22,%22version%22:%22V%22%7D">http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":{"activityExecution":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","flowContext":"flowContext","causes":["cause1","cause2"]},"meta":{"domainId":"example.domain","id":"651e1653-313d-4530-ba5a-3f1ff30890a9","type":"eiffelactivityfinished","version":"0.1.0","time":1473768454242,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}</a>}}}]</p>
 
 <h2>
 <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service.</h2>
