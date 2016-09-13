@@ -57,7 +57,7 @@ or deploy it in tomcat</p>
 <h2>
 <a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface).</h2>
 
-<p>Examples used here are for the next generation of Eiffel events called semantics which is open source</p>
+<p>Examples used here are for the next generation of Eiffel events called semantics which is open source.</p>
 
 <p>java -jar generate.war -h</p>
 
@@ -168,15 +168,66 @@ or deploy it in tomcat</p>
 
 <p>With input from the example file shown above and output to a file:</p>
 
-<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinishedevent.json -r output.json</p>
+<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished.json -r output.json</p>
 
 <p>Gives:</p>
+
+<p>[
+  {
+    "data": {
+      "outcome": {
+        "conclusion": "TIMED_OUT",
+        "description": "Compilation timed out."
+      },
+      "persistentLogs": [
+        {
+          "name": "firstLog",
+          "uri": "<a href="http://myHost.com/firstLog">http://myHost.com/firstLog</a>"
+        },
+        {
+          "name": "otherLog",
+          "uri": "isbn:0-486-27557-4"
+        }
+      ]
+    },
+    "links": {
+      "activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+      "flowContext": "flowContext",
+      "causes": [
+        "cause1",
+        "cause2"
+      ]
+    },
+    "meta": {
+      "domainId": "example.domain",
+      "id": "2075b7d1-83a6-47c8-af1d-1d0f451b1f81",
+      "type": "eiffelactivityfinished",
+      "version": "0.1.0",
+      "time": 1473767230905,
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "host": "host",
+        "name": "name",
+        "uri": "<a href="http://java.sun.com/j2se/1.3/">http://java.sun.com/j2se/1.3/</a>",
+        "serializer": {
+          "groupId": "G",
+          "artifactId": "A",
+          "version": "V"
+        }
+      }
+    }
+  }
+]</p>
 
 <h2>
 <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service.</h2>
 
-<p>Examples used here are for the next generation of Eiffel events called semantics which is open source
-url: hostname/eiffelsemantics?msgType=
+<p>Examples used here are for the next generation of Eiffel events called semantics which is open source.</p>
+
+<p>url: hostname/eiffelsemantics?msgType=
 use POST method
 body: please follow <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-vocabulary">eiffel vocabulary</a></p>
 
