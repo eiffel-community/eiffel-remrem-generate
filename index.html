@@ -61,58 +61,106 @@ or deploy it in tomcat</p>
 
 <p>usage: java -jar</p>
 
-<p>-d,--debug                       enable debug traces
--f,--content_file           message content file
--h,--help                        show help.
--json,--json_content        json content
--mp,--messaging_protocol    name of messaging protocol to be used,
-                                  e.g. eiffel3, semantics, semantics is used if nothing given
--r,--response_file          file to store the response in, optional
--t,--message_type           message type, mandatory if -f or -json
+<p>-d,--debug                       enable debug traces</p>
+
+<p>-f,--content_file           message content file</p>
+
+<p>-h,--help                        show help.</p>
+
+<p>-json,--json_content        json content</p>
+
+<p>-mp,--messaging_protocol    name of messaging protocol to be used,
+                                  e.g. eiffel3, semantics, semantics is used if nothing given</p>
+
+<p>-r,--response_file          file to store the response in, optional</p>
+
+<p>-t,--message_type           message type, mandatory if -f or -json
                                   is given</p>
 
 <p>The message must exist in a json file for example EiffelActivityFinishedEvent.json might contain following message:<br>
-{"msgParams": {
-  "meta": {
-    "type": "EiffelActivityFinishedEvent",
-    "domainId": "example.domain",
-    "tags": ["tag1", "tag2"],
-    "source": {
-      "host": "host",
-      "name": "name",
-      "uri": "<a href="http://java.sun.com/j2se/1.3/">http://java.sun.com/j2se/1.3/</a>",
-      "serializer": {
-        "groupId": "G",
-        "artifactId": "A",
-        "version": "V"
-      }
-    }
+{"msgParams": {</p>
+
+<p>"meta": {</p>
+
+<pre><code>"type": "EiffelActivityFinishedEvent",
+
+"domainId": "example.domain",
+
+"tags": ["tag1", "tag2"],
+
+"source": {
+
+  "host": "host",
+
+  "name": "name",
+
+  "uri": "http://java.sun.com/j2se/1.3/",
+
+  "serializer": {
+
+    "groupId": "G",
+
+    "artifactId": "A",
+
+    "version": "V"
+
   }
-},
-  "eventParams": {
-    "data": {
-      "outcome": {
-        "conclusion": "TIMED_OUT",
-        "description": "Compilation timed out."
-      },
-      "persistentLogs": [
-        {
-          "name": "firstLog",
-          "uri": "<a href="http://myHost.com/firstLog">http://myHost.com/firstLog</a>"
-        },
-        {
-          "name": "otherLog",
-          "uri": "isbn:0-486-27557-4"
-        }
-      ]
+
+}
+</code></pre>
+
+<p>}</p>
+
+<p>},</p>
+
+<p>"eventParams": {</p>
+
+<pre><code>"data": {
+
+  "outcome": {
+
+    "conclusion": "TIMED_OUT",
+
+    "description": "Compilation timed out."
+
+  },
+
+  "persistentLogs": [
+
+    {
+
+      "name": "firstLog",
+
+      "uri": "http://myHost.com/firstLog"
+
     },
-    "links": {
-      "activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
-      "causes": ["cause1", "cause2"],
-      "flowContext": "flowContext"
+
+    {
+
+      "name": "otherLog",
+
+      "uri": "isbn:0-486-27557-4"
+
     }
-  }
-}</p>
+
+  ]
+
+},
+
+"links": {
+
+  "activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+
+  "causes": ["cause1", "cause2"],
+
+  "flowContext": "flowContext"
+
+}
+</code></pre>
+
+<p>}</p>
+
+<p>}</p>
 
 <h2>
 <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service</h2>
