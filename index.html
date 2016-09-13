@@ -16,14 +16,14 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/ericsson/eiffel-remrem-generate">View on GitHub</a>
+          <a id="forkme_banner" href="https://github.com/vasba/eiffel-remrem-generate">View on GitHub</a>
 
-          <h1 id="project_title">Eiffel RemRem Generate Service</h1>
-          <h2 id="project_tagline"></h2>
+          <h1 id="project_title">Eiffel-remrem-generate</h1>
+          <h2 id="project_tagline">eiffel-remrem-generate</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/ericsson/eiffel-remrem-generate/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/ericsson/eiffel-remrem-generate/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/vasba/eiffel-remrem-generate/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/vasba/eiffel-remrem-generate/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -47,22 +47,29 @@
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
-<p><pre><code>$ java -jar eiffel-remrem-generate-&lt;version&gt;.war</code></pre><br>
+<p>java -jar eiffel-remrem-generate-version.war
 or deploy it in tomcat</p>
 
 <h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage for REST service</h2>
 
-<ul><li>url: hostname/eiffelsemantics?msgType=&lt;message type&gt;</li>
-<li>message type should be one of the following: eiffelartifactpublished, eiffelactivityfinished</li>
-<li>use POST method</li>
-<li>body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></li></ul>
+<a id="this-application-can-be-run-as-a-stand-alone-java-application-or-as-a-service" class="anchor" href="#this-application-can-be-run-as-a-stand-alone-java-application-or-as-a-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>This application can be run as a stand alone Java application or as a service</h2>
+
+
+<h2>
+<a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface)</h2>
+
+<h2>
+<a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service</h2>
+
+<p>url: hostname/eiffelsemantics?msgType=
+use POST method
+body: please follow <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
-<p><h4><a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h4>
-<pre><code>$ curl -H "Content-Type: application/json" -X POST -d '
+<p>example:<br>
+    $ curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
   "meta": {
     "type": "EiffelActivityFinishedEvent",
@@ -103,125 +110,14 @@ or deploy it in tomcat</p>
       "flowContext": "flowContext"
     }
   }
-}' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</code></pre>
-<br><br>
-<pre><code>$ curl -H "Content-Type: application/json" -X POST -d '
-{"msgParams": {
-  "meta": {
-    "type": "EiffelArtifactPublishedEvent",
-    "domainId": "example.domain",
-    "tags": ["tag1", "tag2"],
-    "source": {
-      "host": "host",
-      "name": "name",
-      "uri": "http://java.sun.com/j2se/1.3/",
-      "serializer": {
-        "groupId": "G",
-        "artifactId": "A",
-        "version": "V"
-      }
-    }
-  }
-},
-  "eventParams": {
-    "data": {
-      "locations": [
-        {
-          "type": "ARTIFACTORY",
-          "uri": "https://one.place"
-        },
-        {
-          "type": "PLAIN",
-          "uri": "http://another.com"
-        }
-      ]
-    },
-    "links": {
-      "context": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
-      "artifact": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee2"
-    }
-  }
-}
-' http://localhost:8080/eiffelsemantics?msgType=eiffelartifactpublished</code></pre></p>
-
-<h2>
-<a id="exceptions" class="anchor" href="#exceptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exceptions</h2>
-
-<h4><a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Invalid Json</h4>
-response
-<pre><code>{
-  "timestamp": "Jun 1, 2016 2:40:10 PM",
-  "status": 400,
-  "error": "Bad Request",
-  "exception": "org.springframework.http.converter.HttpMessageNotReadableException",
-  "message": "Could not read JSON: com.google.gson.stream.MalformedJsonException: Unterminated object at line 28 column 12 path $.eventParams.data.persistentLogs[0].name; nested exception is com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Unterminated object at line 28 column 12 path $.eventParams.data.persistentLogs[0].name",
-  "path": "/eiffelsemantics"
-}
-</code></pre>
-<h4><a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Incorrect Eiffel Syntax</h4>
-<p>Example: event missing links<br>
-input event
-<pre><code>{
-"msgParams": {
-  "meta": {
-    "type": "EiffelActivityFinishedEvent",
-    "domainId": "example.domain",
-    "tags": ["tag1", "tag2"],
-    "source": {
-      "host": "host",
-      "name": "name",
-      "uri": "http://java.sun.com/j2se/1.3/",
-      "serializer": {
-        "groupId": "G",
-        "artifactId": "A",
-        "version": "V"
-      }
-    }
-  }
-},
-  "eventParams": {
-    "data": {
-      "outcome": {
-        "conclusion": "TIMED_OUT",
-        "description": "Compilation timed out."
-      },
-      "persistentLogs": [
-        {
-          "name": "firstLog",
-          "uri": "http://myHost.com/firstLog"
-        },
-        {
-          "name": "otherLog",
-          "uri": "isbn:0-486-27557-4"
-        }
-      ]
-    }
-  }
-}
-</code></pre>
-response
-<pre><code>{
-{
-  "message": "Cannot validate given JSON string",
-  "cause": "com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException: com.github.fge.jsonschema.core.report.ListProcessingReport: failure--- BEGIN MESSAGES ---error: object has missing required properties <mark>([\"links\"])</mark>    level: \"error\"    schema: {\"loadingURI\":\"#\",\"pointer\":\"\"}    instance: {\"pointer\":\"\"}    domain: \"validation\"    keyword: \"required\"    required: [\"data\",\"links\",\"meta\"]    missing: [\"links\"]---  END MESSAGES  ---"
-}
-</code></pre>
-
-</p>
-</ul>
-</p>
-
-<h2>
-<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Performance</h2>
-<p>Please refer to <a href="https://github.com/Ericsson/eiffel-remrem-generate/wiki/Performance">performance</a> </p>
-
+}' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Eiffel-remrem-generate maintained by <a href="https://github.com/ericsson">Ericsson</a></p>
+        <p class="copyright">Eiffel-remrem-generate maintained by <a href="https://github.com/vasba">vasba</a></p>
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
