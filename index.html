@@ -209,8 +209,8 @@ body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiff
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
-<p>example:<br>
-    $ curl -H "Content-Type: application/json" -XPOST -d '
+<p>example with event body passed to service:<br>
+curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
   "meta": {
     "type": "EiffelActivityFinishedEvent",
@@ -252,6 +252,9 @@ body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiff
     }
   }
 }' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
+
+<p>example with event body in a file body-single.json passed to service:<br>
+curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
       </section>
     </div>
 
