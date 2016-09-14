@@ -209,7 +209,9 @@ body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiff
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
-<p>example with event body passed to service:<br></p>
+<h3>
+<a id="example-with-event-body-passed-to-service" class="anchor" href="#example-with-event-body-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body passed to service:<br>
+</h3>
 
 <p>curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
@@ -254,7 +256,9 @@ body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiff
   }
 }' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
 
-<p>example with event body in a file body-single.json passed to service:<br></p>
+<h3>
+<a id="example-with-event-body-in-a-file-body-singlejson-passed-to-service" class="anchor" href="#example-with-event-body-in-a-file-body-singlejson-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body in a file body-single.json passed to service:<br>
+</h3>
 
 <p>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
       </section>
