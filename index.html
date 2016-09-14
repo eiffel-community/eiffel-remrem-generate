@@ -16,14 +16,14 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/vasba/eiffel-remrem-generate">View on GitHub</a>
+          <a id="forkme_banner" href="https://github.com/evasiba-ericsson/eiffel-remrem-generate">View on GitHub</a>
 
           <h1 id="project_title">Eiffel-remrem-generate</h1>
           <h2 id="project_tagline">eiffel-remrem-generate</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/vasba/eiffel-remrem-generate/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/vasba/eiffel-remrem-generate/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/evasiba-ericsson/eiffel-remrem-generate/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/evasiba-ericsson/eiffel-remrem-generate/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -31,7 +31,11 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>
+        <p>REMReM (REST Mailbox for Registered Messages) is a set of tools that can be used to generate validated Eiffel messages and publish them on a RabbitMQ message bus. They can be run as micro services or as stand-alone CLI versions. For more details on the micro services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">https://github.com/Ericsson/eiffel-remrem</a> </p>
+
+<p>Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message.</p>
+
+<h2>
 <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility</h2>
 
 <ul>
@@ -51,25 +55,165 @@
 or deploy it in tomcat</p>
 
 <h2>
+<a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface).</h2>
 
-<a id="this-application-can-be-run-as-a-stand-alone-java-application-or-as-a-service" class="anchor" href="#this-application-can-be-run-as-a-stand-alone-java-application-or-as-a-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>This application can be run as a stand alone Java application or as a service</h2>
+<p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
+<p>java -jar generate.war -h</p>
+
+<p>You passed help flag.</p>
+
+<p>usage: java -jar</p>
+
+<p>-d,--debug                       enable debug traces</p>
+
+<p>-f,--content_file           message content file</p>
+
+<p>-h,--help                        show help.</p>
+
+<p>-json,--json_content        json content</p>
+
+<p>-mp,--messaging_protocol    name of messaging protocol to be used,
+                                  e.g. eiffel3, semantics, semantics is used if nothing given</p>
+
+<p>-r,--response_file          file to store the response in, optional</p>
+
+<p>-t,--message_type           message type, mandatory if -f or -json
+                                  is given</p>
+
+<p>The message must exist in a json file for example <strong><em>EiffelActivityFinishedEvent.json</em></strong> might contain following message:<br>
+{"msgParams": {
+  "meta": {
+    "type": "EiffelActivityFinishedEvent",
+    "domainId": "example.domain",
+    "tags": ["tag1", "tag2"],
+    "source": {
+      "host": "host",
+      "name": "name",
+      "uri": "<a href="http://java.sun.com/j2se/1.3/">http://java.sun.com/j2se/1.3/</a>",
+      "serializer": {
+        "groupId": "G",
+        "artifactId": "A",
+        "version": "V"
+      }
+    }
+  }
+},
+  "eventParams": {
+    "data": {
+      "outcome": {
+        "conclusion": "TIMED_OUT",
+        "description": "Compilation timed out."
+      },
+      "persistentLogs": [
+        {
+          "name": "firstLog",
+          "uri": "<a href="http://myHost.com/firstLog">http://myHost.com/firstLog</a>"
+        },
+        {
+          "name": "otherLog",
+          "uri": "isbn:0-486-27557-4"
+        }
+      ]
+    },
+    "links": {
+      "activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+      "causes": ["cause1", "cause2"],
+      "flowContext": "flowContext"
+    }
+  }
+}</p>
+
+<h3>
+<a id="with-input-from-the-example-file-shown-above-and-output-to-a-file" class="anchor" href="#with-input-from-the-example-file-shown-above-and-output-to-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With input from the example file shown above and output to a file:</h3>
+
+<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished -r output.json</p>
+
+<p>Gives:</p>
+
+<p>$cat output.json</p>
+
+<p>[
+  {
+    "data": {
+      "outcome": {
+        "conclusion": "TIMED_OUT",
+        "description": "Compilation timed out."
+      },
+      "persistentLogs": [
+        {
+          "name": "firstLog",
+          "uri": "<a href="http://myHost.com/firstLog">http://myHost.com/firstLog</a>"
+        },
+        {
+          "name": "otherLog",
+          "uri": "isbn:0-486-27557-4"
+        }
+      ]
+    },
+    "links": {
+      "activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+      "flowContext": "flowContext",
+      "causes": [
+        "cause1",
+        "cause2"
+      ]
+    },
+    "meta": {
+      "domainId": "example.domain",
+      "id": "2075b7d1-83a6-47c8-af1d-1d0f451b1f81",
+      "type": "eiffelactivityfinished",
+      "version": "0.1.0",
+      "time": 1473767230905,
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "host": "host",
+        "name": "name",
+        "uri": "<a href="http://java.sun.com/j2se/1.3/">http://java.sun.com/j2se/1.3/</a>",
+        "serializer": {
+          "groupId": "G",
+          "artifactId": "A",
+          "version": "V"
+        }
+      }
+    }
+  }
+]</p>
+
+<h3>
+<a id="same-example-but-output-the-result-on-the-console" class="anchor" href="#same-example-but-output-the-result-on-the-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example but output the result on the console:</h3>
+
+<p>$ java -jar generate.war -f EiffelActivityFinishedEvent.json -t eiffelactivityfinished</p>
+
+<p>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"<a href="http://myHost.com/firstLog%22%7D,%7B%22name%22:%22otherLog%22,%22uri%22:%22isbn:0-486-27557-4%22%7D%5D%7D,%22links%22:%7B%22activityExecution%22:%22aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1%22,%22flowContext%22:%22flowContext%22,%22causes%22:%5B%22cause1%22,%22cause2%22%5D%7D,%22meta%22:%7B%22domainId%22:%22example.domain%22,%22id%22:%22651e1653-313d-4530-ba5a-3f1ff30890a9%22,%22type%22:%22eiffelactivityfinished%22,%22version%22:%220.1.0%22,%22time%22:1473768454242,%22tags%22:%5B%22tag1%22,%22tag2%22%5D,%22source%22:%7B%22host%22:%22host%22,%22name%22:%22name%22,%22uri%22:%22http://java.sun.com/j2se/1.3/%22,%22serializer%22:%7B%22groupId%22:%22G%22,%22artifactId%22:%22A%22,%22version%22:%22V%22%7D">http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":{"activityExecution":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","flowContext":"flowContext","causes":["cause1","cause2"]},"meta":{"domainId":"example.domain","id":"651e1653-313d-4530-ba5a-3f1ff30890a9","type":"eiffelactivityfinished","version":"0.1.0","time":1473768454242,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}</a>}}}]</p>
+
+<h3>
+<a id="same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" class="anchor" href="#same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example, but this time the data is supplied as a command line argument:</h3>
+
+<p>$ java -jar generate.war -t eiffelactivityfinished -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","domainId": "example.domain","tags": ["tag1", "tag2"],"source": {"host": "host","name": "name","uri": "<a href="http://java.sun.com/j2se/1.3/%22,%22serializer">http://java.sun.com/j2se/1.3/","serializer</a>": {"groupId": "G","artifactId": "A",       "version": "V"}}}},"eventParams": {"data": {"outcome": {"conclusion": "TIMED_OUT","description": "Compilation timed out."},"persistentLogs": [{"name": "firstLog","uri": "<a href="http://myHost.com/firstLog%22%7D,%7B%22name">http://myHost.com/firstLog"},{"name</a>": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": {"activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","causes": ["cause1", "cause2"],"flowContext": "flowContext"}}}</p>
+
+<p>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"<a href="http://myHost.com/firstLog%22%7D,%7B%22name%22:%22otherLog%22,%22uri%22:%22isbn:0-486-27557-4%22%7D%5D%7D,%22links%22:%7B%22activityExecution%22:%22aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1%22,%22flowContext%22:%22flowContext%22,%22causes%22:%5B%22cause1%22,%22cause2%22%5D%7D,%22meta%22:%7B%22domainId%22:%22example.domain%22,%22id%22:%22651e1653-313d-4530-ba5a-3f1ff30890a9%22,%22type%22:%22eiffelactivityfinished%22,%22version%22:%220.1.0%22,%22time%22:1473768454242,%22tags%22:%5B%22tag1%22,%22tag2%22%5D,%22source%22:%7B%22host%22:%22host%22,%22name%22:%22name%22,%22uri%22:%22http://java.sun.com/j2se/1.3/%22,%22serializer%22:%7B%22groupId%22:%22G%22,%22artifactId%22:%22A%22,%22version%22:%22V%22%7D">http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":{"activityExecution":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","flowContext":"flowContext","causes":["cause1","cause2"]},"meta":{"domainId":"example.domain","id":"651e1653-313d-4530-ba5a-3f1ff30890a9","type":"eiffelactivityfinished","version":"0.1.0","time":1473768454242,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}</a>}}}]</p>
 
 <h2>
-<a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface)</h2>
+<a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service.</h2>
 
-<h2>
-<a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service</h2>
+<p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <p>url: hostname/eiffelsemantics?msgType=
 use POST method
-body: please follow <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1/eiffel-vocabulary">eiffel vocabulary</a></p>
+body: please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
-<p>example:<br>
-    $ curl -H "Content-Type: application/json" -X POST -d '
+<h3>
+<a id="example-with-event-body-passed-to-service" class="anchor" href="#example-with-event-body-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body passed to service:<br>
+</h3>
+
+<p>curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
   "meta": {
     "type": "EiffelActivityFinishedEvent",
@@ -111,13 +255,19 @@ body: please follow <a href="https://github.com/Ericsson/eiffel/tree/topic-drop1
     }
   }
 }' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
+
+<h3>
+<a id="example-with-event-body-in-a-file-body-singlejson-passed-to-service" class="anchor" href="#example-with-event-body-in-a-file-body-singlejson-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body in a file body-single.json passed to service:<br>
+</h3>
+
+<p>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</p>
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Eiffel-remrem-generate maintained by <a href="https://github.com/vasba">vasba</a></p>
+        <p class="copyright">Eiffel-remrem-generate maintained by <a href="https://github.com/evasiba-ericsson">evasiba-ericsson</a></p>
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
