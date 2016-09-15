@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -182,7 +183,7 @@ public class CLI implements CommandLineRunner{
         String responseFilePath = null; 
         if (commandLine.hasOption("r"))
             responseFilePath = commandLine.getOptionValue("r");
-        String msgType = commandLine.getOptionValue("t");
+        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
         try {
         	JsonParser parser = new JsonParser();
         	JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
@@ -214,7 +215,6 @@ public class CLI implements CommandLineRunner{
     			
     		}
     	} else {
-    		System.out.println( "No protocol has been specified. Semantics is used as default");
     		for (MsgService service : msgServices) {
     			if (service instanceof SemanticsService)
     				return service;
