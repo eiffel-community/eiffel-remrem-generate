@@ -1,6 +1,8 @@
 package com.ericsson.eiffel.remrem.generate.cli;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.reader.StreamReader;
 import org.springframework.boot.CommandLineRunner;
 
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
@@ -167,8 +170,18 @@ public class CLI implements CommandLineRunner{
      * @param commandLine
      */
     private void handleJsonArgs(CommandLine commandLine) {
-    	String jsonContent = commandLine.getOptionValue("json");
-    	handleJsonString(jsonContent, commandLine);
+        String jsonContent = commandLine.getOptionValue("json");
+        if (jsonContent.equals("-")) {
+            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                jsonContent = bufferReader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(5);
+            }
+            
+        }
+        handleJsonString(jsonContent, commandLine);
     }
     
     /**
