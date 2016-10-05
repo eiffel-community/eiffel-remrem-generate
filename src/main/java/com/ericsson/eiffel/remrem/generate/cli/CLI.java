@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -18,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.reader.StreamReader;
 import org.springframework.boot.CommandLineRunner;
 
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
@@ -190,19 +191,18 @@ public class CLI implements CommandLineRunner{
      * @param filePath the file path where the message content resides
      * @param responseFilePath the file path where to store the prepared message, stdout if null
      */
-    private void handleJsonString(String jsonString,
-    							  CommandLine commandLine) {
-        
+    private void handleJsonString(String jsonString, CommandLine commandLine) {
         String responseFilePath = null; 
         if (commandLine.hasOption("r"))
             responseFilePath = commandLine.getOptionValue("r");
-        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
+        String msgType = handleMsgTypeArgs(commandLine);
+
         try {
-        	JsonParser parser = new JsonParser();
-        	JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
-        	MsgService msgService = getMessageService(commandLine);
-        	String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
-        	returnJsonStr = "[" + returnJsonStr + "]";
+            JsonParser parser = new JsonParser();
+            JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
+            MsgService msgService = getMessageService(commandLine);
+            String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
+            returnJsonStr = "[" + returnJsonStr + "]";
             if (responseFilePath != null) {
                 try(  PrintWriter out = new PrintWriter( responseFilePath )  ){
                     out.println( returnJsonStr );
@@ -211,12 +211,21 @@ public class CLI implements CommandLineRunner{
                 System.out.println( returnJsonStr );
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             System.exit(-1);
         }
     }
-    
+
+    private String handleMsgTypeArgs(CommandLine commandLine) {
+        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
+        Pattern p = Pattern.compile("(.*)event");
+        Matcher m = p.matcher(msgType);
+        if(m.matches()) {
+            return m.group(1);
+        }
+        return msgType;
+    }
+
     private MsgService getMessageService(CommandLine commandLine) {
     	if (commandLine.hasOption("mp")) {
     		String protocol = commandLine.getOptionValue("mp");
