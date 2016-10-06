@@ -15,6 +15,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,20 @@ public class CLI implements CommandLineRunner{
      */
     private static Options createCLIOptions() {
         Options options = new Options();
+        Option msgTypeOpt = new Option("t", "message_type", true, "message type");
+        msgTypeOpt.setRequired(true);
+        options.addOption(msgTypeOpt);
         options.addOption("h", "help", false, "show help.");
-        options.addOption("f", "content_file", true, "message content file");
-        options.addOption("json", "json_content", true, "json content");
-        options.addOption("t", "message_type", true, "message type, mandatory if -f or -json is given");
         options.addOption("r", "response_file", true, "file to store the response in, optional");
         options.addOption("d", "debug", false, "enable debug traces");
         options.addOption("mp", "messaging_protocol", true, "name of messaging protocol to be used, e.g. eiffel3, semantics");
+
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("f", "content_file", true, "message content file"));
+        group.addOption(new Option("json", "json_content", true, "json content"));
+        group.setRequired(true);
+        options.addOptionGroup(group);
+
         return options;
     }
 
@@ -119,32 +127,29 @@ public class CLI implements CommandLineRunner{
     		log.setLevel(Level.OFF);
     	}
     }
-    
+
     /**
      * Delegates actions depending on the passed arguments
      * @param commandLine command line arguments
      */
     private void handleOptions(CommandLine commandLine) {
-    	handleLogging(commandLine);
-    	if (commandLine.hasOption("h")) {
-    		System.out.println("You passed help flag.");
-    		help(options);
-    	} else if (commandLine.hasOption("f") && commandLine.hasOption("t")) {
-        	handleFileArgs(commandLine);
-        } else if (commandLine.hasOption("json") && commandLine.hasOption("t")) {
-        	handleJsonArgs(commandLine);
-        }else {
-        	System.out.println("Nothing to do with the options you passed.");
+        handleLogging(commandLine);
+        if (commandLine.hasOption("h")) {
+            System.out.println("You passed help flag.");
             help(options);
+        } else if (commandLine.hasOption("f")) {
+            handleFileArgs(commandLine);
+        } else if (commandLine.hasOption("json")) {
+            handleJsonArgs(commandLine);
         }
     }
-    
+
     /**
      * Reads the content from the given file and sends it to message service
      * @param commandLine
      */
     private void handleFileArgs(CommandLine commandLine) {
-    	String filePath = commandLine.getOptionValue("f");       
+    	String filePath = commandLine.getOptionValue("f");
         String jsonContent = readFileContent(filePath);
         handleJsonString(jsonContent, commandLine);
     }
