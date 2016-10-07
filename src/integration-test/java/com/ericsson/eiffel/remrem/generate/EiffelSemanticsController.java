@@ -10,7 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
@@ -19,12 +22,11 @@ import java.util.Scanner;
 
 import static com.jayway.restassured.RestAssured.given;
 
-
-//@RunWith(SpringJUnit4ClassRunner.class)
-@RunWith(SpringRunner.class)
-//@SpringApplicationConfiguration(classes = App.class)
-//@WebIntegrationTest({"server.port=0", "management.port=0"})
-@SpringBootTest({"server.port=0", "management.port=0"})
+@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringRunner.class)
+@SpringApplicationConfiguration(classes = App.class)
+@WebIntegrationTest({"server.port=0", "management.port=0"})
+//@SpringBootTest({"server.port=0", "management.port=0"})
 public class EiffelSemanticsController {
     JsonParser parser = new JsonParser();
 
@@ -56,7 +58,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelartifactpublished"))
-            .body("meta.version", Matchers.is("0.1.0"));
+            .body("meta.version", Matchers.is("0.1.5"));
     }
 
     @Test public void sendActivityFinished() throws Exception {
@@ -66,7 +68,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelactivityfinished"))
-            .body("meta.version", Matchers.is("0.1.0"));
+            .body("meta.version", Matchers.is("0.1.5"));
     }
 
 }
