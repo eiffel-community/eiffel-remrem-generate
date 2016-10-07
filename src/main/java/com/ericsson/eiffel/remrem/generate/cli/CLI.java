@@ -17,6 +17,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -98,23 +99,22 @@ public class CLI implements CommandLineRunner{
      * @return if the service should start or not
      */
     public boolean parse(String[] args) {
-    	Logger log = (Logger) LoggerFactory.getLogger("ROOT");
         CommandLineParser parser = new DefaultParser(); 
         boolean startService = true;
         try {
             CommandLine commandLine = parser.parse(options, args);
-            Option[] existingOptions = commandLine.getOptions(); 
+            Option[] existingOptions = commandLine.getOptions();
             if (existingOptions.length > 0) {
                 startService = false;
                 handleOptions(commandLine);
             }
-        } catch (Exception e) {
-        	e.printStackTrace();
+        } catch (Exception  e) {
+            System.out.println(e.getMessage());
             help(options);
         }
         return startService;
     }
-    
+
     /**
      * @param commandLine
      */
