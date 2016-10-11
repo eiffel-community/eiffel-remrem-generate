@@ -10,7 +10,7 @@
   "eventParams": {
     "data": {
       "outcome": {
-        "verdict": "TIMEOUT",
+        "conclusion": "TIMED_OUT",
         "description": "Compilation timed out."
       },
       "persistentLogs": [

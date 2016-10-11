@@ -53,10 +53,7 @@ public class CLI implements CommandLineRunner{
 
     @Override
 	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
-		boolean startService = parse(args);
-		if (!startService)
-			return;
+		parse(args);
 	}
     
     /**
