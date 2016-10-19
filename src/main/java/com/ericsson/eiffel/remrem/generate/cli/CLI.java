@@ -17,7 +17,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -52,10 +51,12 @@ public class CLI implements CommandLineRunner{
     }
 
     @Override
-	public void run(String... args) throws Exception {
-		parse(args);
-	}
-    
+    public void run(String... args) throws Exception {
+        if (args.length > 0) {
+            parse(args);
+        }
+    }
+
     /**
      * Creates the options needed by command line interface
      * @return the options this CLI can handle
@@ -161,7 +162,6 @@ public class CLI implements CommandLineRunner{
 			byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
 	        return new String(fileBytes);	    
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-2);
 		}
