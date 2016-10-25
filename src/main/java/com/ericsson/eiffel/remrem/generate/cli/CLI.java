@@ -53,7 +53,8 @@ public class CLI implements CommandLineRunner{
 
     @Override
 	public void run(String... args) throws Exception {
-		parse(args);
+    	if (args.length > 0)
+    		parse(args);
 	}
     
     /**
