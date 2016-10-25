@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,11 +23,8 @@ import java.util.Scanner;
 
 import static com.jayway.restassured.RestAssured.given;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-//@RunWith(SpringRunner.class)
-@SpringApplicationConfiguration(classes = App.class)
-@WebIntegrationTest({"server.port=0", "management.port=0"})
-//@SpringBootTest({"server.port=0", "management.port=0"})
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class EiffelSemanticsController {
     JsonParser parser = new JsonParser();
 
