@@ -75,7 +75,7 @@ public class CLIOptions {
     /**
      * Check if the CLI contain any options
      * 
-     * @return true if there exists options otherwise false
+     * @return true if options exists otherwise false
      */
     public static boolean hasParsedOptions() {
         if (commandLine == null)

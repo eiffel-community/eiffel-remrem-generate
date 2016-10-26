@@ -6,25 +6,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.DefaultApplicationArguments;
 
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
@@ -103,7 +94,7 @@ public class CLI implements CommandLineRunner {
      * Read file content as String
      * 
      * @param filePath
-     * @return file contents if not successful 
+     * @return file contents if successful 
      */
     private String readFileContent(String filePath) {
         try {
