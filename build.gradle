@@ -83,7 +83,7 @@ group 'com.ericsson.eiffel.remrem'
 version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.13'
+  gradleVersion = '3.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -92,8 +92,9 @@ task integrationTest(type: Test) {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/classes/integrationTest")
     }
+    dependsOn integrationTestClasses
     testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    classpath = sourceSets.integrationTest.runtimeClasspath + sourceSets.main.output
     outputs.upToDateWhen { false }
 }
 
@@ -135,7 +136,7 @@ dependencies {
 
     //Injectable Message Library and its Implementation
     compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'
-    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.6'
+    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.7')
 
     //compileOnly is supported in gradle 2.12 but it might be required
     // in cucumber folder

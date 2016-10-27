@@ -56,7 +56,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelartifactpublished"))
-            .body("meta.version", Matchers.is("0.1.6"));
+            .body("meta.version", Matchers.is("0.1.7"));
     }
 
     @Test public void sendActivityFinished() throws Exception {
@@ -66,7 +66,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelactivityfinished"))
-            .body("meta.version", Matchers.is("0.1.6"));
+            .body("meta.version", Matchers.is("0.1.7"));
     }
 
 }
