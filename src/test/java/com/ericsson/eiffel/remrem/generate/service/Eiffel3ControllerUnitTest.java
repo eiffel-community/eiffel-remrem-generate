@@ -21,10 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebTestContextBootstrapper;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(SpringRunner.class)
-//@SpringApplicationConfiguration(FakeConfig.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+//@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class Eiffel3ControllerUnitTest {
 
     @InjectMocks
