@@ -43,10 +43,10 @@ public class CLI implements CommandLineRunner {
     private MsgService[] msgServices;
 
     public CLI(MsgService[] msgServices) {
-		super();
-		this.msgServices = msgServices;
+        super();
+        this.msgServices = msgServices;
 	}
-
+    
 	@Override
     public void run(String... args) throws Exception {
         if (CLIOptions.hasParsedOptions())
