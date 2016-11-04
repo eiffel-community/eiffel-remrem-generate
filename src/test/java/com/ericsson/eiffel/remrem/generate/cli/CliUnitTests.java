@@ -32,7 +32,8 @@ public class CliUnitTests {
         MockitoAnnotations.initMocks(this);
         String key = PropertiesConfig.TEST_MODE;
         System.setProperty(key, "true");
-        //Switch std out to another stream
+        // Switch std out to another stream in case
+        // we need to check output
         bytes   = new ByteArrayOutputStream();		  
         console = System.out;
         System.setOut(new PrintStream(bytes));
@@ -55,7 +56,7 @@ public class CliUnitTests {
 
     @Test
     public void testHandleFileArgsFail() throws Exception {	
-        String[] args = {"-t", "mt", "-f", "filename"};
+        String[] args = {"-t", "artifactpublished", "-f", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.CLI_READ_FILE_FAILED;
@@ -67,7 +68,7 @@ public class CliUnitTests {
         File file = new File(getClass().getClassLoader().getResource("jsonTest.json").getFile());
         String filePath = file.getAbsolutePath();
 
-        String[] args = {"-t", "mt", "-f", filePath};
+        String[] args = {"-t", "artifactpublished", "-f", filePath};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -75,7 +76,7 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsPass() throws Exception {
-        String[] args = {"-t", "mt", "-json", "{someKey:someValue}"};
+        String[] args = {"-t", "artifactpublished", "-json", "{someKey:someValue}"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -83,10 +84,18 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsFail() throws Exception {
-        String[] args = {"-t", "mt", "-json", "filename"};
+        String[] args = {"-t", "artifactpublished", "-json", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.HANDLE_JSON_STRING_FAILED;
         assertTrue(CLIOptions.getErrorCodes().contains(code));
+    }
+    
+    @Test
+    public void testHandleMsgTypeEventArgsPass() throws Exception {
+        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}"};
+        CLIOptions.parse(args);
+        cli.run(args);		
+        assertTrue(CLIOptions.getErrorCodes().isEmpty());		
     }
 }

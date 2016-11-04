@@ -1,11 +1,13 @@
 package com.ericsson.eiffel.remrem.generate.cli;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
@@ -15,8 +17,10 @@ import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 public class CLIOptions {
     private static CommandLine commandLine = null;
     private static Options options = null;
+    private static OptionGroup typeGroup = null;
+    private static OptionGroup contentGroup = null;
+    
     //Used for testing purposes
-
     private static ArrayList<Integer> testErrorCodes = new ArrayList<>();
 
     public static ArrayList getErrorCodes() {
@@ -42,24 +46,21 @@ public class CLIOptions {
      */
     public static Options createCLIOptions() {
         options = new Options();
-        OptionGroup typeGroup = new OptionGroup();
+        typeGroup = new OptionGroup();
         Option msgTypeOpt = new Option("t", "message_type", true, "message type");
-        Option helpOpt = new Option("h", "help", false, "show help.");
-        typeGroup.addOption(helpOpt);
-        typeGroup.addOption(msgTypeOpt);
-        typeGroup.setRequired(true);
-        options.addOption(msgTypeOpt);        
+        typeGroup.addOption(msgTypeOpt);        
+        options.addOptionGroup(typeGroup);
+               
+        options.addOption("h", "help", false, "show help.");
         options.addOption("r", "response_file", true, "file to store the response in, optional");
         options.addOption("d", "debug", false, "enable debug traces");
         options.addOption("mp", "messaging_protocol", true,
                 "name of messaging protocol to be used, e.g. eiffel3, semantics");
 
-        OptionGroup group = new OptionGroup();
-        group.addOption(new Option("f", "content_file", true, "message content file"));
-        group.addOption(new Option("json", "json_content", true, "json content"));
-        group.addOption(helpOpt);
-        group.setRequired(true);
-        options.addOptionGroup(group);
+        contentGroup = new OptionGroup();
+        contentGroup.addOption(new Option("f", "content_file", true, "message content file"));
+        contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
+        options.addOptionGroup(contentGroup);
 
         return options;
     }
@@ -70,7 +71,7 @@ public class CLIOptions {
     public static void help(int errorCode) {
         // This prints out some help
         HelpFormatter formater = new HelpFormatter();
-        formater.printHelp("java -jar", options);
+        formater.printHelp("java -jar", options);     
         exit(errorCode);
     }
 
@@ -97,10 +98,37 @@ public class CLIOptions {
         CommandLineParser parser = new DefaultParser();
         try {
             commandLine = parser.parse(options, args);
+            afterParseChecks();            
         } catch (Exception e) {
             System.out.println(e.getMessage());            
             help(CLIExitCodes.getExceptionCode(e));
         }
+    }
+    
+    public static void afterParseChecks() throws MissingOptionException{
+    	 if (commandLine.hasOption("h")) {
+             System.out.println("You passed help flag.");
+             help(0);
+    	 } else {
+    		 checkRequiredOptions();
+    	 }
+    }
+    
+    public static void checkRequiredOptions() throws MissingOptionException {
+    	OptionGroup[] groups = {typeGroup, contentGroup};
+    	for(OptionGroup group : groups) {
+    		ArrayList<Option> groupOptions = new ArrayList<Option>(group.getOptions());
+    		boolean groupIsGiven = false;
+    		for (Option option : groupOptions){
+    			if (commandLine.hasOption(option.getOpt())) {
+    				groupIsGiven = true;
+    				break;
+    			}
+    		}
+    		if (!groupIsGiven){
+    			throw new MissingOptionException(groupOptions);
+    		}
+    	}
     }
 
     /**

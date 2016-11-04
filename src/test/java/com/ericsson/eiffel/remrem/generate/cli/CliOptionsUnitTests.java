@@ -47,13 +47,38 @@ public class CliOptionsUnitTests {
     public void testHelpOptionOnlyWorks() throws Exception {
         String[] args = {"-h"};
         CLIOptions.parse(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());
+        assertTrue(CLIOptions.getErrorCodes().contains(0));
+        assertTrue(CLIOptions.getErrorCodes().size() == 1);
     }
 	
     @Test
     public void testHelpOptionWorks() throws Exception {
         String[] args = {"-h", "-r", "respons file"};
         CLIOptions.parse(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());		
+        assertTrue(CLIOptions.getErrorCodes().contains(0));
+        assertTrue(CLIOptions.getErrorCodes().size() == 1);        	
+    }
+    
+    @Test
+    public void testMessageTypeOptionMissing() throws Exception {
+        String[] args = {"-f", "input_file", "-r", "respons file"};
+        CLIOptions.parse(args);
+        int code = CLIExitCodes.CLI_MISSING_OPTION_EXCEPTION;
+        assertTrue(CLIOptions.getErrorCodes().contains(code));
+    }
+    
+    @Test
+    public void testContentOptionMissing() throws Exception {
+        String[] args = {"-t", "artifactpublished", "-r", "respons file"};
+        CLIOptions.parse(args);
+        int code = CLIExitCodes.CLI_MISSING_OPTION_EXCEPTION;
+        assertTrue(CLIOptions.getErrorCodes().contains(code));
+    }  
+    
+    @Test
+    public void testRequiredOptionsGiven() throws Exception {
+        String[] args = {"-f", "input_file", "-t", "artifactpublished"};
+        CLIOptions.parse(args);
+        assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
 }
