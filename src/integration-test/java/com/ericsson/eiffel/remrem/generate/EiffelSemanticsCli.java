@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertTrue;
@@ -21,6 +22,7 @@ import com.ericsson.eiffel.remrem.generate.cli.CLIOptions;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 
 @RunWith(SpringRunner.class)
+@ContextConfiguration(locations={"/EiffelSemanticsCli-context.xml"})
 public class EiffelSemanticsCli {
 	private PrintStream console;
     private ByteArrayOutputStream bytes;
