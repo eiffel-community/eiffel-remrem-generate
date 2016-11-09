@@ -14,10 +14,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(FakeConfig.class)
+@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class EiffelSemanticsControllerUnitTest {
 
     @InjectMocks

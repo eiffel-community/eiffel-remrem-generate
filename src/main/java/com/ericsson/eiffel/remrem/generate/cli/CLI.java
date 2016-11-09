@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
 
+import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
@@ -41,11 +42,17 @@ public class CLI implements CommandLineRunner {
     @Autowired
     private MsgService[] msgServices;
 
-    @Override
+    public CLI(MsgService[] msgServices) {
+        super();
+        this.msgServices = msgServices;
+	}
+    
+	@Override
     public void run(String... args) throws Exception {
         if (CLIOptions.hasParsedOptions())
-            handleOptions();
+        	handleOptions();
     }
+    
     /**
      * @param commandLine
      */
@@ -71,7 +78,7 @@ public class CLI implements CommandLineRunner {
         handleLogging(commandLine);
         if (commandLine.hasOption("h")) {
             System.out.println("You passed help flag.");
-            CLIOptions.help();
+            CLIOptions.help(1);
         } else if (commandLine.hasOption("f")) {
             handleFileArgs(commandLine);
         } else if (commandLine.hasOption("json")) {
@@ -101,8 +108,8 @@ public class CLI implements CommandLineRunner {
             byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
             return new String(fileBytes);
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-2);
+            e.printStackTrace(System.out);
+            CLIOptions.exit(CLIExitCodes.CLI_READ_FILE_FAILED);
         }
         return null;
     }
@@ -119,8 +126,11 @@ public class CLI implements CommandLineRunner {
             try {
                 jsonContent = bufferReader.readLine();
             } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(5);
+                e.printStackTrace(System.out);
+                CLIOptions.exit(CLIExitCodes.READ_JSON_FROM_CONSOLE_FAILED);
+                // In unit tests we do not do system exit but it still needs
+                // to return here.
+                return;
             }
 
         }
@@ -158,8 +168,8 @@ public class CLI implements CommandLineRunner {
                 System.out.println(returnJsonStr);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
+            e.printStackTrace(System.out);
+            CLIOptions.exit(CLIExitCodes.HANDLE_JSON_STRING_FAILED);
         }
     }
 
@@ -189,8 +199,12 @@ public class CLI implements CommandLineRunner {
             }
         }
 
-        System.out.println("No protocol service has been found registered.");
-        System.exit(-3);
+        boolean testMode = Boolean.getBoolean(PropertiesConfig.TEST_MODE);
+    	if (testMode && msgServices.length>0)
+    		return msgServices[0];
+
+    	System.out.println("No protocol service has been found registered.");        
+        CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);
         return null;
     }
 }
