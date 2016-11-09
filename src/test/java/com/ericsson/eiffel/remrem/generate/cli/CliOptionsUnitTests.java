@@ -81,4 +81,12 @@ public class CliOptionsUnitTests {
         CLIOptions.parse(args);
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
+    
+    @Test
+    public void testJarPathLoading() throws Exception{
+    	String[] args = {"-f", "input_file", "-t", "artifactpublished","-jarPath", "C:/Users/esantnc/Downloads/Remrem_Jars/eiffel3messaging-4.0.3.jar"};
+    	CLIOptions.parse(args);
+    	int code = CLIExitCodes.CLI_MISSING_OPTION_EXCEPTION;
+        assertTrue(CLIOptions.getErrorCodes().contains(code));
+    }
 }

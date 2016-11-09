@@ -76,6 +76,7 @@ public class CLI implements CommandLineRunner {
     private void handleOptions() {
         CommandLine commandLine = CLIOptions.getCommandLine();
         handleLogging(commandLine);
+        CLIOptions.handleJarLocation();
         if (commandLine.hasOption("h")) {
             System.out.println("You passed help flag.");
             CLIOptions.help(1);
