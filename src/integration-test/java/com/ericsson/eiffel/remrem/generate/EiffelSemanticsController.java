@@ -1,20 +1,16 @@
 package com.ericsson.eiffel.remrem.generate;
 
 import com.google.gson.JsonParser;
-
 import com.jayway.restassured.RestAssured;
-
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
@@ -22,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.jar.Attributes;
@@ -30,6 +27,7 @@ import java.util.jar.Manifest;
 
 import static com.jayway.restassured.RestAssured.given;
 
+@ActiveProfiles("integration-test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class EiffelSemanticsController {
@@ -44,6 +42,8 @@ public class EiffelSemanticsController {
     static String activityFinishedBody;
     
     static String version = null;
+
+    private String credentials = "Basic " + Base64.getEncoder().encodeToString("user:secret".getBytes());
 
     @Before
     public void  setUp() throws FileNotFoundException {
@@ -91,24 +91,41 @@ public class EiffelSemanticsController {
         return null; 
     }
 
-    @Test public void sendArtifactPublished() throws Exception {
-        given().contentType("application/json").body(artifactPublishedBody).
-            when().
-            post("/eiffelsemantics?msgType=eiffelartifactpublished").
-            then().
-            statusCode(HttpStatus.SC_OK)
-            .body("meta.type", Matchers.is("eiffelartifactpublished"))
-            .body("meta.version", Matchers.is(version));
+    @Test
+    public void testUnauthenticatedNotAllowed() throws Exception {
+        given()
+                .contentType("application/json")
+                .body(artifactPublishedBody)
+                .when()
+                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                .then()
+                    .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test public void sendActivityFinished() throws Exception {
-        given().contentType("application/json").body(activityFinishedBody).
-            when().
-            post("/eiffelsemantics?msgType=eiffelactivityfinished").
-            then().
-            statusCode(HttpStatus.SC_OK)
-            .body("meta.type", Matchers.is("eiffelactivityfinished"))
-            .body("meta.version", Matchers.is(version));
+    @Test public void testSendArtifactPublished() throws Exception {
+        given()
+                .header("Authorization", credentials)
+                .contentType("application/json")
+                .body(artifactPublishedBody)
+                .when()
+                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("meta.type", Matchers.is("eiffelartifactpublished"))
+                    .body("meta.version", Matchers.is(version));
+    }
+
+    @Test public void testSendActivityFinished() throws Exception {
+        given()
+                .header("Authorization", credentials)
+                .contentType("application/json")
+                .body(activityFinishedBody)
+                .when()
+                    .post("/eiffelsemantics?msgType=eiffelactivityfinished")
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("meta.type", Matchers.is("eiffelactivityfinished"))
+                    .body("meta.version", Matchers.is(version));
     }
 
 }

@@ -5,14 +5,18 @@ spring:
 debug: false
 logging:
   level:
-    root: ERROR
+    root: INFO
     org:
       springframework:
-        web: ERROR
+        web: INFO
 org:
   springframework:
     boot:
       logging:
         LoggingSystem: none
 jar:
-  path: 
+  path:
+# TODO Actual values for domain and url need to be provided
+activedirectory:
+  domain: "ERICSSON.COM"
+  url: "ldap://<hostname>.ericsson.com"
