@@ -20,7 +20,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.5.8'
+    version =  '0.5.9'
 }
 
 
@@ -31,6 +31,23 @@ jacocoTestReport {
         html.destination "${buildDir}/jacocoHtml"
     }
     executionData = files('build/jacoco/jacocoTest.exec', 'build/jacoco/test.exec')
+}
+
+configurations.all {
+    configurations.all {
+        resolutionStrategy {
+            // force certain versions of dependencies (including transitive)
+            //  *append new forced modules:
+            force 'com.fasterxml.jackson.core:jackson-databind:2.8.3'
+            //  *replace existing forced modules with new ones:
+            forcedModules = ['com.fasterxml.jackson.core:jackson-databind:2.8.3']
+            
+             // cache dynamic versions for 10 minutes
+    cacheDynamicVersionsFor 10*60, 'seconds'
+    // don't cache changing modules at all
+    cacheChangingModulesFor 0, 'seconds'
+        }
+    }
 }
 
 configurations {
@@ -66,7 +83,7 @@ group 'com.ericsson.eiffel.remrem'
 version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.13'
+  gradleVersion = '3.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -75,8 +92,9 @@ task integrationTest(type: Test) {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/classes/integrationTest")
     }
+    dependsOn integrationTestClasses
     testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    classpath = sourceSets.integrationTest.runtimeClasspath + sourceSets.main.output
     outputs.upToDateWhen { false }
 }
 
@@ -93,7 +111,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.jayway.restassured:rest-assured:2.3.2')
+    compile('com.jayway.restassured:rest-assured:2.9.0')
     compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
@@ -118,7 +136,7 @@ dependencies {
 
     //Injectable Message Library and its Implementation
     compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'
-    compile 'com.github.Ericsson:eiffel-remrem-semantics:0.1.5'
+    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.7')
 
     //compileOnly is supported in gradle 2.12 but it might be required
     // in cucumber folder
@@ -133,21 +151,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.4.1'
     testCompile("org.springframework.boot:spring-boot-starter-test:$sprintBootVersion")
-    //{
-      //  exclude module: "spring-boot-starter-logging"
-       // exclude module: "logback-classic"
-    //}
-
-    //Cloud is enabled via dependency but disabled via config
-/*    compile('org.springframework.cloud:spring-cloud-starter-consul-all:1.0.0.RELEASE') {
-        exclude group: 'io.reactivex', module: 'rxjava'
-
-    }
-    compile group: 'io.reactivex', name: 'rxjava', version: '1.1.5'*/
-
-    // In order to get embedded app container to work
-    integrationTestRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    integrationTestCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
 
     // Will be used to package contents of third party libs
     runtime fileTree(dir: 'libs', include: '*.jar')

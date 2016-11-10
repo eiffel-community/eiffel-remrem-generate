@@ -13,20 +13,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Scanner;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import static com.jayway.restassured.RestAssured.given;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-//@RunWith(SpringRunner.class)
-@SpringApplicationConfiguration(classes = App.class)
-@WebIntegrationTest({"server.port=0", "management.port=0"})
-//@SpringBootTest({"server.port=0", "management.port=0"})
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class EiffelSemanticsController {
     JsonParser parser = new JsonParser();
 
@@ -37,6 +42,8 @@ public class EiffelSemanticsController {
 
     static String activityFinishedFileName = "ActivityFinished.json";
     static String activityFinishedBody;
+    
+    static String version = null;
 
     @Before
     public void  setUp() throws FileNotFoundException {
@@ -49,6 +56,39 @@ public class EiffelSemanticsController {
         file = new File(getClass().getClassLoader().getResource(activityFinishedFileName).getFile());
         activityFinishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
+        
+        if (version == null) {
+            version = getMessagingVersion();
+        }
+    }
+    
+    public static String getMessagingVersion() {
+        Enumeration resEnum;
+        try {
+            resEnum = Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);
+            while (resEnum.hasMoreElements()) {
+                try {
+                    URL url = (URL)resEnum.nextElement();
+                    if(url.getPath().contains("eiffel-remrem-semantics")) {
+                        InputStream is = url.openStream();
+                        if (is != null) {
+                            Manifest manifest = new Manifest(is);
+                            Attributes mainAttribs = manifest.getMainAttributes();
+                            String version = mainAttribs.getValue("Semantics-Version");
+                            if(version != null) {
+                                return version;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    // Silently ignore wrong manifests on classpath?
+                }
+            }
+        } catch (IOException e1) {
+            // Silently ignore wrong manifests on classpath?
+        }
+        return null; 
     }
 
     @Test public void sendArtifactPublished() throws Exception {
@@ -58,7 +98,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelartifactpublished"))
-            .body("meta.version", Matchers.is("0.1.5"));
+            .body("meta.version", Matchers.is(version));
     }
 
     @Test public void sendActivityFinished() throws Exception {
@@ -68,7 +108,7 @@ public class EiffelSemanticsController {
             then().
             statusCode(HttpStatus.SC_OK)
             .body("meta.type", Matchers.is("eiffelactivityfinished"))
-            .body("meta.version", Matchers.is("0.1.5"));
+            .body("meta.version", Matchers.is(version));
     }
 
 }
