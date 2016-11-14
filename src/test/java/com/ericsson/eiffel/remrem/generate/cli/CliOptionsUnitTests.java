@@ -84,8 +84,8 @@ public class CliOptionsUnitTests {
     
     @Test
     public void testJarPathLoading() throws Exception{
-    	String[] args = {"-f", "input_file", "-t", "artifactpublished","-jarPath", "sample.jar"};
-    	CLIOptions.parse(args);
+        String[] args = {"-f", "input_file", "-t", "artifactpublished","-jp", "sample.jar"};
+        CLIOptions.parse(args);
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
 }

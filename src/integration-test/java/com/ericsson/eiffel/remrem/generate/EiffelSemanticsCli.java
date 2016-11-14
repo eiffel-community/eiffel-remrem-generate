@@ -96,7 +96,7 @@ public class EiffelSemanticsCli {
     @Test
     public void testJarLoading() throws Exception{
         String jarFile = "sample.jar";
-        String[] args = {"-t", "eiffelartifactpublished", "-f", "ActivityFinished.json","-jarPath",jarFile};
+        String[] args = {"-t", "eiffelartifactpublished", "-f", "ActivityFinished.json","-jp",jarFile};
         CLIOptions.parse(args);
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }

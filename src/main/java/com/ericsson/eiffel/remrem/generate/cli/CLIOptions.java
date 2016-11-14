@@ -59,7 +59,8 @@ public class CLIOptions {
         options.addOption("mp", "messaging_protocol", true,
                 "name of messaging protocol to be used, e.g. eiffel3, semantics");
 
-        options.addOption("jarPath", "jar_location", false, "Used to load jars into classloader");
+        options.addOption("jp", "jar_path", true,
+                "path to find protocol definition jar files, e.g. C:/Users/xyz/Desktop/eiffel3messaging.jar");
         contentGroup = new OptionGroup();
         contentGroup.addOption(new Option("f", "content_file", true, "message content file"));
         contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
@@ -146,15 +147,15 @@ public class CLIOptions {
     }    
     
     public static void handleJarLocation(){
-    	if (commandLine.hasOption("jarDirectory")) {
-    		String jarDirectoryPath = commandLine.getOptionValue("jarPath");
-    		System.out.println("JarPath :: "+ jarDirectoryPath);
-    		try {
-				RemremJarHelper.addJarsToClassPath(jarDirectoryPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("Error while loading jars from the path mentioned MESSAGE :: " + e.getMessage());
-			}
-    	}
+        if (commandLine.hasOption("jp")) {
+            String jarDirectoryPath = commandLine.getOptionValue("jp");
+            System.out.println("JarPath :: "+ jarDirectoryPath);
+            try {
+                RemremJarHelper.addJarsToClassPath(jarDirectoryPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
+            }
+        }
     }
 }
