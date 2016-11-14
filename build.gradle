@@ -135,8 +135,10 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     //Injectable Message Library and its Implementation
-    compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'
-    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.7')
+    //compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.5'
+    compile files ('/home/evasiba/git/eiffel-remrem-shared/build/libs/remrem-shared-0.1.5.jar')
+    compile files('/home/evasiba/git/eiffel-remrem-semantics/build/libs/eiffel-remrem-semantics-0.1.8.jar')
+    //compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.8')
 
     //compileOnly is supported in gradle 2.12 but it might be required
     // in cucumber folder
