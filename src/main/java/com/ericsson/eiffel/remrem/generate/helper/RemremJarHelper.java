@@ -53,6 +53,7 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
                 @Override
                 public final void onFileCreate(final String filePath) {
                     addJarsToClassPath(filePath);
+                
                 }
 
                 @Override

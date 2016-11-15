@@ -85,6 +85,7 @@ public class CLI implements CommandLineRunner {
         } else if (commandLine.hasOption("json")) {
             handleJsonArgs(commandLine);
         }
+        
     }
 
     /**
