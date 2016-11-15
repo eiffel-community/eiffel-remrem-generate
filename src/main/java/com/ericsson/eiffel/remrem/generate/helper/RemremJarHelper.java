@@ -2,7 +2,9 @@ package com.ericsson.eiffel.remrem.generate.helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -53,7 +55,6 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
                 @Override
                 public final void onFileCreate(final String filePath) {
                     addJarsToClassPath(filePath);
-                
                 }
 
                 @Override
@@ -74,17 +75,26 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
         System.out.println("Listening to changes in :: " + jarPath);
         if(jarPath!=null ){
             File f = new File(jarPath);
-            try{
-                URL u = f.toURL();
-                URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-                Class urlClass = URLClassLoader.class;
-                Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-                method.setAccessible(true);
-                method.invoke(urlClassLoader, new Object[]{u});
-            }catch(Exception e){
-                System.out.println(e.getMessage());
+            try {
+			    URL u = f.toURI().toURL();
+	            URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+	            Class<?> urlClass = URLClassLoader.class;
+	            Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+	            method.setAccessible(true);
+	            method.invoke(urlClassLoader, new Object[]{u});
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
-            }
+            } catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
         }
     }
 

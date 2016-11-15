@@ -157,6 +157,5 @@ public class CLIOptions {
                 System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
             }
         }
-        
     }
 }
