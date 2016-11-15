@@ -76,7 +76,7 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
         if(jarPath!=null ){
             File f = new File(jarPath);
             try {
-			    URL u = f.toURI().toURL();
+                URL u = f.toURI().toURL();
 	            URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 	            Class<?> urlClass = URLClassLoader.class;
 	            Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
