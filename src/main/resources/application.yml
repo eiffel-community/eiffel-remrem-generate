@@ -14,3 +14,5 @@ org:
     boot:
       logging:
         LoggingSystem: none
+jar:
+  path: 

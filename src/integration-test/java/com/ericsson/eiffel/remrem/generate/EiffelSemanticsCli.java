@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Scanner;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 
 import static org.junit.Assert.assertTrue;
 
@@ -22,7 +22,7 @@ import com.ericsson.eiffel.remrem.generate.cli.CLIOptions;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(locations={"/EiffelSemanticsCli-context.xml"})
+@ContextConfiguration(initializers=ConfigFileApplicationContextInitializer.class, locations={"/EiffelSemanticsCli-context.xml"})
 public class EiffelSemanticsCli {
 	private PrintStream console;
     private ByteArrayOutputStream bytes;
@@ -91,5 +91,13 @@ public class EiffelSemanticsCli {
         String message = bytes.toString();
         int code = CLIExitCodes.HANDLE_JSON_STRING_FAILED;
         assertTrue(CLIOptions.getErrorCodes().contains(code));
+    }
+    
+    @Test
+    public void testJarLoading() throws Exception{
+        String jarFile = "sample.jar";
+        String[] args = {"-t", "eiffelartifactpublished", "-f", "ActivityFinished.json","-jp",jarFile};
+        CLIOptions.parse(args);
+        assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
 }
