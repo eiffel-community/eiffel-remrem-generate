@@ -44,51 +44,47 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
     }
 	
     private void lookupForJarFileChanges() throws IOException {
-	    System.out.println("Listening to the Jar Location");
+	    System.out.println("Listening to the Jar Path");
         final DirectoryWatchService jarPathListener = new SimpleJarDirectoryWatchService();
-        String jarPathLocation = getJarPath();
-        if (jarPathLocation != null) {
+        String jarPath = getJarPath();
+        if (jarPath != null) {
             System.out.println("Creating path listener");
             jarPathListener.register(new DirectoryWatchService.OnFileChangeListener() {
                 @Override
                 public final void onFileCreate(final String filePath) {
-                    try{
-                        addJarsToClassPath(filePath);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
+                    addJarsToClassPath(filePath);
                 }
 
                 @Override
                 public final void onFileModify(final String filePath) {
-                    try{
-                        addJarsToClassPath(filePath);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
+                    addJarsToClassPath(filePath);
                 }
 
                 @Override
                 public final void onFileDelete(final String filePath) {
-                    try{
-                        addJarsToClassPath(filePath);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
+                    addJarsToClassPath(filePath);
                 }
-            }, jarPathLocation);
+            }, jarPath);
             jarPathListener.start();
         }
     }
 	
-    public static void addJarsToClassPath(String jarDirectoryPath) throws Exception {
-        System.out.println("Listening to changes in :: " + jarDirectoryPath);
-        File f = new File(jarDirectoryPath);
-        URL u = f.toURL();
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-        method.setAccessible(true);
-        method.invoke(urlClassLoader, new Object[]{u});
+    public static void addJarsToClassPath(String jarPath){
+        System.out.println("Listening to changes in :: " + jarPath);
+        if(jarPath!=null ){
+            File f = new File(jarPath);
+            try{
+                URL u = f.toURL();
+                URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                Class urlClass = URLClassLoader.class;
+                Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+                method.setAccessible(true);
+                method.invoke(urlClassLoader, new Object[]{u});
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
+
 }

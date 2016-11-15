@@ -146,12 +146,12 @@ public class CLIOptions {
         return commandLine.getOptions().length > 0;
     }    
     
-    public static void handleJarLocation(){
+    public static void handleJarPath(){
         if (commandLine.hasOption("jp")) {
-            String jarDirectoryPath = commandLine.getOptionValue("jp");
-            System.out.println("JarPath :: "+ jarDirectoryPath);
+            String jarPath = commandLine.getOptionValue("jp");
+            System.out.println("JarPath :: "+ jarPath);
             try {
-                RemremJarHelper.addJarsToClassPath(jarDirectoryPath);
+                RemremJarHelper.addJarsToClassPath(jarPath);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
