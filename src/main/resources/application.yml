@@ -5,10 +5,10 @@ spring:
 debug: false
 logging:
   level:
-    root: INFO
+    root: ERROR
     org:
       springframework:
-        web: INFO
+        web: ERROR
 org:
   springframework:
     boot:
