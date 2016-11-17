@@ -30,49 +30,50 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
     }
 	
     @PostConstruct public void init() {
+        if(CLIOptions.getCommandLine()==null ){
+        	System.out.println("Adding the jars present in "+jarPath);
+            addJarsToClassPath(jarPath);
+            lookupForJarFileChanges();
+        }
+        else if(!CLIOptions.getCommandLine().hasOption("jp")){
+        	System.out.println("Adding the jars present in "+jarPath);
+            addJarsToClassPath(jarPath);
+        }
+    }
+	
+    private void lookupForJarFileChanges() {	    
         try{
-            if(CLIOptions.getCommandLine()==null ){
-                addJarsToClassPath(jarPath);
-                lookupForJarFileChanges();
+        	final DirectoryWatchService jarPathListener = new SimpleJarDirectoryWatchService();
+            String jarPath = getJarPath();
+            System.out.println("Listening to the changes in Jar Path "+ jarPath);
+            if (jarPath != null) {
+                System.out.println("Creating path listener");
+                jarPathListener.register(new DirectoryWatchService.OnFileChangeListener() {
+                    @Override
+                    public final void onFileCreate(final String filePath) {
+                        addJarsToClassPath(filePath);
+                    }
+
+                    @Override
+                    public final void onFileModify(final String filePath) {
+                        addJarsToClassPath(filePath);
+                    }
+
+                    @Override
+                    public final void onFileDelete(final String filePath) {
+                        addJarsToClassPath(filePath);
+                    }
+                }, jarPath);
+                jarPathListener.start();
             }
-            else if(!CLIOptions.getCommandLine().hasOption("jp")){
-                addJarsToClassPath(jarPath);
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch(IOException e){
+        	System.out.println("Failed to listen to changes in jars from : "+ jarPath);
+        	System.out.println(e.getMessage()+":"+e.getCause());
         }
+
     }
 	
-    private void lookupForJarFileChanges() throws IOException {
-	    System.out.println("Listening to the Jar Path");
-        final DirectoryWatchService jarPathListener = new SimpleJarDirectoryWatchService();
-        String jarPath = getJarPath();
-        if (jarPath != null) {
-            System.out.println("Creating path listener");
-            jarPathListener.register(new DirectoryWatchService.OnFileChangeListener() {
-                @Override
-                public final void onFileCreate(final String filePath) {
-                    addJarsToClassPath(filePath);
-                }
-
-                @Override
-                public final void onFileModify(final String filePath) {
-                    addJarsToClassPath(filePath);
-                }
-
-                @Override
-                public final void onFileDelete(final String filePath) {
-                    addJarsToClassPath(filePath);
-                }
-            }, jarPath);
-            jarPathListener.start();
-        }
-    }
-	
-    public static void addJarsToClassPath(String jarPath){
-        System.out.println("Listening to changes in :: " + jarPath);
+    public static void addJarsToClassPath(String jarPath){       
         if(jarPath!=null ){
             File f = new File(jarPath);
             try {
@@ -83,19 +84,13 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
                 method.setAccessible(true);
                 method.invoke(urlClassLoader, new Object[]{u});
             } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                System.out.println("Invalid jarPath ... "+ jarPath);	
+                System.out.println(e.getMessage()+":"+e.getCause());
+            } catch (NoSuchMethodException |SecurityException | IllegalAccessException
+                    |IllegalArgumentException | InvocationTargetException e) {
+            	System.out.println("Failed to load jars from : "+ jarPath);
+            	System.out.println(e.getMessage()+":"+e.getCause());
             }
         }
     }
-
 }
