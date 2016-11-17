@@ -16,7 +16,7 @@ org:
         LoggingSystem: none
 jar:
   path:
-# TODO Actual values for domain and url need to be provided
 activedirectory:
-  domain: "ERICSSON.COM"
-  url: "ldap://<hostname>.ericsson.com"
+  enabled: false
+  domain:
+  url:
