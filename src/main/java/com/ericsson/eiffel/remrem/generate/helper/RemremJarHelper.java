@@ -30,13 +30,11 @@ import com.ericsson.eiffel.remrem.generate.listener.SimpleJarDirectoryWatchServi
     }
 	
     @PostConstruct public void init() {
-        if(CLIOptions.getCommandLine()==null ){
-        	System.out.println("Adding the jars present in "+jarPath);
+        if(CLIOptions.getCommandLine()==null ){        	
             addJarsToClassPath(jarPath);
             lookupForJarFileChanges();
         }
-        else if(!CLIOptions.getCommandLine().hasOption("jp")){
-        	System.out.println("Adding the jars present in "+jarPath);
+        else if(!CLIOptions.getCommandLine().hasOption("jp")){        	
             addJarsToClassPath(jarPath);
         }
     }
