@@ -1,3 +1,6 @@
+## 0.6.1
+- Removed printstack traces to stdout.
+  
 ## 0.6.0
 - added functionality to load dynamic protocol jars in both cli as well
   as service

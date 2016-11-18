@@ -109,7 +109,7 @@ public class CLI implements CommandLineRunner {
             byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
             return new String(fileBytes);
         } catch (IOException e) {
-            e.printStackTrace(System.out);
+            System.out.println("Unable to read File content from file path " + filePath);
             CLIOptions.exit(CLIExitCodes.CLI_READ_FILE_FAILED);
         }
         return null;
