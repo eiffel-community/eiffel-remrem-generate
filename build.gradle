@@ -20,7 +20,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.6.1'
+    version =  '0.6.2'
 }
 
 
@@ -128,11 +128,17 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator:$sprintBootVersion")
     compile "org.springframework.boot:spring-boot:$sprintBootVersion"
     // end::actuator[]
+
+    //Authentication
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.security:spring-security-ldap")
+    compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
     
      //ServletException requires compile time servlet dependency but it causes problems
     //when deployed if exist on war run time.. hence provided but also compileOnly
     compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    testCompile("org.springframework.boot:spring-boot-starter-tomcat")
 
     //Injectable Message Library and its Implementation
     compile 'com.github.Ericsson:eiffel-remrem-shared:0.1.4'

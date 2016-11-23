@@ -15,4 +15,8 @@ org:
       logging:
         LoggingSystem: none
 jar:
-  path: 
+  path:
+activedirectory:
+  enabled: false
+  domain:
+  url:
