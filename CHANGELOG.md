@@ -1,7 +1,9 @@
+## 0.6.3
+- Removed unused dependency.
+
 ## 0.6.2
 - added optional authentication to an Active Directory server for all 
   REST endpoints
-
 
 ## 0.6.1
 - Removed printstack traces to stdout.
