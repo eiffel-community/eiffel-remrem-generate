@@ -12,8 +12,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
+import com.ericsson.eiffel.remrem.generate.helper.RemremJarHelper;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.shared.VersionService;
+
 
 public class CLIOptions {
     private static CommandLine commandLine = null;
@@ -58,6 +60,8 @@ public class CLIOptions {
         options.addOption("mp", "messaging_protocol", true,
                 "name of messaging protocol to be used, e.g. eiffel3, semantics");
 
+        options.addOption("jp", "jar_path", true,
+                "path to find protocol definition jar files, e.g. C:/Users/xyz/Desktop/eiffel3messaging.jar");
         contentGroup = new OptionGroup();
         contentGroup.addOption(new Option("f", "content_file", true, "message content file"));
         contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
@@ -167,5 +171,18 @@ public class CLIOptions {
         if (commandLine == null)
             return false;
         return commandLine.getOptions().length > 0;
+    }    
+    
+    public static void handleJarPath(){
+        if (commandLine.hasOption("jp")) {
+            String jarPath = commandLine.getOptionValue("jp");
+            System.out.println("JarPath :: "+ jarPath);
+            try {
+                RemremJarHelper.addJarsToClassPath(jarPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
+            }
+        }
     }
 }
