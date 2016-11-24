@@ -237,7 +237,9 @@ usage: java -jar
 <h3>
 <a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
 
-<p>Active Directory authentication can be enabled for the REMReM REST service by setting the configuration property <code>activedirectory.enabled=true</code>. The necessary configuration properties for Active Directory are</p> 
+<p>Configuration parameters will be read from the application.yml file at the root of the classpath at startup.</p>
+
+<p>Active Directory authentication can be enabled for the REST service by setting the configuration property <code>activedirectory.enabled=true</code>. The necessary configuration properties for Active Directory are</p> 
 
 <ul>
   <li><code>activedirectory.domain=&lt;the domain name, may be empty&gt;</code></li>
