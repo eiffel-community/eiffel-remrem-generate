@@ -76,6 +76,7 @@ public class CLI implements CommandLineRunner {
     private void handleOptions() {
         CommandLine commandLine = CLIOptions.getCommandLine();
         handleLogging(commandLine);
+        CLIOptions.handleJarPath();
         if (commandLine.hasOption("h")) {
             System.out.println("You passed help flag.");
             CLIOptions.help(1);
@@ -108,7 +109,7 @@ public class CLI implements CommandLineRunner {
             byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
             return new String(fileBytes);
         } catch (IOException e) {
-            e.printStackTrace(System.out);
+            System.out.println("Unable to read File content from file path " + filePath);
             CLIOptions.exit(CLIExitCodes.CLI_READ_FILE_FAILED);
         }
         return null;
