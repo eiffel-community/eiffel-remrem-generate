@@ -237,8 +237,6 @@ usage: java -jar
 <h3>
 <a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
 
-<p>Configuration parameters will be read from the application.yml file at the root of the classpath at startup.</p>
-
 <p>Active Directory authentication can be enabled for the REST service by setting the configuration property <code>activedirectory.enabled=true</code>. The necessary configuration properties for Active Directory are</p> 
 
 <ul>
@@ -250,10 +248,8 @@ usage: java -jar
 
 <p>Example Active Directory configuration</p>
 
-<pre>activedirectory:
-  enabled: true
-  domain: "mycompany.com"
-  url: "ldap://ad.mycompany.com:389"</pre>
+<pre><code>$ java -Dactivedirectory.enabled=true -Dactivedirectory.domain=mycompany -Dactivedirectory.url=ldap://ad.mycompany.com:389 -jar eiffel-remrem*
+</code></pre>
 
 <p>To authenticate a user with username "user" and password "secret" the HTTP header <code>Authorization: Basic dXNlcjpzZWNyZXQ=</code> must be included in the request. Where dXNlcjpzZWNyZXQ= is the string user:secret Base64 encoded.</p>
 
