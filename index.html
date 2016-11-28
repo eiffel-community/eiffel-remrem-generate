@@ -234,6 +234,25 @@ usage: java -jar
 </pre></td></tr></table>
 </p>
 
+<h3>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>Active Directory authentication can be enabled for the REST service by setting the configuration property <code>activedirectory.enabled=true</code>. The necessary configuration properties for Active Directory are</p> 
+
+<ul>
+  <li><code>activedirectory.domain=&lt;the domain name, may be empty&gt;</code></li>
+  <li><code>activedirectory.url=&lt;LDAP url&gt;</code></li>
+</ul>
+
+<p>Each HTTP request must then include an Authorization header with value <code>Basic &lt;Base64 encoded username:password&gt;</code>.</p>
+
+<p>Example Active Directory configuration</p>
+
+<pre><code>$ java -Dactivedirectory.enabled=true -Dactivedirectory.domain=mycompany -Dactivedirectory.url=ldap://ad.mycompany.com:389 -jar eiffel-remrem*
+</code></pre>
+
+<p>To authenticate a user with username "user" and password "secret" the HTTP header <code>Authorization: Basic dXNlcjpzZWNyZXQ=</code> must be included in the request. Where dXNlcjpzZWNyZXQ= is the string user:secret Base64 encoded.</p>
+
 <h2>
 <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
