@@ -10,8 +10,8 @@ import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-@RestController @RequestMapping("/eiffelmessagingversions")
-public class EiffelMessagingVersionsController {
+@RestController @RequestMapping("/versions")
+public class VersionsController {
 	
 	JsonParser parser = new JsonParser();
 	

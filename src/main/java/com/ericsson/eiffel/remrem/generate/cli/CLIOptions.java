@@ -67,7 +67,7 @@ public class CLIOptions {
         contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
         options.addOptionGroup(contentGroup);
 
-        options.addOption("lv", "list-versions", false, "list the version and all loaded protocols");
+        options.addOption("lv", "list_versions", false, "list the version and all loaded protocols");
         return options;
     }
 
