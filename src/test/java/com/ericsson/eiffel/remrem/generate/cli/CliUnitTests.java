@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
-import com.ericsson.eiffel.remrem.shared.MsgService;
+import com.ericsson.eiffel.remrem.protocol.MsgService;
 
 @RunWith(SpringRunner.class)
 public class CliUnitTests {

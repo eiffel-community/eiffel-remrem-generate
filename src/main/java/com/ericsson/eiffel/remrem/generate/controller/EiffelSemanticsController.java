@@ -1,10 +1,10 @@
 package com.ericsson.eiffel.remrem.generate.controller;
 
+import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.ericsson.eiffel.remrem.shared.MsgService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

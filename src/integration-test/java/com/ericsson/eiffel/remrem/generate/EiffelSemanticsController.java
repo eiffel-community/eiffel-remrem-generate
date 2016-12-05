@@ -74,7 +74,7 @@ public class EiffelSemanticsController {
                         if (is != null) {
                             Manifest manifest = new Manifest(is);
                             Attributes mainAttribs = manifest.getMainAttributes();
-                            String version = mainAttribs.getValue("Semantics-Version");
+                            String version = mainAttribs.getValue("semanticsVersion");
                             if(version != null) {
                                 return version;
                             }

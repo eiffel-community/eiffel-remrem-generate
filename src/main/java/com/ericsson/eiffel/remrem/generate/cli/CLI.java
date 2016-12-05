@@ -16,10 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
-
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
+import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
-import com.ericsson.eiffel.remrem.shared.MsgService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

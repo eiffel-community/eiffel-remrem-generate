@@ -1,3 +1,6 @@
+## 0.7.0
+- Added functiolaity to list endpoint versions
+
 ## 0.6.3
 - Removed unused dependency.
 

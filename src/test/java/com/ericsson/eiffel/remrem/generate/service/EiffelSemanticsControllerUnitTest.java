@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.ericsson.eiffel.remrem.generate.controller.EiffelSemanticsController;
-import com.ericsson.eiffel.remrem.shared.MsgService;
+import com.ericsson.eiffel.remrem.protocol.MsgService;
 
 import org.junit.Before;
 import org.junit.Test;
