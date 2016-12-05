@@ -19,7 +19,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.6.3'
+    version =  '0.7.0'
 }
 
 
@@ -139,9 +139,8 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-tomcat")
 
     //Injectable Message Library and its Implementation
-    // TODO: Need to be updated to the latest versions
-    compile ('com.github.Ericsson:eiffel-remrem-shared:0.2.0')
-    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.8')
+    compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
+    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.9')
     compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
 
     //commons CLI

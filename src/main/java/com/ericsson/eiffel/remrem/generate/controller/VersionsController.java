@@ -16,7 +16,7 @@ public class VersionsController {
 	JsonParser parser = new JsonParser();
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
-    public JsonElement generateMsg() {
+    public JsonElement getVersions() {
 		Map versions = VersionService.getMessagingVersions();
 		return parser.parse(versions.toString());
 	}
