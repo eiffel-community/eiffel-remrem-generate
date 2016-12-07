@@ -1,3 +1,6 @@
+## 0.7.1
+- Fix authentication required even when activedirectory.enabled=false
+
 ## 0.7.0
 - Added functiolaity to list endpoint versions
 
