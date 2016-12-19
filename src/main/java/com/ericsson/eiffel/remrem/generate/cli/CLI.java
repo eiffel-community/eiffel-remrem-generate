@@ -13,12 +13,15 @@ import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-import org.springframework.boot.CommandLineRunner;
+
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
+import com.ericsson.eiffel.remrem.shared.helper.RemremJarHelper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -38,6 +41,18 @@ import ch.qos.logback.classic.Logger;
 @Component
 @ComponentScan(basePackages = "com.ericsson.eiffel.remrem")
 public class CLI implements CommandLineRunner {
+	
+	@Value("${jar.path}")
+	private String jarPath;
+	
+	public void setJarPath(String jarPath) {
+		this.jarPath = jarPath;
+	}
+	
+	public String getJarPath() {
+		return jarPath;
+	}
+	
     @Autowired
     private MsgService[] msgServices;
 
@@ -48,8 +63,11 @@ public class CLI implements CommandLineRunner {
     
 	@Override
     public void run(String... args) throws Exception {
-        if (CLIOptions.hasParsedOptions())
+        if (CLIOptions.hasParsedOptions()){
         	handleOptions();
+        }else{
+        	RemremJarHelper.lookupForJarFileChanges(jarPath);
+        }
     }
     
     /**
@@ -186,11 +204,18 @@ public class CLI implements CommandLineRunner {
     private MsgService getMessageService(CommandLine commandLine) {
         if (commandLine.hasOption("mp")) {
             String protocol = commandLine.getOptionValue("mp");
-            for (MsgService service : msgServices) {
-                boolean isEiffel3 = (protocol.equals("eiffel3"));
-                boolean isEiffel3Service = service.getClass().getName().endsWith("Eiffel3Service");
-                if (isEiffel3 && isEiffel3Service)
-                    return service;
+            String className = System.getProperty("eiffel.protocol");
+            System.out.println(className);
+            if(className!=null && !className.isEmpty()){
+            	try {
+					MsgService service = (MsgService) Class.forName(className).newInstance();
+					if(protocol.equals(service.getServiceName()))
+					    return service;
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					System.out.println("No protocol service has been found registered.");        
+			        CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);
+			        return null;
+				}
             }
         } else {
             for (MsgService service : msgServices) {

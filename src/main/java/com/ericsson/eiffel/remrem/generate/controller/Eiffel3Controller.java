@@ -1,6 +1,7 @@
 package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

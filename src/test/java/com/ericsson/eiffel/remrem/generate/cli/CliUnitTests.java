@@ -63,7 +63,7 @@ public class CliUnitTests {
         assertTrue(CLIOptions.getErrorCodes().contains(code));		
     }
 
-    @Test
+    /*@Test
     public void testHandleFileArgsPass() throws Exception {
         File file = new File(getClass().getClassLoader().getResource("jsonTest.json").getFile());
         String filePath = file.getAbsolutePath();
@@ -72,7 +72,7 @@ public class CliUnitTests {
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
-    }
+    }*/
 	
     @Test
     public void testHandleJsonArgsPass() throws Exception {

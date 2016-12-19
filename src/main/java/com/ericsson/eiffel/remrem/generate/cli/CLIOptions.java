@@ -12,8 +12,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
-import com.ericsson.eiffel.remrem.generate.helper.RemremJarHelper;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
+import com.ericsson.eiffel.remrem.shared.JarLoaderUtility;
 import com.ericsson.eiffel.remrem.shared.VersionService;
 
 
@@ -178,7 +178,7 @@ public class CLIOptions {
             String jarPath = commandLine.getOptionValue("jp");
             System.out.println("JarPath :: "+ jarPath);
             try {
-                RemremJarHelper.addJarsToClassPath(jarPath);
+            	JarLoaderUtility.loadJar(jarPath);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
