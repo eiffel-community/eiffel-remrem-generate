@@ -1,8 +1,11 @@
+## 0.7.2
+- Explicitly stated some dependencies.
+
 ## 0.7.1
 - Fix authentication required even when activedirectory.enabled=false
 
 ## 0.7.0
-- Added functiolaity to list endpoint versions
+- Added functionality to list endpoint versions
 
 ## 0.6.3
 - Removed unused dependency.
