@@ -19,7 +19,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.7.1'
+    version =  '0.7.2'
 }
 
 
@@ -128,8 +128,8 @@ dependencies {
     // end::actuator[]
 
     //Authentication
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.security:spring-security-ldap")
+    compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
+    compile("org.springframework.security:spring-security-ldap:4.1.3.RELEASE")
     compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
     
     //ServletException requires compile time servlet dependency but it causes problems
