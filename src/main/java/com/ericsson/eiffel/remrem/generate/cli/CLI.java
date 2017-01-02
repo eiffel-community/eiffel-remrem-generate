@@ -209,9 +209,12 @@ public class CLI implements CommandLineRunner {
             if(className!=null && !className.isEmpty()){
             	try {
 					MsgService service = (MsgService) Class.forName(className).newInstance();
+					System.out.println(service);
 					if(protocol.equals(service.getServiceName()))
 					    return service;
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				    e.printStackTrace();
+				    //System.out.println("Exception loading the class :: " + e.getMessage());
 					System.out.println("No protocol service has been found registered.");        
 			        CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);
 			        return null;

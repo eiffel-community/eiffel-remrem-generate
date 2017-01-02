@@ -20,8 +20,8 @@ public class RemremGenerateController {
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
     public JsonElement generateMsg(@RequestParam("mp") String mp,@RequestParam("msgType") String msgType,
-           @RequestParam("className") String className,@RequestBody JsonObject bodyJson) {
-        msgService = getMessageService(mp,className);
+           @RequestBody JsonObject bodyJson) {
+        msgService = getMessageService(mp);
         if(msgService!=null){
         	return parser.parse(msgService.generateMsg(msgType, bodyJson));
         }else{
@@ -31,14 +31,16 @@ public class RemremGenerateController {
     }
 	
 	
-	public MsgService getMessageService(String messageProtocol,String className){
-		try {
+	public MsgService getMessageService(String messageProtocol){
+	    String className = System.getProperty("eiffel.protocol");
+	    try {
 		    MsgService service = (MsgService) Class.forName(className).newInstance();
 		    if(service.getServiceName().equals(messageProtocol))
 		        return service;
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			System.out.println("**************** EXCEPTION ********************* ");
-			//e.printStackTrace();
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return null;
 	}
