@@ -82,10 +82,4 @@ public class CliOptionsUnitTests {
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
     
-    @Test
-    public void testJarPathLoading() throws Exception{
-        String[] args = {"-f", "input_file", "-t", "artifactpublished","-jp", "sample.jar"};
-        CLIOptions.parse(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());
-    }
 }

@@ -1,6 +1,7 @@
 package com.ericsson.eiffel.remrem.generate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ericsson.eiffel.remrem.protocol.MsgService;
-import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,8 +21,8 @@ public class RemremGenerateController {
 	private MsgService[] msgServices;
 	private JsonParser parser = new JsonParser();
 	
-	@RequestMapping(value = "", method = RequestMethod.POST)
-    public JsonElement generateMsg(@RequestParam("mp") String mp,@RequestParam("msgType") String msgType,
+	@RequestMapping(value="/{mp}", method = RequestMethod.POST)
+	public JsonElement generateMsg(@PathVariable String mp,@RequestParam("msgType") String msgType,
            @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(mp);
         if(msgService!=null){

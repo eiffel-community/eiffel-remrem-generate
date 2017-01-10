@@ -99,11 +99,4 @@ public class CliUnitTests {
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
     }
     
-    @Test
-    public void testHandleJarPathArgs() throws Exception{
-        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}","-jp", "sample.jar"};
-        CLIOptions.parse(args);
-        cli.run(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());
-    }
 }

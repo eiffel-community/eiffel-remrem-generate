@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
-import com.ericsson.eiffel.remrem.shared.helper.RemremJarHelper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -65,8 +64,6 @@ public class CLI implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (CLIOptions.hasParsedOptions()){
         	handleOptions();
-        }else{
-        	RemremJarHelper.lookupForJarFileChanges(jarPath);
         }
     }
     
@@ -93,7 +90,6 @@ public class CLI implements CommandLineRunner {
     private void handleOptions() {
         CommandLine commandLine = CLIOptions.getCommandLine();
         handleLogging(commandLine);
-        CLIOptions.handleJarPath();
         if (commandLine.hasOption("h")) {
             System.out.println("You passed help flag.");
             CLIOptions.help(1);
