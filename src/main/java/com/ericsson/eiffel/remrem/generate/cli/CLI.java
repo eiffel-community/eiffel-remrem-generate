@@ -204,21 +204,10 @@ public class CLI implements CommandLineRunner {
     private MsgService getMessageService(CommandLine commandLine) {
         if (commandLine.hasOption("mp")) {
             String protocol = commandLine.getOptionValue("mp");
-            String className = System.getProperty("eiffel.protocol");
-            System.out.println(className);
-            if(className!=null && !className.isEmpty()){
-            	try {
-					MsgService service = (MsgService) Class.forName(className).newInstance();
-					System.out.println(service);
-					if(protocol.equals(service.getServiceName()))
-					    return service;
-				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				    e.printStackTrace();
-				    //System.out.println("Exception loading the class :: " + e.getMessage());
-					System.out.println("No protocol service has been found registered.");        
-			        CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);
-			        return null;
-				}
+            for(MsgService service: msgServices){
+                if(service.getServiceName().equals(protocol)){
+                    return service;
+                }
             }
         } else {
             for (MsgService service : msgServices) {
