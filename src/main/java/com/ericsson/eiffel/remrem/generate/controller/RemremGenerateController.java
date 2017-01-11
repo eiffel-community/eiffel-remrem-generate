@@ -35,6 +35,7 @@ public class RemremGenerateController {
 	
 	
     public MsgService getMessageService(String messageProtocol) {
+        
         for (MsgService service : msgServices) {
             if (service.getServiceName().equals(messageProtocol)) {
                 return service;

@@ -48,12 +48,15 @@ public class EiffelSemanticsController {
     @Before
     public void  setUp() throws FileNotFoundException {
         RestAssured.port = port;
-
-        File file = new File(getClass().getClassLoader().getResource(artifactPublishedFileName).getFile());
+        URL url = getClass().getClassLoader().getResource(artifactPublishedFileName);
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         artifactPublishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
 
-        file = new File(getClass().getClassLoader().getResource(activityFinishedFileName).getFile());
+        url = getClass().getClassLoader().getResource(activityFinishedFileName);
+        path = url.getPath().replace("%20"," ");
+        file = new File(path);
         activityFinishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
         
@@ -97,7 +100,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/generate/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
                     .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
@@ -108,7 +111,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/generate/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("eiffelartifactpublished"))
@@ -121,7 +124,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(activityFinishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelactivityfinished")
+                    .post("/generate/eiffelsemantics?msgType=eiffelactivityfinished")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("eiffelactivityfinished"))
