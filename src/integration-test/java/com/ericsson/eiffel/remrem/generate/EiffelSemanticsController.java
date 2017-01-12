@@ -100,7 +100,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/generate/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
                     .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
@@ -111,7 +111,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/generate/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("eiffelartifactpublished"))
@@ -124,7 +124,7 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(activityFinishedBody)
                 .when()
-                    .post("/generate/eiffelsemantics?msgType=eiffelactivityfinished")
+                    .post("/eiffelsemantics?msgType=eiffelactivityfinished")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("eiffelactivityfinished"))

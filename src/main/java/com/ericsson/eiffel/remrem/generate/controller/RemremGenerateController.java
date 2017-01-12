@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
-@RestController @RequestMapping("/generate") 
+@RestController @RequestMapping("/**") 
 public class RemremGenerateController {
 	
     @Autowired
@@ -35,7 +35,6 @@ public class RemremGenerateController {
 	
 	
     public MsgService getMessageService(String messageProtocol) {
-        
         for (MsgService service : msgServices) {
             if (service.getServiceName().equals(messageProtocol)) {
                 return service;
