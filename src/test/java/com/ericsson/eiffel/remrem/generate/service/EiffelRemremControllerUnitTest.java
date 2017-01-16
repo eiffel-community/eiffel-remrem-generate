@@ -37,6 +37,9 @@ public class EiffelRemremControllerUnitTest {
     @Mock
     MsgService service;
     
+    @Mock
+    MsgService service2;
+    
 
     @Spy
     private List<MsgService> msgServices = new ArrayList<MsgService>();
@@ -54,7 +57,9 @@ public class EiffelRemremControllerUnitTest {
             .useDelimiter("\\A").next());
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
-        Mockito.when(service.getServiceName()).thenReturn("semantics");
+        msgServices.add(service2);
+        Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
+        Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
         
         Mockito.when(service.generateMsg(
             Mockito.eq("eiffelactivityfinished"),
@@ -65,17 +70,42 @@ public class EiffelRemremControllerUnitTest {
                 Mockito.eq("eiffeljobfinished"),
                 Mockito.anyObject()
         )).thenReturn("{ \"result\":\"FAILURE\" }");
+        
+        Mockito.when(service2.generateMsg(
+                Mockito.eq("eiffeljobfinished"),
+                Mockito.anyObject()
+        )).thenReturn("{ \"result\":\"SUCCESS\" }");
+        
+        
+        Mockito.when(service2.generateMsg(
+                Mockito.eq("eiffelactivityfinished"),
+                Mockito.anyObject()
+        )).thenReturn("{ \"result\":\"FAILURE\" }");
+        
+        
     }
     
     @Test 
     public void testSemanticsEvent() throws Exception {        
-        JsonElement elem = unit.generate("semantics", "eiffelactivityfinished", body.getAsJsonObject());
+        JsonElement elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", body.getAsJsonObject());
         assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
     }
     
     @Test
     public void testSemanticsFailureEvent() throws Exception{
-        JsonElement elem = unit.generate("semantics", "eiffeljobfinished", body.getAsJsonObject());
+        JsonElement elem = unit.generate("eiffelsemantics", "eiffeljobfinished", body.getAsJsonObject());
+        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
+    }
+    
+    @Test 
+    public void testEiffel3Event() throws Exception {        
+        JsonElement elem = unit.generate("eiffel3", "eiffeljobfinished", body.getAsJsonObject());
+        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
+    }
+    
+    @Test
+    public void testEiffel3FailureEvent() throws Exception{
+        JsonElement elem = unit.generate("eiffel3", "eiffelactivityfinished", body.getAsJsonObject());
         assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
     }   
 }
