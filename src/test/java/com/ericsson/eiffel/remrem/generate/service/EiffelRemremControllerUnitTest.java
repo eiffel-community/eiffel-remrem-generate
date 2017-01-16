@@ -1,13 +1,13 @@
 package com.ericsson.eiffel.remrem.generate.service;
 
-<<<<<<< HEAD
+
 import java.util.ArrayList;
 import java.util.List;
-=======
+
 import java.io.File;
 import java.net.URL;
 import java.util.Scanner;
->>>>>>> 36166bca759b8fa5e8f19a581e22a819347bc97a
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-<<<<<<< HEAD
+
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.ComponentScan;
-=======
->>>>>>> 36166bca759b8fa5e8f19a581e22a819347bc97a
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
@@ -58,6 +56,7 @@ public class EiffelRemremControllerUnitTest {
             .useDelimiter("\\A").next());
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
+        Mockito.when(service.getServiceName()).thenReturn("semantics");
         
         Mockito.when(service.generateMsg(
             Mockito.eq("eiffelactivityfinished"),
@@ -73,14 +72,14 @@ public class EiffelRemremControllerUnitTest {
     @SuppressWarnings("deprecation")
     @Test 
     public void testSemanticsEvent() throws Exception {        
-        JsonElement elem = unit.generateMsg("eiffelactivityfinished", body.getAsJsonObject());
+        JsonElement elem = unit.generate("semantics", "eiffelactivityfinished", body.getAsJsonObject());
         Assert.assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
     }
     
     @SuppressWarnings("deprecation")
     @Test
     public void testSemanticsFailureEvent() throws Exception{
-        JsonElement elem = unit.generateMsg("eiffeljobfinished", body.getAsJsonObject());
+        JsonElement elem = unit.generate("semantics", "eiffeljobfinished", body.getAsJsonObject());
         Assert.assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
     }
     
