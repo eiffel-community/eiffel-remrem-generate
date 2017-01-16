@@ -1,5 +1,8 @@
 package com.ericsson.eiffel.remrem.generate.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,9 +30,13 @@ public class EiffelRemremControllerUnitTest {
 
     @Mock
     MsgService service;
+    
+    @Spy
+    private List<MsgService> msgServices = new ArrayList<MsgService>();
 
     @Before public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        msgServices.add(service);
         Mockito.when(service.generateMsg(
                 Mockito.anyString(),
                 Mockito.anyObject()

@@ -1,5 +1,7 @@
 package com.ericsson.eiffel.remrem.generate.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,7 @@ import com.google.gson.JsonParser;
 public class RemremGenerateController {
 	
     @Autowired
-	private MsgService[] msgServices;
+	private List<MsgService> msgServices;
 	private JsonParser parser = new JsonParser();
 	
 	@RequestMapping(value="/{mp}", method = RequestMethod.POST)

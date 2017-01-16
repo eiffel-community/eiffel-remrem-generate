@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,9 +54,10 @@ public class CLI implements CommandLineRunner {
 	}
 	
     @Autowired
-    private MsgService[] msgServices;
+    private List<MsgService> msgServices;
+    //private MsgService[] msgServices;
 
-    public CLI(MsgService[] msgServices) {
+    public CLI(List<MsgService> msgServices) {
         super();
         this.msgServices = msgServices;
 	}
@@ -213,8 +215,9 @@ public class CLI implements CommandLineRunner {
         }
 
         boolean testMode = Boolean.getBoolean(PropertiesConfig.TEST_MODE);
-    	if (testMode && msgServices.length>0)
-    		return msgServices[0];
+    	if (testMode && msgServices.size()>0)
+    		return msgServices.get(0);
+    		//return msgServices[0];
 
     	System.out.println("No protocol service has been found registered.");        
         CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);

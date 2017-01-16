@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +39,8 @@ public class CliUnitTests {
         bytes   = new ByteArrayOutputStream();		  
         console = System.out;
         System.setOut(new PrintStream(bytes));
-        MsgService[] msgServices = {msgService};
+        List<MsgService> msgServices = new ArrayList<MsgService>();
+        msgServices.add(msgService);
         cli = new CLI(msgServices);		
         
         Mockito.when(msgService.generateMsg(
