@@ -18,9 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.mockito.Spy;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
@@ -28,7 +25,8 @@ import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import junit.framework.Assert;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 public class EiffelRemremControllerUnitTest {
@@ -69,19 +67,15 @@ public class EiffelRemremControllerUnitTest {
         )).thenReturn("{ \"result\":\"FAILURE\" }");
     }
     
-    @SuppressWarnings("deprecation")
     @Test 
     public void testSemanticsEvent() throws Exception {        
         JsonElement elem = unit.generate("semantics", "eiffelactivityfinished", body.getAsJsonObject());
-        Assert.assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
+        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
     }
     
-    @SuppressWarnings("deprecation")
     @Test
     public void testSemanticsFailureEvent() throws Exception{
         JsonElement elem = unit.generate("semantics", "eiffeljobfinished", body.getAsJsonObject());
-        Assert.assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
-    }
-    
-
+        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
+    }   
 }

@@ -3,7 +3,6 @@ package com.ericsson.eiffel.remrem.generate.cli;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
