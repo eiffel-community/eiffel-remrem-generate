@@ -14,23 +14,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
-@RestController @RequestMapping("/**") 
+@RestController @RequestMapping("/*") 
 public class RemremGenerateController {
 	
     @Autowired
-	private MsgService[] msgServices;
+	MsgService[] msgServices;
 	private JsonParser parser = new JsonParser();
 	
+	MsgService msgService;
+	
 	@RequestMapping(value="/{mp}", method = RequestMethod.POST)
-	public JsonElement generateMsg(@PathVariable String mp,@RequestParam("msgType") String msgType,
+	public JsonElement generate(@PathVariable String mp,@RequestParam("msgType") String msgType,
            @RequestBody JsonObject bodyJson) {
-        MsgService msgService = getMessageService(mp);
+        msgService = getMessageService(mp);
         if(msgService!=null){
-        	return parser.parse(msgService.generateMsg(msgType, bodyJson));
+        	return generateMsg( msgType, bodyJson); 
         }else{
         	return null;
         }
-        
     }
 	
 	
@@ -41,6 +42,10 @@ public class RemremGenerateController {
             }
         }
         return null;
+    }
+    
+    public JsonElement generateMsg(String msgType,JsonObject bodyJson){
+        return parser.parse(msgService.generateMsg(msgType, bodyJson));
     }
 
 }
