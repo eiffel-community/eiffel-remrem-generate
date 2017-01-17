@@ -48,12 +48,15 @@ public class EiffelSemanticsController {
     @Before
     public void  setUp() throws FileNotFoundException {
         RestAssured.port = port;
-
-        File file = new File(getClass().getClassLoader().getResource(artifactPublishedFileName).getFile());
+        URL url = getClass().getClassLoader().getResource(artifactPublishedFileName);
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         artifactPublishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
 
-        file = new File(getClass().getClassLoader().getResource(activityFinishedFileName).getFile());
+        url = getClass().getClassLoader().getResource(activityFinishedFileName);
+        path = url.getPath().replace("%20"," ");
+        file = new File(path);
         activityFinishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
         

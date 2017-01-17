@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,9 +14,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-import org.springframework.boot.CommandLineRunner;
+
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
@@ -38,18 +41,32 @@ import ch.qos.logback.classic.Logger;
 @Component
 @ComponentScan(basePackages = "com.ericsson.eiffel.remrem")
 public class CLI implements CommandLineRunner {
+	
+	@Value("${jar.path}")
+	private String jarPath;
+	
+	public void setJarPath(String jarPath) {
+		this.jarPath = jarPath;
+	}
+	
+	public String getJarPath() {
+		return jarPath;
+	}
+	
     @Autowired
-    private MsgService[] msgServices;
+    private List<MsgService> msgServices;
+    //private MsgService[] msgServices;
 
-    public CLI(MsgService[] msgServices) {
+    public CLI(List<MsgService> msgServices) {
         super();
         this.msgServices = msgServices;
 	}
     
 	@Override
     public void run(String... args) throws Exception {
-        if (CLIOptions.hasParsedOptions())
+        if (CLIOptions.hasParsedOptions()){
         	handleOptions();
+        }
     }
     
     /**
@@ -75,7 +92,6 @@ public class CLI implements CommandLineRunner {
     private void handleOptions() {
         CommandLine commandLine = CLIOptions.getCommandLine();
         handleLogging(commandLine);
-        CLIOptions.handleJarPath();
         if (commandLine.hasOption("h")) {
             System.out.println("You passed help flag.");
             CLIOptions.help(1);
@@ -186,11 +202,10 @@ public class CLI implements CommandLineRunner {
     private MsgService getMessageService(CommandLine commandLine) {
         if (commandLine.hasOption("mp")) {
             String protocol = commandLine.getOptionValue("mp");
-            for (MsgService service : msgServices) {
-                boolean isEiffel3 = (protocol.equals("eiffel3"));
-                boolean isEiffel3Service = service.getClass().getName().endsWith("Eiffel3Service");
-                if (isEiffel3 && isEiffel3Service)
+            for(MsgService service: msgServices){
+                if(service.getServiceName().equals(protocol)){
                     return service;
+                }
             }
         } else {
             for (MsgService service : msgServices) {
@@ -200,8 +215,9 @@ public class CLI implements CommandLineRunner {
         }
 
         boolean testMode = Boolean.getBoolean(PropertiesConfig.TEST_MODE);
-    	if (testMode && msgServices.length>0)
-    		return msgServices[0];
+    	if (testMode && msgServices.size()>0)
+    		return msgServices.get(0);
+    		//return msgServices[0];
 
     	System.out.println("No protocol service has been found registered.");        
         CLIOptions.exit(CLIExitCodes.MESSAGE_PROTOCOL_NOT_FOUND);

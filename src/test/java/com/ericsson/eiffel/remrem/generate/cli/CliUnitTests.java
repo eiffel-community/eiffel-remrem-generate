@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +40,8 @@ public class CliUnitTests {
         bytes   = new ByteArrayOutputStream();		  
         console = System.out;
         System.setOut(new PrintStream(bytes));
-        MsgService[] msgServices = {msgService};
+        List<MsgService> msgServices = new ArrayList<MsgService>();
+        msgServices.add(msgService);
         cli = new CLI(msgServices);		
         
         Mockito.when(msgService.generateMsg(
@@ -65,7 +69,9 @@ public class CliUnitTests {
 
     @Test
     public void testHandleFileArgsPass() throws Exception {
-        File file = new File(getClass().getClassLoader().getResource("jsonTest.json").getFile());
+        URL url = getClass().getClassLoader().getResource("jsonTest.json");
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         String filePath = file.getAbsolutePath();
 
         String[] args = {"-t", "artifactpublished", "-f", filePath};
@@ -99,11 +105,4 @@ public class CliUnitTests {
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
     }
     
-    @Test
-    public void testHandleJarPathArgs() throws Exception{
-        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}","-jp", "sample.jar"};
-        CLIOptions.parse(args);
-        cli.run(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());
-    }
 }
