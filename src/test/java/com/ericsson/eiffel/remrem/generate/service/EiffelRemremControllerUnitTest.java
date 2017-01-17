@@ -43,18 +43,13 @@ public class EiffelRemremControllerUnitTest {
 
     @Spy
     private List<MsgService> msgServices = new ArrayList<MsgService>();
-    static String testInputName = "samplesemantics.json";
-    static JsonElement body;
+    
+    @Mock
+    JsonElement body;
 
 
-    @SuppressWarnings("resource")
     @Before
     public void setUp() throws Exception {
-        URL url = getClass().getClassLoader().getResource(testInputName);
-        String path = url.getPath().replace("%20"," ");
-        File file = new File(path);
-        body = new JsonParser().parse(new Scanner(file)
-            .useDelimiter("\\A").next());
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
         msgServices.add(service2);
@@ -82,7 +77,6 @@ public class EiffelRemremControllerUnitTest {
                 Mockito.anyObject()
         )).thenReturn("{ \"result\":\"FAILURE\" }");
         
-        
     }
     
     @Test 
@@ -107,5 +101,11 @@ public class EiffelRemremControllerUnitTest {
     public void testEiffel3FailureEvent() throws Exception{
         JsonElement elem = unit.generate("eiffel3", "eiffelactivityfinished", body.getAsJsonObject());
         assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
+    }
+    
+    @Test
+    public void testOtherEvent() throws Exception{
+        JsonElement elem = unit.generate("other", "eiffelactivityfinished", body.getAsJsonObject());
+        assertEquals(elem,null);
     }   
 }

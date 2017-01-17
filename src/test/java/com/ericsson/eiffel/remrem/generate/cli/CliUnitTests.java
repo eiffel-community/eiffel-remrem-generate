@@ -3,7 +3,9 @@ package com.ericsson.eiffel.remrem.generate.cli;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,16 +67,18 @@ public class CliUnitTests {
         assertTrue(CLIOptions.getErrorCodes().contains(code));		
     }
 
-    /*@Test
+    @Test
     public void testHandleFileArgsPass() throws Exception {
-        File file = new File(getClass().getClassLoader().getResource("jsonTest.json").getFile());
+        URL url = getClass().getClassLoader().getResource("jsonTest.json");
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         String filePath = file.getAbsolutePath();
 
         String[] args = {"-t", "artifactpublished", "-f", filePath};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
-    }*/
+    }
 	
     @Test
     public void testHandleJsonArgsPass() throws Exception {

@@ -14,8 +14,6 @@ org:
     boot:
       logging:
         LoggingSystem: none
-jar:
-  path: 
 activedirectory:
   enabled: false
   domain:
