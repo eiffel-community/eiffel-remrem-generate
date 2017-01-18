@@ -1,3 +1,6 @@
+## 0.7.3
+- Added single protocol end-point in remrem generate.
+
 ## 0.7.2
 - Explicitly stated some dependencies.
 
