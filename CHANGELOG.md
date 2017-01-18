@@ -1,3 +1,6 @@
+## 0.7.3
+- Added single endpoint for Remrem generate
+
 ## 0.7.2
 - Explicitly stated some dependencies.
 
