@@ -75,7 +75,7 @@ usage: java -jar
                              is given
 </pre>
 <p>NOTE: The message type is the name of the event type to send without the suffix <em>event</em> and in small case letters, for example <em>eiffelactivityfinished</em> for an <em>EiffelActivityFinishedEvent</em>.</p>
-<p>For other than eiffelsemantics, we need to provide the <strong><em>-Djava.ext.dirs="Path to other protocol jars"</em></strong> for loading other protocol jars.</p>
+<p>For other than eiffelsemantics protocol, we need to provide the <strong><em>-Djava.ext.dirs="Path to other protocol jars"</em></strong> for loading other protocol jars.</p>
 
 <p>The message must exist in a json file, for example <strong><em>EiffelActivityFinishedEvent.json</em></strong> might contain the following message:<br></p>
 <pre>
@@ -285,7 +285,7 @@ usage: java -jar
   }
 }' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</pre>
 
-<p><strong>NOTE:</strong> For other than eiffelsemantics provide the Java opts as: </p>
+<p><strong>NOTE:</strong> For other than eiffelsemantics protocol, provide the Java opts as: </p>
 <pre>set JAVA_OPTS="-Djava.ext.dirs=/path/to/other/protocol/jars" in catalina.sh</pre>
 
 <h3>
