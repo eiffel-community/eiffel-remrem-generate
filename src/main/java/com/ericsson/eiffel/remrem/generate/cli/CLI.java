@@ -42,7 +42,7 @@ import ch.qos.logback.classic.Logger;
 @ComponentScan(basePackages = "com.ericsson.eiffel.remrem")
 public class CLI implements CommandLineRunner {
 	
-	@Autowired
+    @Autowired
     private List<MsgService> msgServices;
     //private MsgService[] msgServices;
 
