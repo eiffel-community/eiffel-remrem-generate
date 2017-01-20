@@ -1,3 +1,6 @@
+## 0.7.4
+- Fixed domain property injection in SecurityConfig
+
 ## 0.7.3
 - Added single protocol end-point in remrem generate.
 
