@@ -42,18 +42,7 @@ import ch.qos.logback.classic.Logger;
 @ComponentScan(basePackages = "com.ericsson.eiffel.remrem")
 public class CLI implements CommandLineRunner {
 	
-	@Value("${jar.path}")
-	private String jarPath;
-	
-	public void setJarPath(String jarPath) {
-		this.jarPath = jarPath;
-	}
-	
-	public String getJarPath() {
-		return jarPath;
-	}
-	
-    @Autowired
+	@Autowired
     private List<MsgService> msgServices;
     //private MsgService[] msgServices;
 
