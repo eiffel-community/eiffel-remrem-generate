@@ -1,3 +1,6 @@
+## 0.7.5
+- Added changed semantics version in build.gradle
+
 ## 0.7.4
 - Fixed domain property injection in SecurityConfig
 
