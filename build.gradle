@@ -19,7 +19,7 @@ apply plugin: 'war'
 
 war {
     baseName = 'remrem-generate'
-    version =  '0.7.4'
+    version =  '0.7.5'
 }
 
 
@@ -140,7 +140,7 @@ dependencies {
 
     //Injectable Message Library and its Implementation
     compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
-    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.1.9')
+    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.0')
     compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
 
     //commons CLI

@@ -179,7 +179,7 @@ public class CLI implements CommandLineRunner {
     }
 
     private String handleMsgTypeArgs(CommandLine commandLine) {
-        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
+        String msgType = commandLine.getOptionValue("t");
         Pattern p = Pattern.compile("(.*)event");
         Matcher m = p.matcher(msgType);
         if (m.matches()) {

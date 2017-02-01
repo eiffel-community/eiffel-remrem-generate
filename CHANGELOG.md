@@ -1,3 +1,8 @@
+## 0.7.5
+- upgraded semantics version in build.gradle to support all
+  EiffelEvents in the eiffel repo from topic-drop4 branch 
+- Changed json inputs for test cases
+
 ## 0.7.4
 - Fixed domain property injection in SecurityConfig
 

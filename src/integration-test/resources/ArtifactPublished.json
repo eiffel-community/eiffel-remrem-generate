@@ -1,12 +1,25 @@
-{"msgParams": {
-  "meta": {
-    "type": "EiffelArtifactPublishedEvent",
-    "version": "1.0",
-    "time": 1234567890,
-    "domainId": "example.domain",
-    "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee0"
-  }
-},
+{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelArtifactPublishedEvent",
+      "version": "1.0.0",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "domainId": "example.domain",
+        "host": "host",
+        "name": "name",
+        "uri": "http://java.sun.com/j2se/1.3/",
+        "serializer": {
+          "groupId": "G",
+          "artifactId": "A",
+          "version": "V"
+        }
+      }
+    }
+  },
   "eventParams": {
     "data": {
       "locations": [
@@ -20,9 +33,11 @@
         }
       ]
     },
-    "links": {
-      "context": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
-      "artifact": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee2"
-    }
+    "links": [
+      {
+        "type": "LinkTargetType",
+        "target": "LinkTarget"
+      }
+    ]
   }
 }
