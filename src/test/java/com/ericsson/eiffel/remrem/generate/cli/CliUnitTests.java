@@ -60,7 +60,7 @@ public class CliUnitTests {
 
     @Test
     public void testHandleFileArgsFail() throws Exception {	
-        String[] args = {"-t", "artifactpublished", "-f", "filename"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-f", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.CLI_READ_FILE_FAILED;
@@ -74,7 +74,7 @@ public class CliUnitTests {
         File file = new File(path);
         String filePath = file.getAbsolutePath();
 
-        String[] args = {"-t", "artifactpublished", "-f", filePath};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-f", filePath};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -82,7 +82,7 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsPass() throws Exception {
-        String[] args = {"-t", "artifactpublished", "-json", "{someKey:someValue}"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "{someKey:someValue}"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -90,7 +90,7 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsFail() throws Exception {
-        String[] args = {"-t", "artifactpublished", "-json", "filename"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.HANDLE_JSON_STRING_FAILED;
@@ -99,7 +99,7 @@ public class CliUnitTests {
     
     @Test
     public void testHandleMsgTypeEventArgsPass() throws Exception {
-        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "{someKey:someValue}"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		

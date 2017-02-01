@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 
@@ -61,7 +62,9 @@ public class EiffelSemanticsCli {
     
     @Test
     public void testWrongMessageTypeFail() throws Exception {	
-    	File file = new File(getClass().getClassLoader().getResource(artifactPublishedFileName).getFile());
+        URL url = getClass().getClassLoader().getResource(artifactPublishedFileName);
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
     	String filePath = file.getAbsolutePath();
     	
         String[] args = {"-t", "artifactpublishednone", "-f", filePath};
@@ -75,7 +78,7 @@ public class EiffelSemanticsCli {
     @Test
     public void testIncompleteMessageContentFail() throws Exception {	
     	String jsonContent = "{\"msgParams\": {\"meta\":{\"fakseContent\":\"yes\"}}, \"eventParams\": {\"falseKey\" : \"none\"}}";
-        String[] args = {"-t", "eiffelartifactpublished", "-json", jsonContent};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
         CLIOptions.parse(args);
         cli.run(args);	
         String message = bytes.toString();
@@ -86,7 +89,7 @@ public class EiffelSemanticsCli {
     @Test
     public void testMalformedJsonFail() throws Exception {
     	String jsonContent = "{\"someKey\":\"someValue\"}";
-        String[] args = {"-t", "eiffelartifactpublished", "-json", jsonContent};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
         CLIOptions.parse(args);
         cli.run(args);
         String message = bytes.toString();
