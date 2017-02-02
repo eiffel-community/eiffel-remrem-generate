@@ -1,3 +1,7 @@
+## 0.7.6
+- Changed the project structure to build seperate
+  binaries for CLI and Service.
+
 ## 0.7.5
 - upgraded semantics version in build.gradle to support all
   EiffelEvents in the eiffel repo from topic-drop4 branch 

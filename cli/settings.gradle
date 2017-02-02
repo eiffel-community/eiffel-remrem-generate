@@ -1,0 +1,2 @@
+include 'common'
+rootProject.name = 'cli'
