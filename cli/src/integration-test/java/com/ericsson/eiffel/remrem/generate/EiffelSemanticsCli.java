@@ -1,18 +1,6 @@
 package com.ericsson.eiffel.remrem.generate;
 
-import com.ericsson.eiffel.remrem.generate.cli.CLI;
-import com.ericsson.eiffel.remrem.generate.cli.CLIExitCodes;
-import com.ericsson.eiffel.remrem.generate.cli.CLIOptions;
-import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,10 +8,18 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.test.context.ContextConfiguration;
 
-@ActiveProfiles("integration-test")
-@RunWith(SpringRunner.class)
+import com.ericsson.eiffel.remrem.generate.cli.CLI;
+import com.ericsson.eiffel.remrem.generate.cli.CLIExitCodes;
+import com.ericsson.eiffel.remrem.generate.cli.CLIOptions;
+import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
+
 @ContextConfiguration(initializers=ConfigFileApplicationContextInitializer.class, locations={"/EiffelSemanticsCli-context.xml"})
 public class EiffelSemanticsCli {
 	private PrintStream console;

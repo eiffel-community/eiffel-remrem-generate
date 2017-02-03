@@ -12,16 +12,13 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 
-@RunWith(SpringRunner.class)
 public class CliUnitTests {
     private PrintStream console;
     private ByteArrayOutputStream bytes;
@@ -42,7 +39,7 @@ public class CliUnitTests {
         System.setOut(new PrintStream(bytes));
         List<MsgService> msgServices = new ArrayList<MsgService>();
         msgServices.add(msgService);
-        cli = new CLI(msgServices);		
+        cli = new CLI(msgServices);
         
         Mockito.when(msgService.generateMsg(
 	                Mockito.anyString(),

@@ -1,18 +1,17 @@
 package com.ericsson.eiffel.remrem.generate.cli;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 
-@RunWith(SpringRunner.class)
+
 public class CliOptionsUnitTests {
     private PrintStream console;
     private ByteArrayOutputStream bytes;

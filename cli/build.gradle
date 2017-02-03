@@ -16,6 +16,7 @@ plugins{
 
 
 apply plugin: 'application'
+mainClassName = 'com.ericsson.eiffel.remrem.generate.cli.CLI'
 
 jacocoTestReport {
     reports {
@@ -67,9 +68,6 @@ processResources {
 }
 
 install.dependsOn assemble
-
-apply plugin: 'spring-boot'
-apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group 'com.ericsson.eiffel.remrem'
@@ -105,11 +103,10 @@ repositories {
 
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.13'
-    compile('com.jayway.restassured:rest-assured:2.9.0')
     
-    compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-    }  
+    //swagger UI
+    compile 'io.springfox:springfox-swagger2:2.4.0'
+    compile 'io.springfox:springfox-swagger-ui:2.4.0'
     
     //Injectable Message Library and its Implementation
     compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
@@ -118,13 +115,11 @@ dependencies {
 
     //commons CLI
     compile 'commons-cli:commons-cli:1.3.1'
-    
     compile project(':common')
     
     // Test framework
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.4.1'
-    testCompile("org.springframework.boot:spring-boot-starter-test:$sprintBootVersion")
 
     // Will be used to package contents of third party libs
     runtime fileTree(dir: 'libs', include: '*.jar')
