@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
-import com.ericsson.eiffel.remrem.shared.MsgService;
+import com.ericsson.eiffel.remrem.protocol.MsgService;
 
 @RunWith(SpringRunner.class)
 public class CliUnitTests {
@@ -37,7 +40,8 @@ public class CliUnitTests {
         bytes   = new ByteArrayOutputStream();		  
         console = System.out;
         System.setOut(new PrintStream(bytes));
-        MsgService[] msgServices = {msgService};
+        List<MsgService> msgServices = new ArrayList<MsgService>();
+        msgServices.add(msgService);
         cli = new CLI(msgServices);		
         
         Mockito.when(msgService.generateMsg(
@@ -56,7 +60,7 @@ public class CliUnitTests {
 
     @Test
     public void testHandleFileArgsFail() throws Exception {	
-        String[] args = {"-t", "artifactpublished", "-f", "filename"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-f", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.CLI_READ_FILE_FAILED;
@@ -65,10 +69,12 @@ public class CliUnitTests {
 
     @Test
     public void testHandleFileArgsPass() throws Exception {
-        File file = new File(getClass().getClassLoader().getResource("jsonTest.json").getFile());
+        URL url = getClass().getClassLoader().getResource("jsonTest.json");
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         String filePath = file.getAbsolutePath();
 
-        String[] args = {"-t", "artifactpublished", "-f", filePath};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-f", filePath};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -76,7 +82,7 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsPass() throws Exception {
-        String[] args = {"-t", "artifactpublished", "-json", "{someKey:someValue}"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "{someKey:someValue}"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
@@ -84,7 +90,7 @@ public class CliUnitTests {
 	
     @Test
     public void testHandleJsonArgsFail() throws Exception {
-        String[] args = {"-t", "artifactpublished", "-json", "filename"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "filename"};
         CLIOptions.parse(args);
         cli.run(args);		
         int code = CLIExitCodes.HANDLE_JSON_STRING_FAILED;
@@ -93,17 +99,10 @@ public class CliUnitTests {
     
     @Test
     public void testHandleMsgTypeEventArgsPass() throws Exception {
-        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}"};
+        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", "{someKey:someValue}"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		
     }
     
-    @Test
-    public void testHandleJarPathArgs() throws Exception{
-        String[] args = {"-t", "artiFactPublishedevent", "-json", "{someKey:someValue}","-jp", "sample.jar"};
-        CLIOptions.parse(args);
-        cli.run(args);
-        assertTrue(CLIOptions.getErrorCodes().isEmpty());
-    }
 }

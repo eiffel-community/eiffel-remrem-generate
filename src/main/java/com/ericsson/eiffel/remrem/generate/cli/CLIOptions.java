@@ -1,7 +1,7 @@
 package com.ericsson.eiffel.remrem.generate.cli;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -12,8 +12,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
-import com.ericsson.eiffel.remrem.generate.helper.RemremJarHelper;
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
+import com.ericsson.eiffel.remrem.shared.VersionService;
 
 
 public class CLIOptions {
@@ -58,14 +58,12 @@ public class CLIOptions {
         options.addOption("d", "debug", false, "enable debug traces");
         options.addOption("mp", "messaging_protocol", true,
                 "name of messaging protocol to be used, e.g. eiffel3, semantics");
-
-        options.addOption("jp", "jar_path", true,
-                "path to find protocol definition jar files, e.g. C:/Users/xyz/Desktop/eiffel3messaging.jar");
         contentGroup = new OptionGroup();
         contentGroup.addOption(new Option("f", "content_file", true, "message content file"));
         contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
         options.addOptionGroup(contentGroup);
 
+        options.addOption("lv", "list_versions", false, "list the version and all loaded protocols");
         return options;
     }
 
@@ -113,11 +111,36 @@ public class CLIOptions {
     	 if (commandLine.hasOption("h")) {
              System.out.println("You passed help flag.");
              help(0);
-    	 } else {
+         } else if (commandLine.hasOption("lv")) {
+             printVersions();
+         } else {
     		 checkRequiredOptions();
     	 }
     }
-    
+
+    /**
+     * Lists the version and all loaded protocols  
+     */
+    private static void printVersions() {
+        Map versions = VersionService.getMessagingVersions();
+        Map<String, String> endpointVersions = (Map<String, String>) versions.get("endpointVersions");
+        Map<String, String> serviceVersion = (Map<String, String>) versions.get("serviceVersion");
+
+        if(serviceVersion != null) {
+            System.out.print("REMREM Generate version ");
+            for (String version: serviceVersion.values()) {
+                System.out.println(version);
+            }
+        }
+        if(endpointVersions != null) {
+            System.out.println("Available endpoints");
+            for (Map.Entry<String, String> entry : endpointVersions.entrySet()) {
+                System.out.println(entry);
+            }
+        }
+        exit(0);
+    }
+
     public static void checkRequiredOptions() throws MissingOptionException {
     	OptionGroup[] groups = {typeGroup, contentGroup};
     	for(OptionGroup group : groups) {
@@ -146,16 +169,4 @@ public class CLIOptions {
         return commandLine.getOptions().length > 0;
     }    
     
-    public static void handleJarPath(){
-        if (commandLine.hasOption("jp")) {
-            String jarPath = commandLine.getOptionValue("jp");
-            System.out.println("JarPath :: "+ jarPath);
-            try {
-                RemremJarHelper.addJarsToClassPath(jarPath);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error while loading jars from the path mentioned, MESSAGE :: " + e.getMessage());
-            }
-        }
-    }
 }

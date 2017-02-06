@@ -1,3 +1,23 @@
+## 0.7.5
+- upgraded semantics version in build.gradle to support all
+  EiffelEvents in the eiffel repo from topic-drop4 branch 
+- Changed json inputs for test cases
+
+## 0.7.4
+- Fixed domain property injection in SecurityConfig
+
+## 0.7.3
+- Added single protocol end-point in remrem generate.
+
+## 0.7.2
+- Explicitly stated some dependencies.
+
+## 0.7.1
+- Fix authentication required even when activedirectory.enabled=false
+
+## 0.7.0
+- Added functionality to list endpoint versions
+
 ## 0.6.3
 - Removed unused dependency.
 

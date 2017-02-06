@@ -41,19 +41,22 @@ public class EiffelSemanticsController {
     static String activityFinishedFileName = "ActivityFinished.json";
     static String activityFinishedBody;
     
-    static String version = null;
+    static String version = "1.0.0";
 
     private String credentials = "Basic " + Base64.getEncoder().encodeToString("user:secret".getBytes());
 
     @Before
     public void  setUp() throws FileNotFoundException {
         RestAssured.port = port;
-
-        File file = new File(getClass().getClassLoader().getResource(artifactPublishedFileName).getFile());
+        URL url = getClass().getClassLoader().getResource(artifactPublishedFileName);
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
         artifactPublishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
 
-        file = new File(getClass().getClassLoader().getResource(activityFinishedFileName).getFile());
+        url = getClass().getClassLoader().getResource(activityFinishedFileName);
+        path = url.getPath().replace("%20"," ");
+        file = new File(path);
         activityFinishedBody = new Scanner(file)
             .useDelimiter("\\A").next();
         
@@ -74,7 +77,7 @@ public class EiffelSemanticsController {
                         if (is != null) {
                             Manifest manifest = new Manifest(is);
                             Attributes mainAttribs = manifest.getMainAttributes();
-                            String version = mainAttribs.getValue("Semantics-Version");
+                            String version = mainAttribs.getValue("semanticsVersion");
                             if(version != null) {
                                 return version;
                             }
@@ -108,10 +111,10 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/eiffelsemantics?msgType=EiffelArtifactPublishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("meta.type", Matchers.is("eiffelartifactpublished"))
+                    .body("meta.type", Matchers.is("EiffelArtifactPublishedEvent"))
                     .body("meta.version", Matchers.is(version));
     }
 
@@ -121,10 +124,10 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(activityFinishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelactivityfinished")
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("meta.type", Matchers.is("eiffelactivityfinished"))
+                    .body("meta.type", Matchers.is("EiffelActivityFinishedEvent"))
                     .body("meta.version", Matchers.is(version));
     }
 
