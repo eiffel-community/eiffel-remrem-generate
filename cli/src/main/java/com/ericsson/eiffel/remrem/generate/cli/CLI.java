@@ -6,16 +6,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
@@ -25,7 +26,6 @@ import com.google.gson.JsonParser;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import net.sourceforge.stripes.util.ResolverUtil;
 
 /**
  * Class for interpreting the passed arguments from command line. Parse method
@@ -37,9 +37,11 @@ import net.sourceforge.stripes.util.ResolverUtil;
  * @author evasiba
  *
  */
+@Component
 public class CLI implements CommandLineRunner {
 	
-    private static List<MsgService> msgServices =  new ArrayList<MsgService>();
+	@Autowired
+    private List<MsgService> msgServices;
     //private MsgService[] msgServices;
     
     public CLI(List<MsgService> msgServices) {
@@ -211,19 +213,8 @@ public class CLI implements CommandLineRunner {
     }
     
     public static void main(String[] args) throws Exception {
-    	System.out.println("Inside the main method");
-    	ResolverUtil<MsgService> resolver = new ResolverUtil<MsgService>();
-    	resolver.findImplementations(MsgService.class, "com.ericsson.eiffel.remrem");
-    	Set<Class<? extends MsgService>> classes = resolver.getClasses();
-    	System.out.println(classes.size());
-    	for (Class<? extends MsgService> clazz : classes) {
-    		System.out.println("Classs :: "+clazz);
-		    if(!clazz.isInterface()){
-		    	MsgService service = clazz.newInstance();
-		    	msgServices.add(service);
-		    }
-    	}
-        CLI cli = new CLI(msgServices);
-        cli.run(args);
+    	ApplicationContext ctx = new ClassPathXmlApplicationContext("config.xml");
+    	CLI cli = ctx.getBean(CLI.class);
+    	cli.run(args);
 	}
 }
