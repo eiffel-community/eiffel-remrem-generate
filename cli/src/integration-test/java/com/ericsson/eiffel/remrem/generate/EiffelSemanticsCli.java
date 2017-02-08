@@ -65,7 +65,7 @@ public class EiffelSemanticsCli {
     	
         String[] args = {"-t", "artifactpublishednone", "-f", filePath};
         CLIOptions.parse(args);
-        cli.run(args);	
+        cli.main(args);	
         String message = bytes.toString();
         boolean conditionTrue = message.contains("Unknown message type requested");
         assertTrue(conditionTrue);
@@ -76,7 +76,7 @@ public class EiffelSemanticsCli {
     	String jsonContent = "{\"msgParams\": {\"meta\":{\"fakseContent\":\"yes\"}}, \"eventParams\": {\"falseKey\" : \"none\"}}";
         String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
         CLIOptions.parse(args);
-        cli.run(args);	
+        cli.main(args);	
         String message = bytes.toString();
         boolean conditionTrue = message.contains("Cannot validate given JSON string");
         assertTrue(conditionTrue);
@@ -87,7 +87,7 @@ public class EiffelSemanticsCli {
     	String jsonContent = "{\"someKey\":\"someValue\"}";
         String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
         CLIOptions.parse(args);
-        cli.run(args);
+        cli.main(args);
         String message = bytes.toString();
         int code = CLIExitCodes.HANDLE_JSON_STRING_FAILED;
         assertTrue(CLIOptions.getErrorCodes().contains(code));
