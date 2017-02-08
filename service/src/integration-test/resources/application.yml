@@ -2,8 +2,6 @@ spring:
   http:
     converters:
       preferred-json-mapper: gson
-jar:
-  path:
 activedirectory:
   enabled: true
   domain:

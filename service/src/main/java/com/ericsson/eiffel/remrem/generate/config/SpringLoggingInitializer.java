@@ -8,6 +8,8 @@ import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import com.ericsson.eiffel.remrem.generate.App;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
@@ -20,7 +22,7 @@ public class SpringLoggingInitializer implements ApplicationContextInitializer {
 	 */
 	@Override
 	public void initialize(ConfigurableApplicationContext applicationContext) {
-		Class[] loggers = {SpringApplication.class, ConfigFileApplicationListener.class, EndpointMBeanExporter.class,
+		Class[] loggers = {SpringApplication.class, App.class, ConfigFileApplicationListener.class, EndpointMBeanExporter.class,
 				AutoConfigurationReportLoggingInitializer.class};
 		Logger log = (Logger) LoggerFactory.getLogger("ROOT");
 		log.setLevel(Level.ERROR);

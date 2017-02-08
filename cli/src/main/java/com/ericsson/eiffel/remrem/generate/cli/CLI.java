@@ -40,7 +40,7 @@ import ch.qos.logback.classic.Logger;
 @Component
 public class CLI implements CommandLineRunner {
 	
-	@Autowired
+    @Autowired
     private List<MsgService> msgServices;
     //private MsgService[] msgServices;
     
@@ -213,8 +213,8 @@ public class CLI implements CommandLineRunner {
     }
     
     public static void main(String[] args) throws Exception {
-    	ApplicationContext ctx = new ClassPathXmlApplicationContext("config.xml");
-    	CLI cli = ctx.getBean(CLI.class);
-    	cli.run(args);
-	}
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("config.xml");
+        CLI cli = ctx.getBean(CLI.class);
+        cli.run(args);
+    }
 }
