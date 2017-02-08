@@ -51,9 +51,9 @@ public class CLI implements CommandLineRunner {
     
 	@Override
     public void run(String... args) throws Exception {
-		CLIOptions.parse(args);
-		if (CLIOptions.hasParsedOptions()){
-        	handleOptions();
+        CLIOptions.parse(args);
+        if (CLIOptions.hasParsedOptions()){
+            handleOptions();
         }
     }
     

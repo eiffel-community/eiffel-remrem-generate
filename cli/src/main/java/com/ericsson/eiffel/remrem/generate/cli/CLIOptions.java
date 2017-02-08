@@ -165,7 +165,7 @@ public class CLIOptions {
      * @return true if options exists otherwise false
      */
     public static boolean hasParsedOptions() {
-    	if (commandLine == null)
+        if (commandLine == null)
             return false;
         return commandLine.getOptions().length > 0;
     }    
