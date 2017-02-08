@@ -10,7 +10,7 @@
 
     <title>Eiffel-remrem-generate</title>
   </head>
-
+  
   <body>
 
     <!-- HEADER -->
@@ -47,7 +47,33 @@
 <a id="the-releases" class="anchor" href="#the-releases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The releases</h2>
 
 <p>Binary is relased via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
-
+<p>Download the latest version of generate <a onClick="getLatestVersion();">generate.war</a></p>
+<div id="downloadLink" style="visibility: hidden">
+</div>
+<script type="text/javascript">
+	function getLatestVersion(){
+		var xhr = new XMLHttpRequest(); 
+		xhr.open("GET", "https://jitpack.io/v/Ericsson/eiffel-remrem-generate.svg"); 
+		xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+		xhr.onload = function() 
+		{
+			var blob = xhr.response;
+			var reader = new FileReader();
+			reader.addEventListener("loadend", function() {
+				document.getElementById("downloadLink").innerHTML = reader.result;
+				var val = document.getElementsByTagName("text")[2].innerHTML;
+				val = val.trim();
+				urlLink = "https://jitpack.io/com/github/Ericsson/eiffel-remrem-generate/"+val+"/eiffel-remrem-generate-"+val+".war";
+				var link = document.createElement("a");
+			    link.download = "generate.war";
+			    link.href = urlLink;
+			    link.click(); 
+			});
+			reader.readAsBinaryString(blob);
+		}
+		xhr.send();	
+	}
+</script>
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation (Micro service)</h2>
 
