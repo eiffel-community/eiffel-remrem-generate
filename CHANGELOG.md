@@ -1,3 +1,6 @@
+## 0.7.6
+- Updated the documentation for generate.
+
 ## 0.7.5
 - upgraded semantics version in build.gradle to support all
   EiffelEvents in the eiffel repo from topic-drop4 branch 
