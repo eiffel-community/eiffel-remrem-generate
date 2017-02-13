@@ -1,6 +1,9 @@
-## 0.7.6
+## 0.7.7
 - Changed the project structure to build seperate
   binaries for CLI and Service.
+
+## 0.7.6
+- Updated the documentation for generate.
 
 ## 0.7.5
 - upgraded semantics version in build.gradle to support all
