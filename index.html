@@ -34,7 +34,38 @@
         <p>REMReM (REST Mailbox for Registered Messages) is a set of tools that can be used to generate validated Eiffel messages and publish them on a RabbitMQ message bus. They can be run as micro services or as stand-alone CLI versions. For more details on the micro services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">https://github.com/Ericsson/eiffel-remrem</a> </p>
 
 <p>Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message.</p>
-
+<p>Download the latest version of generate <a onClick="getLatestVersion();">generate.war</a></p>
+<div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;">
+</div>
+<script type="text/javascript">
+function getLatestVersion(){
+	var xhr = new XMLHttpRequest(); 
+	xhr.open("GET", "https://jitpack.io/v/Ericsson/eiffe-remrem-generate.svg"); 
+ 	xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+ 	xhr.onload = function() 
+ 	{
+ 		var blob = xhr.response;
+ 		var reader = new FileReader();
+ 		reader.addEventListener("loadend", function() {
+		var result = reader.result;
+		if(result=="Repo not found or no access token provided"){
+			document.getElementById("downloadLink").innerHTML = result;
+			document.getElementById("downloadLink").style.visibility = "";
+		}
+		else{
+			document.getElementById("downloadLink").innerHTML = result;
+			var val = document.getElementsByTagName("text")[2].innerHTML;
+			val = val.trim();
+			urlLink = "https://jitpack.io/com/github/Ericsson/eiffel-remrem-generate/"+val+"/eiffel-remrem-generate-"+val+".war";
+			var link = document.createElement("a");
+			link.download = "generate.war";
+			link.href = urlLink;
+			link.click();
+		}
+ 	});
+ 	reader.readAsBinaryString(blob);
+}
+</script>
 <h2>
 <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility</h2>
 
