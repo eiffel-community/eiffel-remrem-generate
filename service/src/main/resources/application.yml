@@ -1,0 +1,20 @@
+spring:
+  http:
+    converters:
+      preferred-json-mapper: gson
+debug: false
+logging:
+  level:
+    root: ERROR
+    org:
+      springframework:
+        web: ERROR
+org:
+  springframework:
+    boot:
+      logging:
+        LoggingSystem: none
+activedirectory:
+  enabled: false
+  domain:
+  url:
