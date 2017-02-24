@@ -3,6 +3,10 @@ package com.ericsson.eiffel.remrem.generate.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +19,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
-import org.springframework.http.ResponseEntity;
 
 @RunWith(SpringRunner.class)
 public class EiffelRemremControllerUnitTest {
@@ -42,7 +46,8 @@ public class EiffelRemremControllerUnitTest {
     JsonElement body;
 
 
-    @Before
+    @SuppressWarnings("resource")
+	@Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
@@ -50,10 +55,17 @@ public class EiffelRemremControllerUnitTest {
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
         Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
         
-        String successOutput = "{\"meta\":{\"id\":\"646cb3ff-30b5-42f7-b686-220131287b2d\",\"type\":\"EiffelActivityFinishedEvent\",\"version\":\"1.0.0\",\"time\":1487851528091,\"tags\":[\"tag1\",\"tag2\"],\"source\":{\"domainId\":\"domainID\",\"host\":\"host\",\"name\":\"name\",\"serializer\":{\"groupId\":\"G\",\"artifactId\":\"A\",\"version\":\"V\"},\"uri\":\"http://java.sun.com/j2se/1.3/\"}},\"data\":{\"outcome\":{\"conclusion\":\"TIMED_OUT\",\"description\":\"Compilation timed out.\"},\"persistentLogs\":[{\"name\":\"firstLog\",\"uri\":\"http://myHost.com/firstLog\"},{\"name\":\"otherLog\",\"uri\":\"http://myHost.com/firstLog33\"}],\"customData\":[]},\"links\":[{\"type\":\"LinkTargetType\",\"target\":\"LinkTarget\"}]}";
-        String failureOutput = "{\"message\":\"Unknown message type requested\",\"cause\":\"\u0027EiffelActivityFinis\u0027 is not in the vocabulary of this service\"}";
+        URL url = getClass().getClassLoader().getResource("successInput.json");
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
+        String successOutput = new BufferedReader(new FileReader(file)).readLine();
 
         
+        url = getClass().getClassLoader().getResource("errorInput.json");
+        path = url.getPath().replace("%20"," ");
+        file = new File(path);
+        String errorOutput = new BufferedReader(new FileReader(file)).readLine();
+
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelActivityFinishedEvent"),
                 Mockito.anyObject())).thenReturn(successOutput);
@@ -61,7 +73,7 @@ public class EiffelRemremControllerUnitTest {
 
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelActivityFinished"),
-                Mockito.anyObject())).thenReturn(failureOutput);
+                Mockito.anyObject())).thenReturn(errorOutput);
         
         Mockito.when(service2.generateMsg(
                 Mockito.eq("eiffelartifactnew"),
@@ -69,7 +81,7 @@ public class EiffelRemremControllerUnitTest {
         
         Mockito.when(service2.generateMsg(
                 Mockito.eq("eiffelartifactnewevent"),
-                Mockito.anyObject())).thenReturn(failureOutput);
+                Mockito.anyObject())).thenReturn(errorOutput);
      
     }
     

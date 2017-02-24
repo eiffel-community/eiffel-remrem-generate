@@ -3,6 +3,8 @@ package com.ericsson.eiffel.remrem.generate.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;;
+import com.google.gson.JsonParser;;
 
 @RestController @RequestMapping("/*")
 public class RemremGenerateController {
@@ -46,11 +46,12 @@ public class RemremGenerateController {
         try{
             if (msgService != null) {
             	response = msgService.generateMsg(msgType, bodyJson);
-                if(!response.contains("message")) {
-                	return new ResponseEntity<>(parser.parse(response),HttpStatus.OK);
+            	JsonElement resp = parser.parse(response);
+                if(!resp.getAsJsonObject().has(RemremGenerateServiceConstants.MESSAGE)) {
+                	return new ResponseEntity<>(resp,HttpStatus.OK);
                 }
                 else {
-                	return new ResponseEntity<>(parser.parse(response),HttpStatus.BAD_REQUEST);
+                	return new ResponseEntity<>(resp,HttpStatus.BAD_REQUEST);
                 }
             }
             else {
