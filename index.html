@@ -34,7 +34,6 @@
         <p>REMReM (REST Mailbox for Registered Messages) is a set of tools that can be used to generate validated Eiffel messages and publish them on a RabbitMQ message bus. They can be run as micro services or as stand-alone CLI versions. For more details on the micro services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">https://github.com/Ericsson/eiffel-remrem</a> </p>
 
 <p>Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message.</p>
-
 <h2>
 <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility</h2>
 
@@ -47,12 +46,46 @@
 <a id="the-releases" class="anchor" href="#the-releases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The releases</h2>
 
 <p>Binary is relased via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
+<p><b>Download the latest version of CLI from </b><a onClick="getLatestVersion('cli','jar');">generate-cli.jar</a></p>
+<p><b>Download the latest version of Service from </b><a onClick="getLatestVersion('service','war');">generate-service.war</a></p>
+<div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;">
+</div>
+<script type="text/javascript">
+function getLatestVersion(type,extn){
+	var xhr = new XMLHttpRequest(); 
+	xhr.open("GET", "https://jitpack.io/v/Ericsson/eiffel-remrem-generate.svg"); 
+ 	xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+ 	xhr.onload = function() 
+ 	{
+ 		var blob = xhr.response;
+ 		var reader = new FileReader();
+ 		reader.addEventListener("loadend", function() {
+			var result = reader.result;
+			if(result=="Repo not found or no access token provided"){
+				document.getElementById("downloadLink").innerHTML = result;
+				document.getElementById("downloadLink").style.visibility = "";
+			}
+			else{
+				document.getElementById("downloadLink").innerHTML = result;
+				var val = document.getElementsByTagName("text")[2].innerHTML;
+				val = val.trim();
+				urlLink = "https://jitpack.io/com/github/Ericsson/eiffel-remrem-generate/generate-"+type +"\/"+val+"/generate-"+type +"-"+val+"."+extn;
+				var link = document.createElement("a");
+				link.href = urlLink;
+				link.click();
+			}
+	 	});
+ 		reader.readAsBinaryString(blob);
+ 	}
+ 	xhr.send();
+}
+</script>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation (Micro service)</h2>
 
-<p>Start the self executing WAR</p>
-<pre>java -jar generate.war</pre>
+<p>Start the self executing JAR</p>
+<pre>java -jar generate-cli.jar</pre>
 
 <p>or deploy it in Tomcat.</p>
 
@@ -61,7 +94,7 @@
 
 <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
-<pre>java -jar generate.war -h
+<pre>java -jar generate-cli.jar -h
 You passed help flag.
 usage: java -jar
  -d,--debug                  enable debug traces
@@ -131,7 +164,7 @@ usage: java -jar
 <h3>
 <a id="with-input-from-the-example-file-shown-above-and-output-to-a-file" class="anchor" href="#with-input-from-the-example-file-shown-above-and-output-to-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With input from the example file shown above and output to a file:</h3>
 
-<pre><code> $ java -jar generate.war -f EiffelActivityFinishedEvent.json -t EiffelActivityFinishedEvent -r output.json
+<pre><code> $ java -jar generate-cli.jar -f EiffelActivityFinishedEvent.json -t EiffelActivityFinishedEvent -r output.json
 </code></pre>
 
 <p>Gives:</p>
@@ -190,7 +223,7 @@ usage: java -jar
 <h3>
 <a id="same-example-but-output-the-result-on-the-console" class="anchor" href="#same-example-but-output-the-result-on-the-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example but output the result on the console:</h3>
 
-<pre><code> $ java -jar generate.war -f EiffelActivityFinishedEvent.json -t EiffelActivityFinishedEvent
+<pre><code> $ java -jar generate-cli.jar -f EiffelActivityFinishedEvent.json -t EiffelActivityFinishedEvent
 </code></pre>
 
 <p>Gives:</p>
@@ -200,7 +233,7 @@ usage: java -jar
 <h3>
 <a id="same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" class="anchor" href="#same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example, but this time the data is supplied as a command line argument:</h3>
 
-<pre><code>$ java -jar generate.war -t EiffelActivityFinishedEvent -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","domainId": "example.domain","tags": ["tag1", "tag2"],"source": {"host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","serializer": {"groupId": "G","artifactId": "A",       "version": "V"}}}},"eventParams": {"data": {"outcome": {"conclusion": "TIMED_OUT","description": "Compilation timed out."},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": {"activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","causes": ["cause1", "cause2"],"flowContext": "flowContext"}}}
+<pre><code>$ java -jar generate-cli.jar -t EiffelActivityFinishedEvent -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","domainId": "example.domain","tags": ["tag1", "tag2"],"source": {"host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","serializer": {"groupId": "G","artifactId": "A",       "version": "V"}}}},"eventParams": {"data": {"outcome": {"conclusion": "TIMED_OUT","description": "Compilation timed out."},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": {"activityExecution": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1","causes": ["cause1", "cause2"],"flowContext": "flowContext"}}}
 </code></pre>
 
 <p>Gives:</p>
@@ -209,6 +242,8 @@ usage: java -jar
 
 <h2>
 <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service.</h2>
+
+<p> Deploy the generate-service.war in tomcat</p>
 
 <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
