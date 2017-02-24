@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ericsson.eiffel.remrem.protocol.MsgService;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;;
 
 @RestController @RequestMapping("/*")
 public class RemremGenerateController {
@@ -36,15 +39,29 @@ public class RemremGenerateController {
     * 
     */
     @RequestMapping(value = "/{mp}", method = RequestMethod.POST)
-    public JsonElement generate(@PathVariable String mp, @RequestParam("msgType") String msgType,
+    public ResponseEntity<?> generate(@PathVariable String mp, @RequestParam("msgType") String msgType,
             @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(mp);
-        if (msgService != null) {
-            return parser.parse(msgService.generateMsg(msgType, bodyJson));
-        } else {
-            return null;
+        String response= "";
+        try{
+            if (msgService != null) {
+            	response = msgService.generateMsg(msgType, bodyJson);
+                if(!response.contains("message")) {
+                	return new ResponseEntity<>(parser.parse(response),HttpStatus.OK);
+                }
+                else {
+                	return new ResponseEntity<>(parser.parse(response),HttpStatus.BAD_REQUEST);
+                }
+            }
+            else {
+            	return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),HttpStatus.SERVICE_UNAVAILABLE);
+            }
+        }        
+        catch(Exception e) {
+        	return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     private MsgService getMessageService(String messageProtocol) {
         for (MsgService service : msgServices) {

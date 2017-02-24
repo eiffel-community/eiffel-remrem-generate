@@ -1,3 +1,4 @@
+//Plugins used for CLI
 plugins{
     id 'java'
     id 'maven'
@@ -63,6 +64,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+//this is used to build the generate-cli binary
 jar{
 	baseName = 'generate-cli'
     manifest {
@@ -92,15 +94,13 @@ repositories {
     mavenCentral()
 }
 
+//Dependencies for remrem-generate-cli
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.13'
     
     //commons CLI
     compile 'commons-cli:commons-cli:1.3.1'
-    
-    // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     compile 'javax.servlet:javax.servlet-api:3.0.1'
-    
     // Will be used to package contents of third party libs
     runtime fileTree(dir: 'libs', include: '*.jar')
 }

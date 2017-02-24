@@ -1,3 +1,6 @@
+## 0.7.8
+- Added HttpStatus codes for generated ouput
+
 ## 0.7.7
 - Changed the project structure to build seperate
   binaries for CLI and Service.
