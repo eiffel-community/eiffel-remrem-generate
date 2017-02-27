@@ -55,22 +55,21 @@ public class EiffelRemremControllerUnitTest {
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
         Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
         
-        URL url = getClass().getClassLoader().getResource("successInput.json");
-        String path = url.getPath().replace("%20"," ");
-        File file = new File(path);
-        String successOutput = new BufferedReader(new FileReader(file)).readLine();
+        URL jsonInputURL = getClass().getClassLoader().getResource("successInput.json");
+        String inputFilePath = jsonInputURL.getPath().replace("%20"," ");
+        File jsonFile = new File(inputFilePath);
+        String successOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
 
         
-        url = getClass().getClassLoader().getResource("errorInput.json");
-        path = url.getPath().replace("%20"," ");
-        file = new File(path);
-        String errorOutput = new BufferedReader(new FileReader(file)).readLine();
+        jsonInputURL = getClass().getClassLoader().getResource("errorInput.json");
+        inputFilePath = jsonInputURL.getPath().replace("%20"," ");
+        jsonFile = new File(inputFilePath);
+        String errorOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
 
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelActivityFinishedEvent"),
                 Mockito.anyObject())).thenReturn(successOutput);
         
-
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelActivityFinished"),
                 Mockito.anyObject())).thenReturn(errorOutput);

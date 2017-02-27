@@ -46,12 +46,12 @@ public class RemremGenerateController {
         try{
             if (msgService != null) {
             	response = msgService.generateMsg(msgType, bodyJson);
-            	JsonElement resp = parser.parse(response);
-                if(!resp.getAsJsonObject().has(RemremGenerateServiceConstants.MESSAGE)) {
-                	return new ResponseEntity<>(resp,HttpStatus.OK);
+            	JsonElement parsedResponse = parser.parse(response);
+                if(!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                	return new ResponseEntity<>(parsedResponse,HttpStatus.OK);
                 }
                 else {
-                	return new ResponseEntity<>(resp,HttpStatus.BAD_REQUEST);
+                	return new ResponseEntity<>(parsedResponse,HttpStatus.BAD_REQUEST);
                 }
             }
             else {
