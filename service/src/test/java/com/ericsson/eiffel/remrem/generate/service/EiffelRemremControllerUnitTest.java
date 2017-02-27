@@ -67,7 +67,7 @@ public class EiffelRemremControllerUnitTest {
         String errorOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
 
         Mockito.when(service.generateMsg(
-                Mockito.eq("EiffelActivityFinishedEvent"),
+                Mockito.eq("eiffelactivityfinished"),
                 Mockito.anyObject())).thenReturn(successOutput);
         
         Mockito.when(service.generateMsg(
@@ -86,7 +86,7 @@ public class EiffelRemremControllerUnitTest {
     
     @Test
     public void testSemanticsSuccessEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinishedEvent", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     

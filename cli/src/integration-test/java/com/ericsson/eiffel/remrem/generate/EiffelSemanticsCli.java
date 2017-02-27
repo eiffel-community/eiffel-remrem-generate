@@ -74,7 +74,7 @@ public class EiffelSemanticsCli {
     @Test
     public void testIncompleteMessageContentFail() throws Exception {	
     	String jsonContent = "{\"msgParams\": {\"meta\":{\"fakseContent\":\"yes\"}}, \"eventParams\": {\"falseKey\" : \"none\"}}";
-        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
+        String[] args = {"-t", "eiffelartifactpublished", "-json", jsonContent};
         CLIOptions.parse(args);
         cli.main(args);	
         String message = bytes.toString();
@@ -85,7 +85,7 @@ public class EiffelSemanticsCli {
     @Test
     public void testMalformedJsonFail() throws Exception {
     	String jsonContent = "{\"someKey\":\"someValue\"}";
-        String[] args = {"-t", "EiffelArtifactPublishedEvent", "-json", jsonContent};
+        String[] args = {"-t", "eiffelactivityfinished", "-json", jsonContent};
         CLIOptions.parse(args);
         cli.main(args);
         String message = bytes.toString();

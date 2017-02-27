@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -178,7 +179,7 @@ public class CLI implements CommandLineRunner {
     }
 
     private String handleMsgTypeArgs(CommandLine commandLine) {
-        String msgType = commandLine.getOptionValue("t");
+        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
         Pattern p = Pattern.compile("(.*)event");
         Matcher m = p.matcher(msgType);
         if (m.matches()) {
