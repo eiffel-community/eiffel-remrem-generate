@@ -3,6 +3,8 @@ package com.ericsson.eiffel.remrem.generate.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonParser;;
 
 @RestController @RequestMapping("/*")
 public class RemremGenerateController {
@@ -36,15 +39,30 @@ public class RemremGenerateController {
     * 
     */
     @RequestMapping(value = "/{mp}", method = RequestMethod.POST)
-    public JsonElement generate(@PathVariable String mp, @RequestParam("msgType") String msgType,
+    public ResponseEntity<?> generate(@PathVariable String mp, @RequestParam("msgType") String msgType,
             @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(mp);
-        if (msgService != null) {
-            return parser.parse(msgService.generateMsg(msgType, bodyJson));
-        } else {
-            return null;
+        String response= "";
+        try{
+            if (msgService != null) {
+            	response = msgService.generateMsg(msgType, bodyJson);
+            	JsonElement parsedResponse = parser.parse(response);
+                if(!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                	return new ResponseEntity<>(parsedResponse,HttpStatus.OK);
+                }
+                else {
+                	return new ResponseEntity<>(parsedResponse,HttpStatus.BAD_REQUEST);
+                }
+            }
+            else {
+            	return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),HttpStatus.SERVICE_UNAVAILABLE);
+            }
+        }        
+        catch(Exception e) {
+        	return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     private MsgService getMessageService(String messageProtocol) {
         for (MsgService service : msgServices) {

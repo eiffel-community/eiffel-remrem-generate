@@ -3,6 +3,10 @@ package com.ericsson.eiffel.remrem.generate.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
@@ -40,7 +46,8 @@ public class EiffelRemremControllerUnitTest {
     JsonElement body;
 
 
-    @Before
+    @SuppressWarnings("resource")
+	@Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
@@ -48,56 +55,63 @@ public class EiffelRemremControllerUnitTest {
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
         Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
         
+        URL jsonInputURL = getClass().getClassLoader().getResource("successInput.json");
+        String inputFilePath = jsonInputURL.getPath().replace("%20"," ");
+        File jsonFile = new File(inputFilePath);
+        String successOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
+
+        
+        jsonInputURL = getClass().getClassLoader().getResource("errorInput.json");
+        inputFilePath = jsonInputURL.getPath().replace("%20"," ");
+        jsonFile = new File(inputFilePath);
+        String errorOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
+
         Mockito.when(service.generateMsg(
-            Mockito.eq("eiffelactivityfinished"),
-            Mockito.anyObject()
-        )).thenReturn("{ \"result\":\"SUCCESS\" }");
-        
-        Mockito.when(service.generateMsg(
-                Mockito.eq("eiffeljobfinished"),
-                Mockito.anyObject()
-        )).thenReturn("{ \"result\":\"FAILURE\" }");
-        
-        Mockito.when(service2.generateMsg(
-                Mockito.eq("eiffeljobfinished"),
-                Mockito.anyObject()
-        )).thenReturn("{ \"result\":\"SUCCESS\" }");
-        
-        
-        Mockito.when(service2.generateMsg(
                 Mockito.eq("eiffelactivityfinished"),
-                Mockito.anyObject()
-        )).thenReturn("{ \"result\":\"FAILURE\" }");
+                Mockito.anyObject())).thenReturn(successOutput);
         
-    }
-    
-    @Test 
-    public void testSemanticsEvent() throws Exception {        
-        JsonElement elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", body.getAsJsonObject());
-        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
-    }
-    
-    @Test
-    public void testSemanticsFailureEvent() throws Exception{
-        JsonElement elem = unit.generate("eiffelsemantics", "eiffeljobfinished", body.getAsJsonObject());
-        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
-    }
-    
-    @Test 
-    public void testEiffel3Event() throws Exception {        
-        JsonElement elem = unit.generate("eiffel3", "eiffeljobfinished", body.getAsJsonObject());
-        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "SUCCESS");
+        Mockito.when(service.generateMsg(
+                Mockito.eq("EiffelActivityFinished"),
+                Mockito.anyObject())).thenReturn(errorOutput);
+        
+        Mockito.when(service2.generateMsg(
+                Mockito.eq("eiffelartifactnew"),
+                Mockito.anyObject())).thenReturn(successOutput);
+        
+        Mockito.when(service2.generateMsg(
+                Mockito.eq("eiffelartifactnewevent"),
+                Mockito.anyObject())).thenReturn(errorOutput);
+     
     }
     
     @Test
-    public void testEiffel3FailureEvent() throws Exception{
-        JsonElement elem = unit.generate("eiffel3", "eiffelactivityfinished", body.getAsJsonObject());
-        assertEquals(elem.getAsJsonObject().get("result").getAsString(), "FAILURE");
+    public void testSemanticsSuccessEvent() throws Exception {        
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", body.getAsJsonObject());
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     
     @Test
-    public void testOtherEvent() throws Exception{
-        JsonElement elem = unit.generate("other", "eiffelactivityfinished", body.getAsJsonObject());
-        assertEquals(elem,null);
-    }   
+    public void testSemanticsFailureEvent() throws Exception {        
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", body.getAsJsonObject());
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @Test
+    public void testEiffel3SuccessEvent() throws Exception {        
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", body.getAsJsonObject());
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+    
+    @Test
+    public void testEiffel3FailureEvent() throws Exception {        
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", body.getAsJsonObject());
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @Test
+    public void testMessageServiceUnavailableEvent() throws Exception {        
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", body.getAsJsonObject());
+        assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+     
 }

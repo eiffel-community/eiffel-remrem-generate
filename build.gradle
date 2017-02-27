@@ -18,6 +18,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+
+//Adding dependencies and sub projects common build script
 subprojects {
 	buildscript {
  	   repositories {
@@ -38,7 +40,7 @@ subprojects {
 	targetCompatibility = 1.8
 	
 	//Latest version for generate
-	version = "0.7.7"
+	version = "0.7.8"
 	
 	repositories {
         mavenCentral()
@@ -48,7 +50,7 @@ subprojects {
 	dependencies {
 	    //Injectable Message Library and its Implementation
 	    compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
-	    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.0')
+	    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.3')
 	    compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
 	    
 	    //Authentication
