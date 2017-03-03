@@ -11,97 +11,6 @@ plugins{
     id 'java'
     id 'war'
     id 'maven'
-    id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.6.3'
-}
-
-apply plugin: 'war'
-
-war {
-    baseName = 'remrem-generate'
-    version =  '0.7.5'
-}
-
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-        html.destination "${buildDir}/jacocoHtml"
-    }
-    executionData = files('build/jacoco/jacocoTest.exec', 'build/jacoco/test.exec')
-}
-
-configurations.all {
-    configurations.all {
-        resolutionStrategy {
-            // force certain versions of dependencies (including transitive)
-            //  *append new forced modules:
-            force 'com.fasterxml.jackson.core:jackson-databind:2.8.3'
-            //  *replace existing forced modules with new ones:
-            forcedModules = ['com.fasterxml.jackson.core:jackson-databind:2.8.3']
-            
-            // cache dynamic versions for 10 minutes
-            cacheDynamicVersionsFor 10*60, 'seconds'
-            // don't cache changing modules at all
-            cacheChangingModulesFor 0, 'seconds'
-        }
-    }
-}
-
-configurations {
-    providedRuntime
-    provided
-
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
-
-sourceSets {
-    integrationTest {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integration-test/java')
-        }
-        resources.srcDir file('src/integration-test/resources')
-    }
-}
-
-processResources {
-    expand(project.properties)
-}
-
-install.dependsOn assemble
-
-apply plugin: 'spring-boot'
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-group 'com.ericsson.eiffel.remrem'
-version '1.0-SNAPSHOT'
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '3.1'
-  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
-}
-
-task integrationTest(type: Test) {
-    jacoco {
-        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$buildDir/classes/integrationTest")
-    }
-    dependsOn integrationTestClasses
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath + sourceSets.main.output
-    outputs.upToDateWhen { false }
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-ext {
-    sprintBootVersion = "1.4.1.RELEASE"
 }
 
 repositories {
@@ -109,48 +18,49 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-dependencies {
-    compile('com.jayway.restassured:rest-assured:2.9.0')
-    compile("org.springframework.boot:spring-boot-starter-web:$sprintBootVersion") {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+
+//Adding dependencies and sub projects common build script
+subprojects {
+	buildscript {
+ 	   repositories {
+    	    mavenCentral()
+    	}
+    	dependencies {
+	        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+	    }
+	}
+	
+	ext {
+    	sprintBootVersion = "1.4.1.RELEASE"
     }
-  
-    //gson support
-    compile('com.google.code.gson:gson:2.6.2')
-
-    //swagger UI
-    compile 'io.springfox:springfox-swagger2:2.4.0'
-    compile 'io.springfox:springfox-swagger-ui:2.4.0'
-
-    // tag::actuator[]
-    compile("org.springframework.boot:spring-boot-starter-actuator:$sprintBootVersion")
-    compile "org.springframework.boot:spring-boot:$sprintBootVersion"
-    // end::actuator[]
-
-    //Authentication
-    compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
-    compile("org.springframework.security:spring-security-ldap:4.1.3.RELEASE")
-    compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
+	
+	apply plugin:'java'
+	
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	
+	//Latest version for generate
+	version = "0.7.8"
+	
+	repositories {
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
     
-    //ServletException requires compile time servlet dependency but it causes problems
-    //when deployed if exist on war run time.. hence provided but also compileOnly
-    compileOnly("org.springframework.boot:spring-boot-starter-tomcat")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    testCompile("org.springframework.boot:spring-boot-starter-tomcat")
-
-    //Injectable Message Library and its Implementation
-    compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
-    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.0')
-    compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
-
-    //commons CLI
-    compile 'commons-cli:commons-cli:1.3.1'
-
-    // Test framework
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.4.1'
-    testCompile("org.springframework.boot:spring-boot-starter-test:$sprintBootVersion")
-
-    // Will be used to package contents of third party libs
-    runtime fileTree(dir: 'libs', include: '*.jar')
+	dependencies {
+	    //Injectable Message Library and its Implementation
+	    compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.0')
+	    compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.3')
+	    compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
+	    
+	    //Authentication
+    	compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
+    	compile("org.springframework.security:spring-security-ldap:4.1.3.RELEASE")
+    	compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
+    	
+    	// Test framework
+	    testCompile 'junit:junit:4.12'
+	    testCompile 'org.assertj:assertj-core:3.4.1'
+	    testCompile("org.springframework.boot:spring-boot-starter-test:$sprintBootVersion")
+    }
 }

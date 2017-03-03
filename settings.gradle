@@ -1,2 +1,3 @@
+include 'cli'
+include 'service'
 rootProject.name = 'generate'
-
