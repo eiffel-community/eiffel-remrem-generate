@@ -1,3 +1,6 @@
+## 0.7.9
+- Moved ldap related functionality to shared
+
 ## 0.7.8
 - Added HttpStatus codes for generated ouput
 
