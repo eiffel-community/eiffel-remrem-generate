@@ -1,3 +1,6 @@
+## 0.8.0
+- Updated remrem-shared version to 0.3.2 to support base64 encryption functionality for Ldap manager password.
+
 ## 0.7.9
 - Moved ldap related functionality to shared
 
