@@ -1,5 +1,6 @@
 ## 0.8.1
 - Added copyright headers to the source code.
+- Uplifted remrem-shared version to 0.3.3 to get the versions of generate and all loaded protocols.
 
 ## 0.8.0
 - Updated remrem-shared version to 0.3.2 to support base64 encryption functionality for Ldap manager password.

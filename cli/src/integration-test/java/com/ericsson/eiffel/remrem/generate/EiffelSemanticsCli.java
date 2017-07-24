@@ -81,7 +81,7 @@ public class EiffelSemanticsCli {
         CLIOptions.parse(args);
         cli.main(args);	
         String message = bytes.toString();
-        boolean conditionTrue = message.contains("Unknown message type requested");
+        boolean conditionTrue = message.contains("Unknown event type requested");
         assertTrue(conditionTrue);
     }
     

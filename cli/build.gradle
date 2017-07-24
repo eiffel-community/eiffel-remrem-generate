@@ -82,9 +82,9 @@ apply plugin: 'eclipse'
 jar{
 	baseName = 'generate-cli'
     manifest {
-        attributes(
-            'Main-Class': 'com.ericsson.eiffel.remrem.generate.cli.CLI'
-        )
+		attributes('Main-Class': 'com.ericsson.eiffel.remrem.generate.cli.CLI')
+		attributes('remremVersionKey': 'serviceVersion')
+		attributes('serviceVersion': version)
     }
 }
 

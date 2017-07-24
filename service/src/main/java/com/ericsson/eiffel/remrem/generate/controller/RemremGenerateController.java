@@ -15,6 +15,7 @@
 package com.ericsson.eiffel.remrem.generate.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;;
@@ -75,6 +77,17 @@ public class RemremGenerateController {
         catch(Exception e) {
         	return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    /**
+     * this method is used to display the versions of generate and all loaded protocols.
+     *
+     * @return this method returns a json with version details. 
+     */
+      @RequestMapping(value = "/versions", method = RequestMethod.GET)
+    public JsonElement getVersions() {
+        Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
+        return parser.parse(versions.toString());
     }
 
 
