@@ -106,8 +106,12 @@ usage: java -jar
  -r,--response_file          file to store the response in, optional
  -t,--message_type           message type, mandatory if -f or -json
                              is given
+ -v,--list_versions          lists the versions of generate and all loaded protocols
 </pre>
 <p>NOTE: The message type is the name of the event type to send without the suffix <em>event</em> and in small case letters, for example <em>eiffelactivityfinished</em> for an <em>eiffelactivityfinishedevent</em>.</p>
+
+<strong><p>Templates for eiffel events are available <a href="http://ericsson.github.io/eiffel-remrem-semantics/">here.</a></p></strong>
+
 
 <p>The message must exist in a json file, for example <strong><em>eiffelactivityfinished.json</em></strong> might contain the following message:<br></p>
 <pre>
@@ -249,7 +253,7 @@ usage: java -jar
 
 <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
-<p>Available REST resources for publish are:</p>
+<p>Available REST resources for generate are:</p>
 
 <p><table width="100%">
 <tr><th>Resource</th><th>Method</th><th>Parameters</th><th>Request body</th></tr>
@@ -270,6 +274,24 @@ usage: java -jar
   }
 }
 </pre></td></tr></table>
+
+<h3>Versions Endpoint:</h3>
+"/versions" endpoint is used to get the versions of messaging protocols along with the current version of generate in a json format.<br>
+
+Ex:  http://localhost:8080/generate-service/versions/ <br>
+
+Result:
+
+<pre>
+        {
+            "serviceVersion": {
+                "version": "0.8.1"
+            },
+            "endpointVersions": {
+                "semanticsVersion": "0.2.5",
+            }
+        }
+</pre>
 
 <h3>Ldap configurations:</h3>
 <p align="justify">Active Directory authentication can be enabled for the REMReM REST service by setting the configuration property <code>activedirectory.enabled=true</code>.</p>
