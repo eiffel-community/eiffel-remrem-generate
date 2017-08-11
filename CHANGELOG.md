@@ -1,3 +1,6 @@
+## 0.8.2
+- Uplifted remrem-semantics version to 0.2.6 to support links validation.
+
 ## 0.8.1
 - Added copyright headers to the source code.
 - Uplifted remrem-shared version to 0.3.3 to get the versions of generate and all loaded protocols.
