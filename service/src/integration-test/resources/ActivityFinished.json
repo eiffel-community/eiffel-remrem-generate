@@ -49,8 +49,8 @@
     },
     "links": [
       {
-        "type": "LinkTargetType",
-        "target": "LinkTarget"
+        "type": "ACTIVITY_EXECUTION",
+        "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
       }
     ]
   }
