@@ -1,3 +1,6 @@
+## 0.8.3
+- Changed REMReM generate to read required properties from tomcat/conf/config.properties for service.
+
 ## 0.8.2
 - Uplifted remrem-semantics version to 0.2.6 to support links validation.
 
