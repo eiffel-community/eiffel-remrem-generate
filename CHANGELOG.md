@@ -1,3 +1,6 @@
+## 0.8.4
+- Removed spring configurations from config.properties file and handled through code.
+
 ## 0.8.3
 - Changed REMReM generate to read required properties from tomcat/conf/config.properties for service.
 
