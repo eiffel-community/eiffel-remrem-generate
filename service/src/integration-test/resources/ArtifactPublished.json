@@ -1,7 +1,7 @@
 {
   "msgParams": {
     "meta": {
-      "type": "eiffelartifactpublished",
+      "type": "EiffelArtifactPublishedEvent",
       "version": "1.0.0",
       "tags": [
         "tag1",

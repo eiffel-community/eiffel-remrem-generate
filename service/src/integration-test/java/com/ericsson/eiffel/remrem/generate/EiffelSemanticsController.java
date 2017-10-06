@@ -125,10 +125,10 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/eiffelsemantics?msgType=EiffelArtifactPublishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("meta.type", Matchers.is("eiffelartifactpublished"))
+                    .body("meta.type", Matchers.is("EiffelArtifactPublishedEvent"))
                     .body("meta.version", Matchers.is(version));
     }
 
@@ -138,10 +138,10 @@ public class EiffelSemanticsController {
                 .contentType("application/json")
                 .body(activityFinishedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=eiffelactivityfinished")
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("meta.type", Matchers.is("eiffelactivityfinished"))
+                    .body("meta.type", Matchers.is("EiffelActivityFinishedEvent"))
                     .body("meta.version", Matchers.is(version));
     }
 
