@@ -193,12 +193,7 @@ public class CLI implements CommandLineRunner {
     }
 
     private String handleMsgTypeArgs(CommandLine commandLine) {
-        String msgType = commandLine.getOptionValue("t").toLowerCase(Locale.ROOT);
-        Pattern p = Pattern.compile("(.*)event");
-        Matcher m = p.matcher(msgType);
-        if (m.matches()) {
-            return m.group(1);
-        }
+        String msgType = commandLine.getOptionValue("t");
         return msgType;
     }
 

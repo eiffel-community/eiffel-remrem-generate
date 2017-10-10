@@ -1,7 +1,7 @@
 {
   "msgParams": {
     "meta": {
-      "type": "eiffelactivityfinished",
+      "type": "EiffelActivityFinishedEvent",
       "version": "1.0.0",
       "tags": [
         "tag1",
