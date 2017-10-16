@@ -27,7 +27,7 @@ war {
     manifest {
 		attributes('Main-Class': 'com.ericsson.eiffel.remrem.generate.App')
 		attributes('remremVersionKey': 'serviceVersion')
-//		attributes('serviceVersion': version)
+		attributes('serviceVersion': version)
     }
 }
 
