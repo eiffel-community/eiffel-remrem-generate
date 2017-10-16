@@ -28,13 +28,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Enumeration;
-import java.util.Scanner;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -44,39 +43,42 @@ import static com.jayway.restassured.RestAssured.given;
 @ActiveProfiles("integration-test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-public class EiffelSemanticsController {
+public class EiffelRemremControllerIntegrationTest {
     JsonParser parser = new JsonParser();
 
     @Value("${local.server.port}")
-    int port;
-    static String artifactPublishedFileName = "ArtifactPublished.json";
-    static String artifactPublishedBody;
+    private int port;
+    private String artifactPublishedFileName = "ArtifactPublished.json";
+    private String artifactPublishedBody;
 
-    static String activityFinishedFileName = "ActivityFinished.json";
-    static String activityFinishedBody;
-    
-    static String version = "1.0.0";
+    private String activityFinishedFileName = "ActivityFinished.json";
+    private String activityFinishedBody;
+
+    private String activityFinishedDuplicateKeysFileName = "ActivityFinishedEventDuplicatedKeys.json";
+    private String activityFinishedDuplicateKeysBody;
+
+    private String version = "1.0.0";
 
     private String credentials = "Basic " + Base64.getEncoder().encodeToString("user:secret".getBytes());
 
     @Before
-    public void  setUp() throws FileNotFoundException {
+    public void  setUp() throws IOException {
         RestAssured.port = port;
-        URL url = getClass().getClassLoader().getResource(artifactPublishedFileName);
-        String path = url.getPath().replace("%20"," ");
-        File file = new File(path);
-        artifactPublishedBody = new Scanner(file)
-            .useDelimiter("\\A").next();
+        artifactPublishedBody = loadEventBody(artifactPublishedFileName);
+        activityFinishedBody = loadEventBody(activityFinishedFileName);
 
-        url = getClass().getClassLoader().getResource(activityFinishedFileName);
-        path = url.getPath().replace("%20"," ");
-        file = new File(path);
-        activityFinishedBody = new Scanner(file)
-            .useDelimiter("\\A").next();
-        
         if (version == null) {
             version = getMessagingVersion();
         }
+    }
+
+    private String loadEventBody(final String fileName) throws IOException {
+        URL url = getClass().getClassLoader().getResource(fileName);
+        assert url != null;
+        String path = url.getPath().replace("%20"," ");
+        File file = new File(path);
+        final byte[] bytes = Files.readAllBytes(file.toPath());
+        return new String(bytes);
     }
     
     public static String getMessagingVersion() {
@@ -119,7 +121,8 @@ public class EiffelSemanticsController {
                     .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test public void testSendArtifactPublished() throws Exception {
+    @Test
+    public void testSendArtifactPublished() throws Exception {
         given()
                 .header("Authorization", credentials)
                 .contentType("application/json")
@@ -132,7 +135,8 @@ public class EiffelSemanticsController {
                     .body("meta.version", Matchers.is(version));
     }
 
-    @Test public void testSendActivityFinished() throws Exception {
+    @Test
+    public void testSendActivityFinished() throws Exception {
         given()
                 .header("Authorization", credentials)
                 .contentType("application/json")
@@ -143,6 +147,20 @@ public class EiffelSemanticsController {
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("EiffelActivityFinishedEvent"))
                     .body("meta.version", Matchers.is(version));
+    }
+
+    @Test
+    public void testDuplicateKeyInBody() throws IOException {
+        activityFinishedDuplicateKeysBody = loadEventBody(activityFinishedDuplicateKeysFileName);
+
+        given()
+                .header("Authorization", credentials)
+                .contentType("application/json")
+                .body(activityFinishedDuplicateKeysBody)
+                .when()
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
+                .then()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
 }

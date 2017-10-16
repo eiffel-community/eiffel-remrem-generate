@@ -26,7 +26,7 @@ public class GsonHttpMessageConverterConfig {
 
     @Bean
     public GsonHttpMessageConverter gsonHttpMessageConverter() {
-        GsonHttpMessageConverter converter = new GsonHttpMessageConverter();
+        GsonHttpMessageConverter converter = new GsonHttpMessageConverterWithValidate();
         converter.setGson(gson());
         return converter;
     }

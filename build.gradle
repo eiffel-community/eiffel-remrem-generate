@@ -30,6 +30,7 @@ plugins{
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
+    mavenLocal()
 }
 
 ext {
@@ -57,11 +58,14 @@ subprojects {
 	repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }
+        mavenLocal()
     }
     
     dependencies {
         //Injectable Message Library and its Implementation
-        compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.4')
+//        compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.4')
+        compile ('com.ericsson.eiffel.remrem:remrem-shared:0.3.5')
+
         compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.7')
         compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
 
