@@ -52,7 +52,7 @@ subprojects {
 	targetCompatibility = 1.8
 	
 	//Latest version for generate
-	version = "0.8.5"
+	version = "0.8.6"
 	
 	repositories {
         mavenCentral()
@@ -62,7 +62,7 @@ subprojects {
     dependencies {
         //Injectable Message Library and its Implementation
         compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.4')
-        compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.7')
+        compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.8')
         compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
 
         //Authentication
