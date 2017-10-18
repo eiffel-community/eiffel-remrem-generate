@@ -39,7 +39,7 @@
 
 <ul>
 <li>JDK 8</li>
-<li>Tomcat 7</li>
+<li>Tomcat 8</li>
 </ul>
 
 <h2>
@@ -108,78 +108,47 @@ usage: java -jar
                              is given
  -v,--list_versions          lists the versions of generate and all loaded protocols
 </pre>
-<p>NOTE: The message type is the name of the event type to send without the suffix <em>event</em> and in small case letters, for example <em>eiffelactivityfinished</em> for an <em>eiffelactivityfinishedevent</em>.</p>
 
-<strong><p>Templates for eiffel events are available <a href="http://ericsson.github.io/eiffel-remrem-semantics/">here.</a></p></strong>
+<strong><p>Generate Templates for eiffel-remrem-semantics to be used are available <a href="http://ericsson.github.io/eiffel-remrem-semantics/">here.</a></p></strong>
 
 
 <p>The message must exist in a json file, for example <strong><em>eiffelactivityfinished.json</em></strong> might contain the following message:<br></p>
 <pre>
 {
-   "msgParams":{
-      "meta":{
-         "type":"eiffelactivityfinished",
-         "domainId":"example.domain",
-         "tags":[
-            "tag1",
-            "tag2"
-         ],
-         "source":{
-            "host":"host",
-            "name":"name",
-            "uri":"http://java.sun.com/j2se/1.3/",
-            "serializer":{
-               "groupId":"G",
-               "artifactId":"A",
-               "version":"V"
-            }
-         }
-      }
-   },
-   "eventParams":{
-      "data":{
-         "outcome":{
-            "conclusion":"TIMED_OUT",
-            "description":"Compilation timed out."
-         },
-         "persistentLogs":[
-            {
-               "name":"firstLog",
-               "uri":"http://myHost.com/firstLog"
-            },
-            {
-               "name":"otherLog",
-               "uri":"isbn:0-486-27557-4"
-            }
-         ]
+  "msgParams": {
+    "meta": {
+    "type": "EiffelActivityFinishedEvent",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "domainId": "example.domain",
+        "host": "host",
+        "name": "name",
+        "uri": "http:\/\/java.sun.com\/j2se\/1.3\/",
+        "gav": {
+          "groupId": "com.github.Ericsson",
+          "artifactId": "eiffel-remrem-semantics",
+          "version": "0.2.9"
+        }
       },
-      "links": [{
-         "type": "ACTIVITY_EXECUTION",
-         "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
-       }]
-   }
-}</pre>
-
-<h3>
-<a id="with-input-from-the-example-file-shown-above-and-output-to-a-file" class="anchor" href="#with-input-from-the-example-file-shown-above-and-output-to-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With input from the example file shown above and output to a file:</h3>
-
-<pre><code> $ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfinished -r output.json
-</code></pre>
-
-<p>Gives:</p>
-
-<pre>$cat output.json
-[
-  {
+      "security": {
+        "sdm": {
+          "authorIdentity": "test",
+          "encryptedDigest": "sample"
+        }
+      }
+    }
+  },
+  "eventParams": {
     "data": {
       "outcome": {
-        "conclusion": "TIMED_OUT",
-        "description": "Compilation timed out."
+        "conclusion": "SUCCESSFUL"
       },
-      "persistentLogs": [
-        {
+      "persistentLogs": [{
           "name": "firstLog",
-          "uri": "http://myHost.com/firstLog"
+          "uri": "http:\/\/myHost.com\/firstLog"
         },
         {
           "name": "otherLog",
@@ -187,32 +156,76 @@ usage: java -jar
         }
       ]
     },
-    "links": [{
-         "type": "ACTIVITY_EXECUTION",
-         "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
-    }],
-    "meta": {
-      "domainId": "example.domain",
-      "id": "2075b7d1-83a6-47c8-af1d-1d0f451b1f81",
-      "type": "eiffelactivityfinished",
-      "version": "0.1.0",
-      "time": 1473767230905,
-      "tags": [
-        "tag1",
-        "tag2"
-      ],
-      "source": {
-        "host": "host",
-        "name": "name",
-        "uri": "http://java.sun.com/j2se/1.3/",
-        "serializer": {
-          "groupId": "G",
-          "artifactId": "A",
-          "version": "V"
+    "links": [
+        {
+            "type": "ACTIVITY_EXECUTION",
+            "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
         }
-      }
-    }
+    ]
   }
+}</pre>
+
+<h3>
+<a id="with-input-from-the-example-file-shown-above-and-output-to-a-file" class="anchor" href="#with-input-from-the-example-file-shown-above-and-output-to-a-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With input from the example file shown above and output to a file:</h3>
+
+<pre><code> $ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfinishedevent -r output.json
+</code></pre>
+
+<p>Gives:</p>
+
+<pre>$cat output.json
+[
+   {
+      "meta": {
+         "id": "7214aead-7702-44dd-915d-a8c0cd346eac",
+         "type": "EiffelActivityFinishedEvent",
+         "version": "1.0.0",
+         "time": 1508760894525,
+         "tags": [
+            "tag1",
+            "tag2"
+         ],
+         "source": {
+            "domainId": "example.domain",
+            "host": "host",
+            "name": "name",
+            "gav": {
+               "groupId": "com.github.Ericsson",
+               "artifactId": "eiffel-remrem-semantics",
+               "version": "0.2.9"
+            },
+            "uri": "http://java.sun.com/j2se/1.3/"
+         },
+         "security": {
+            "sdm": {
+               "authorIdentity": "test",
+               "encryptedDigest": "sample"
+            }
+         }
+      },
+      "data": {
+         "outcome": {
+            "conclusion": "SUCCESSFUL"
+         },
+         "persistentLogs": [
+            {
+               "name": "firstLog",
+               "uri": "http://myHost.com/firstLog"
+            },
+            {
+               "name": "otherLog",
+               "uri": "isbn:0-486-27557-4"
+            }
+         ],
+         "customData": []
+      },
+      "links": [
+         {
+            "type": "ACTIVITY_EXECUTION",
+            "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
+         }
+      ]
+   }
 ]</pre>
 
 <h3>
@@ -223,18 +236,18 @@ usage: java -jar
 
 <p>Gives:</p>
 
-<pre>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"eiffelactivityfinished","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
+<pre>[{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"EiffelActivityFinishedEvent","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","gav":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
 
 <h3>
 <a id="same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" class="anchor" href="#same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example, but this time the data is supplied as a command line argument:</h3>
 
-<pre><code>$ java -jar generate-cli.jar -t eiffelactivityfinished -json {"msgParams": {"meta": {"type":"eiffelactivityfinished","domainId": "example.domain","tags": ["tag1", "tag2"],"source": {"host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","serializer": {"groupId": "G","artifactId": "A",       "version": "V"}}}},"eventParams": {"data": {"outcome": {"conclusion": "TIMED_OUT","description": "Compilation timed out."},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}
+<pre><code>$ java -jar generate-cli.jar -t eiffelactivityfinished -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","tags": ["tag1", "tag2"],"source": {"domainId": "example.domain","host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","gav": {"groupId": "com.github.Ericsson","artifactId": "eiffel-remrem-semantics",       "version": "0.2.9"}}}},"eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}
 </code></pre>
 
 <p>Gives:</p>
 
-<pre>[{"data":{"outcome":{"conclusion":"TIMED_OUT","description":"Compilation timed out."},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"eiffelactivityfinished","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
-<p><strong>For loading protocol jars other than eiffelsemantics :</strong></p>
+<pre>[{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"EiffelActivityFinishedEvent","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","gav":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
+<p><strong>For loading protocol jars other than eiffel-remrem-semantics :</strong></p>
 <pre><code> $ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype
 </code></pre>
 <strong>Note: In the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
@@ -317,17 +330,17 @@ Result:
 <pre>curl -H "Content-Type: application/json" -X POST -d '
   {"msgParams": {
   "meta": {
-    "type": "eiffelactivityfinished",
+    "type": "EiffelActivityFinishedEvent",
     "domainId": "example.domain",
     "tags": ["tag1", "tag2"],
     "source": {
       "host": "host",
       "name": "name",
       "uri": "http://java.sun.com/j2se/1.3/",
-      "serializer": {
-        "groupId": "G",
-        "artifactId": "A",
-        "version": "V"
+      "gav": {
+        "groupId": "com.github.Ericsson",
+        "artifactId": "eiffel-remrem-semantics",
+        "version": "0.2.9"
       }
     }
   }
@@ -335,8 +348,7 @@ Result:
   "eventParams": {
     "data": {
       "outcome": {
-        "conclusion": "TIMED_OUT",
-        "description": "Compilation timed out."
+        "conclusion": "SUCCESSFUL"
       },
       "persistentLogs": [
         {
@@ -355,6 +367,8 @@ Result:
     }]
   }
 }' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</pre>
+
+<p><strong>NOTE:</strong> For eiffel-remrem-semantics inputEventType is not mandatory it will be added based on event type query, But from the input.json the eventType should be camelcase</p>
 
 <p><strong>NOTE:</strong> For other than eiffelsemantics protocol, provide the Java opts as: </p>
 <pre>set JAVA_OPTS="-Djava.ext.dirs=/path/to/jars/" in catalina.sh</pre>
