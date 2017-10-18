@@ -1,3 +1,9 @@
+## 0.8.6
+- Uplift remrem semantics to 0.2.8 and eiffelinputEventType checking.
+
+## 0.8.5
+- Uplift remrem semantics to 0.2.7 and eiffelevents as camelcase.
+
 ## 0.8.4
 - Removed spring configurations from config.properties file and handled through code.
 
