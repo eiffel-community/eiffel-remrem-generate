@@ -30,6 +30,7 @@ plugins{
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
+    mavenLocal()
 }
 
 ext {
@@ -57,6 +58,7 @@ subprojects {
 	repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }
+        mavenLocal()
     }
     
     dependencies {
