@@ -1,3 +1,6 @@
+## 0.8.7
+- Added validation that can detect duplicate keys in the JSON request body
+
 ## 0.8.6
 - Uplift remrem semantics to 0.2.8 and eiffelinputEventType checking.
 
