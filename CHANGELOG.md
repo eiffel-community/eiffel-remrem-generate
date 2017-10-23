@@ -1,3 +1,6 @@
+## 0.8.8
+- Uplifted remrem-semantics version to 0.2.9 to accept case insensitive eventType through query params.
+
 ## 0.8.7
 - Added validation that can detect duplicate keys in the JSON request body
 
