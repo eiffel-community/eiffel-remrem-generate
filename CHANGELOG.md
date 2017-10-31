@@ -1,3 +1,6 @@
+## 0.8.9
+- Uplifted remrem-semantics version to 0.3.0
+
 ## 0.8.8
 - Uplifted remrem-semantics version to 0.2.9 to accept case insensitive eventType through query params.
 
