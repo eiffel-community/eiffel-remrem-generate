@@ -1,3 +1,6 @@
+## 0.9.0
+- Uplifted remrem-semantics to 0.3.1 to override given input meta.source.serializer GAV information
+
 ## 0.8.9
 - Uplifted remrem-protocol version to 0.0.5 and remrem-semantics version to 0.3.0
 
