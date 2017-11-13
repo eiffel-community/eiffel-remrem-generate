@@ -1,3 +1,6 @@
+## 0.9.1
+- Uplifted generate version to resolve versions endpoint issue
+
 ## 0.9.0
 - Uplifted remrem-semantics to 0.3.1 to override given input meta.source.serializer GAV information
 
