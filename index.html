@@ -236,17 +236,18 @@ usage: java -jar
 
 <p>Gives:</p>
 
-<pre>[{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"EiffelActivityFinishedEvent","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","gav":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
+<pre>[{"meta":{"id":"963da060-f2cf-4370-a68d-67fd872def36","type":"EiffelActivityFinishedEvent","version":"1.0.0","time":1513758440588,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":{"groupId":"com.github.Ericsson","artifactId":"eiffel-remrem-semantics","version":"0.3.1"},"uri":"http://java.sun.com/j2se/1.3/"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}},"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}],"customData":[]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}]</pre>
 
 <h3>
 <a id="same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" class="anchor" href="#same-example-but-this-time-the-data-is-supplied-as-a-command-line-argument" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example, but this time the data is supplied as a command line argument:</h3>
 
-<pre><code>$ java -jar generate-cli.jar -t eiffelactivityfinished -json {"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","tags": ["tag1", "tag2"],"source": {"domainId": "example.domain","host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","gav": {"groupId": "com.github.Ericsson","artifactId": "eiffel-remrem-semantics",       "version": "0.2.9"}}}},"eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}
+<pre><code>$ java -jar generate-cli.jar -t eiffelactivityfinished -json '{"msgParams": {"meta": {"type":"EiffelActivityFinishedEvent","tags": ["tag1", "tag2"],"source": {"domainId": "example.domain","host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/","gav": {"groupId": "com.github.Ericsson","artifactId": "eiffel-remrem-semantics",       "version": "0.2.9"}}}},"eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"},"persistentLogs": [{"name": "firstLog","uri": "http://myHost.com/firstLog"},{"name": "otherLog","uri": "isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}'
 </code></pre>
 
 <p>Gives:</p>
 
-<pre>[{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}],"meta":{"domainId":"example.domain","id":"babcdb18-b3c8-46c0-8169-684733bf5ac9","type":"EiffelActivityFinishedEvent","version":"0.1.6-PBN2","time":1477033634382,"tags":["tag1","tag2"],"source":{"host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","gav":{"groupId":"G","artifactId":"A","version":"V"}}}}]</pre>
+<pre>[{"meta":{"id":"963da060-f2cf-4370-a68d-67fd872def36","type":"EiffelActivityFinishedEvent","version":"1.0.0","time":1513758440588,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":{"groupId":"com.github.Ericsson","artifactId":"eiffel-remrem-semantics","version":"0.3.1"},"uri":"http://java.sun.com/j2se/1.3/"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}},"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}],"customData":[]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}]</pre>
+
 <p><strong>For loading protocol jars other than eiffel-remrem-semantics :</strong></p>
 <pre><code> $ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype
 </code></pre>
@@ -327,46 +328,7 @@ Result:
 <a id="example-with-event-body-passed-to-service" class="anchor" href="#example-with-event-body-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body passed to service:<br>
 </h3>
 
-<pre>curl -H "Content-Type: application/json" -X POST -d '
-  {"msgParams": {
-  "meta": {
-    "type": "EiffelActivityFinishedEvent",
-    "domainId": "example.domain",
-    "tags": ["tag1", "tag2"],
-    "source": {
-      "host": "host",
-      "name": "name",
-      "uri": "http://java.sun.com/j2se/1.3/",
-      "gav": {
-        "groupId": "com.github.Ericsson",
-        "artifactId": "eiffel-remrem-semantics",
-        "version": "0.2.9"
-      }
-    }
-  }
-},
-  "eventParams": {
-    "data": {
-      "outcome": {
-        "conclusion": "SUCCESSFUL"
-      },
-      "persistentLogs": [
-        {
-          "name": "firstLog",
-          "uri": "http://myHost.com/firstLog"
-        },
-        {
-          "name": "otherLog",
-          "uri": "isbn:0-486-27557-4"
-        }
-      ]
-    },
-    "links": [{
-        "type": "ACTIVITY_EXECUTION",
-        "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
-    }]
-  }
-}' http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</pre>
+<pre>curl -H "Content-Type: application/json" -X POST -d '{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent", "tags": ["tag1","tag2"], "source": {"domainId": "example.domain", "host": "host", "name": "name", "uri": "http:\/\/java.sun.com\/j2se\/1.3\/", "gav": {"groupId": "com.github.Ericsson", "artifactId": "eiffel-remrem-semantics", "version": "0.2.9"}}, "security": {"sdm": {"authorIdentity": "test", "encryptedDigest": "sample"}}}}, "eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"}, "persistentLogs": [{"name": "firstLog", "uri": "http:\/\/myHost.com\/firstLog"}, {"name": "otherLog", "uri": "isbn:0-486-27557-4"}]}, "links": [{"type": "ACTIVITY_EXECUTION", "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}' http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
 
 <p><strong>NOTE:</strong> For eiffel-remrem-semantics inputEventType is not mandatory it will be added based on event type query, But from the input.json the eventType should be camelcase</p>
 
@@ -377,7 +339,7 @@ Result:
 <a id="example-with-event-body-in-a-file-body-singlejson-passed-to-service" class="anchor" href="#example-with-event-body-in-a-file-body-singlejson-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body in a file body-single.json passed to service:<br>
 </h3>
 
-<pre>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/eiffelsemantics?msgType=eiffelactivityfinished</pre>
+<pre>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
 
 <p><h2>Status Codes:</h2></p>
 <p>HTTP Status Code is the Response Code for the HTTP Request.</p>
