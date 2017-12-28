@@ -1,3 +1,6 @@
+## 0.9.2
+- Updated non-workable examples in documentation.
+
 ## 0.9.1
 - Uplifted generate version to resolve versions endpoint issue
 
