@@ -162,5 +162,18 @@ public class EiffelRemremControllerIntegrationTest {
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
+    
+    @Test
+    public void testGetEventTypes() throws Exception {
+        given()
+                .header("Authorization", credentials)
+                .when()
+                    .get("/event_types/eiffelsemantics")
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body(Matchers.containsString("EiffelArtifactPublishedEvent"))
+                    .body(Matchers.containsString("EiffelActivityFinishedEvent"))
+                    .body(Matchers.containsString("EiffelActivityStartedEvent"));
+    }
 
 }

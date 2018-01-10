@@ -16,10 +16,12 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +90,17 @@ public class RemremGenerateController {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
         return parser.parse(versions.toString());
     }
-
+    
+    /**
+     * this method returns available Eiffel event types as listed in EiffelEventType enum.
+     *
+     * @return string collection with event types.
+     */
+    @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<String>> getEventTypes(@PathVariable String mp) {
+    	MsgService msgService = getMessageService(mp);    	
+    	return new ResponseEntity<Collection<String>>(msgService.getSupportedEventTypes(), HttpStatus.OK);
+    }
 
     private MsgService getMessageService(String messageProtocol) {
         for (MsgService service : msgServices) {
