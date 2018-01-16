@@ -16,14 +16,22 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.protocol.ValidationResult;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.VersionService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +40,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -97,9 +115,24 @@ public class RemremGenerateController {
      * @return string collection with event types.
      */
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
-    public ResponseEntity<Collection<String>> getEventTypes(@PathVariable String mp) {
+    public ResponseEntity<Collection<String>> getEventTypes(@PathVariable("mp") String mp) {
     	MsgService msgService = getMessageService(mp);    	
     	return new ResponseEntity<Collection<String>>(msgService.getSupportedEventTypes(), HttpStatus.OK);
+    }
+    
+    /**
+     * Returns an eiffel event template matching the type specified in the path.
+     *
+     * @return json containing eiffel event template.
+     */
+    @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<JsonElement> getEventTypeTemplate(@PathVariable("type") String type, @PathVariable("mp") String mp) {
+        MsgService msgService = getMessageService(mp);
+        JsonElement template = msgService.getEventTemplate(type);
+        if(template != null)
+            return new ResponseEntity<JsonElement>(template, HttpStatus.OK);
+        else
+            return new ResponseEntity<JsonElement>(template, HttpStatus.NOT_FOUND);
     }
 
     private MsgService getMessageService(String messageProtocol) {

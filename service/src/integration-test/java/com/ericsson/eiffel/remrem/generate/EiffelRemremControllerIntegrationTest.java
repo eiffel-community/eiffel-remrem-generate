@@ -175,5 +175,24 @@ public class EiffelRemremControllerIntegrationTest {
                     .body(Matchers.containsString("EiffelActivityFinishedEvent"))
                     .body(Matchers.containsString("EiffelActivityStartedEvent"));
     }
-
+    
+    @Test
+    public void testGetEventTypeTemplateFileExists() {
+        given()
+                .header("Authorization", credentials)
+                .when()
+                    .get("/template/EiffelArtifactPublishedEvent/eiffelsemantics")
+                .then()
+                    .statusCode(HttpStatus.SC_OK);
+    }
+    
+    @Test
+    public void testGetEventTypeTemplateNoFileExists() {
+        given()
+                .header("Authorization", credentials)
+                .when()
+                    .get("/template/EiffelNotAnEvent/eiffelsemantics")
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
 }
