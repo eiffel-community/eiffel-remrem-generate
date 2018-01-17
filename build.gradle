@@ -30,6 +30,7 @@ plugins{
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
+    mavenLocal()
 }
 
 ext {
@@ -52,18 +53,19 @@ subprojects {
 	targetCompatibility = 1.8
 	
 	//Latest version for generate
-	version = "0.8.5"
+	version = "0.9.2"
 	
 	repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }
+        mavenLocal()
     }
     
     dependencies {
         //Injectable Message Library and its Implementation
         compile ('com.github.Ericsson:eiffel-remrem-shared:0.3.4')
-        compile ('com.github.Ericsson:eiffel-remrem-semantics:0.2.7')
-        compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.1')
+        compile ('com.github.Ericsson:eiffel-remrem-semantics:0.3.2')
+        compile ('com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.5')
 
         //Authentication
         compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")

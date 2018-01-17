@@ -1,3 +1,24 @@
+## 0.9.1
+- Uplifted generate version to resolve versions endpoint issue
+
+## 0.9.0
+- Uplifted remrem-semantics to 0.3.1 to override given input meta.source.serializer GAV information
+
+## 0.8.9
+- Uplifted remrem-protocol version to 0.0.5 and remrem-semantics version to 0.3.0
+
+## 0.8.8
+- Uplifted remrem-semantics version to 0.2.9 to accept case insensitive eventType through query params.
+
+## 0.8.7
+- Added validation that can detect duplicate keys in the JSON request body
+
+## 0.8.6
+- Uplift remrem semantics to 0.2.8 and eiffelinputEventType checking.
+
+## 0.8.5
+- Uplift remrem semantics to 0.2.7 and eiffelevents as camelcase.
+
 ## 0.8.4
 - Removed spring configurations from config.properties file and handled through code.
 
