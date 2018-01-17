@@ -3,9 +3,6 @@
 - Uplifted remrem-semantics to 0.3.5
 - Uplifted remrem-protocol-interface to 0.0.7
 
-## 0.9.2
-- Uplifted remrem-semantics version to 0.3.2 to support continuous operation events
-
 ## 0.9.1
 - Uplifted generate version to resolve versions endpoint issue
 
