@@ -76,6 +76,7 @@ public class RemremGenerateController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
     /**
      * this method is used to display the versions of generate and all loaded protocols.

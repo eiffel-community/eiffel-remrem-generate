@@ -105,7 +105,8 @@ task integrationTest(type: Test) {
 }
 
 repositories {
-    mavenCentral()
+    //mavenCentral()
+    maven { url 'http://repo1.maven.org/maven2' } 
 }
 
 //Dependencies for remrem-generate-cli

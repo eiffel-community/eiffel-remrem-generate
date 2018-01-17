@@ -99,7 +99,8 @@ task integrationTest(type: Test) {
 project.tasks.remove(jar)
 
 repositories {
-    mavenCentral()
+    //mavenCentral()
+    maven { url 'http://repo1.maven.org/maven2' } 
 }
 
 dependencies {

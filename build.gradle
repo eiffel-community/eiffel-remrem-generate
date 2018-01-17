@@ -14,7 +14,8 @@
 */
 buildscript {
     repositories {
-        mavenCentral()
+        //mavenCentral()
+        maven { url 'http://repo1.maven.org/maven2' } 
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
@@ -28,7 +29,8 @@ plugins{
 }
 
 repositories {
-    mavenCentral()
+    //mavenCentral()
+    maven { url 'http://repo1.maven.org/maven2' } 
     maven { url "https://jitpack.io" }
     mavenLocal()
 }
