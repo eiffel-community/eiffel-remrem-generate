@@ -1,6 +1,6 @@
 ## 0.9.3
 - Added endpoint to get event templates
-- Uplifted remrem-semantics to 0.3.4
+- Uplifted remrem-semantics to 0.3.5
 - Uplifted remrem-protocol-interface to 0.0.7
 
 ## 0.9.2
