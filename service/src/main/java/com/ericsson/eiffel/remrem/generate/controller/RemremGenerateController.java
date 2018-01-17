@@ -20,6 +20,7 @@ import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +90,32 @@ public class RemremGenerateController {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
         return parser.parse(versions.toString());
     }
-
+    
+    /**
+     * this method returns available Eiffel event types as listed in EiffelEventType enum.
+     *
+     * @return string collection with event types.
+     */
+    @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<Collection<String>> getEventTypes(@PathVariable("mp") String mp) {
+    	MsgService msgService = getMessageService(mp);    	
+    	return new ResponseEntity<Collection<String>>(msgService.getSupportedEventTypes(), HttpStatus.OK);
+    }
+    
+    /**
+     * Returns an eiffel event template matching the type specified in the path.
+     *
+     * @return json containing eiffel event template.
+     */
+    @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<JsonElement> getEventTypeTemplate(@PathVariable("type") String type, @PathVariable("mp") String mp) {
+        MsgService msgService = getMessageService(mp);
+        JsonElement template = msgService.getEventTemplate(type);
+        if(template != null)
+            return new ResponseEntity<JsonElement>(template, HttpStatus.OK);
+        else
+            return new ResponseEntity<JsonElement>(template, HttpStatus.NOT_FOUND);
+    }
 
     private MsgService getMessageService(String messageProtocol) {
         for (MsgService service : msgServices) {
