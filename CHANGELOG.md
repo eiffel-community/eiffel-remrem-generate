@@ -1,4 +1,8 @@
 
+## 0.9.4
+- Moved ldap related functionality from shared
+- Added functionality to disable the Remrem Generate Authentication.
+
 ## 0.9.3
 - Added endpoint to get event templates
 - Uplifted remrem-semantics to 0.3.5
