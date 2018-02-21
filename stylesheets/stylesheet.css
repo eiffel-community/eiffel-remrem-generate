@@ -158,7 +158,7 @@ p img {
 }
 
 pre, code {
-  width: 100%;
+  width: 90%;
   color: #222;
   background-color: #fff;
 
@@ -175,6 +175,10 @@ pre {
   padding: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
   overflow: auto;
+}
+
+table tr td pre {
+  padding: 0px;
 }
 
 code {
