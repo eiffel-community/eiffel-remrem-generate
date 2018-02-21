@@ -1,4 +1,10 @@
 
+## 0.9.5
+- Added swagger for generate service
+- Added more verifications for generate service
+- Added presentation in html for all GET endpoints
+- Changed year in copyright headers from 2017 to 2018
+
 ## 0.9.4
 - Moved ldap related functionality from shared
 - Added functionality to disable the Remrem Generate Authentication.
