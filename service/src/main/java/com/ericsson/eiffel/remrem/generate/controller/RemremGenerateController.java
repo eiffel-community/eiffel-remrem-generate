@@ -46,6 +46,9 @@ import java.util.Map;
 @Api(value = "REMReM Generate", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
+    // regular expression that exclude "swagger-ui.html" from request parameter
+    public static final String REGEX = ":^(?!swagger-ui.html).*$";
+
     @Autowired
     private List<MsgService> msgServices;
     private JsonParser parser = new JsonParser();
@@ -68,7 +71,7 @@ public class RemremGenerateController {
             @ApiResponse(code = 400, message = "Malformed JSON"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
-    @RequestMapping(value = "/smth/{msgProtocol}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{msgProtocol" + REGEX + "}", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@PathVariable("msgProtocol") String msgProtocol, @RequestParam("msgType") String msgType,
             @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(msgProtocol);

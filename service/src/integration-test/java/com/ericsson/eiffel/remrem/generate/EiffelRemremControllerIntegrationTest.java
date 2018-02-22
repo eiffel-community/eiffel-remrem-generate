@@ -116,7 +116,7 @@ public class EiffelRemremControllerIntegrationTest {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/smth/eiffelsemantics?msgType=eiffelartifactpublished")
+                    .post("/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
                     .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
@@ -128,7 +128,7 @@ public class EiffelRemremControllerIntegrationTest {
                 .contentType("application/json")
                 .body(artifactPublishedBody)
                 .when()
-                    .post("/smth/eiffelsemantics?msgType=EiffelArtifactPublishedEvent")
+                    .post("/eiffelsemantics?msgType=EiffelArtifactPublishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("EiffelArtifactPublishedEvent"))
@@ -142,7 +142,7 @@ public class EiffelRemremControllerIntegrationTest {
                 .contentType("application/json")
                 .body(activityFinishedBody)
                 .when()
-                    .post("/smth/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("EiffelActivityFinishedEvent"))
@@ -158,7 +158,7 @@ public class EiffelRemremControllerIntegrationTest {
                 .contentType("application/json")
                 .body(activityFinishedDuplicateKeysBody)
                 .when()
-                    .post("/smth/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
