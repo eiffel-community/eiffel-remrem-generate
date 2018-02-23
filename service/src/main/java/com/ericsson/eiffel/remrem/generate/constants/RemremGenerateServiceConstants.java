@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Ericsson AB.
+    Copyright 2017 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.ericsson.eiffel.remrem.generate.constants;
 public final class RemremGenerateServiceConstants {
 
     public static final String NO_SERVICE_ERROR = "{\"message\":\"No protocol service has been found registered.\"}";
-    public static final String NO_TEMPLATE_ERROR = "{\"message\":\"Requested template is not available.\"}";
-    public static final String INTERNAL_SERVER_ERROR = "{\"message\":\"Internal server error.\"}";
     public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
 }
