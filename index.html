@@ -48,7 +48,7 @@
                     class="octicon octicon-link"></span></a>The releases
             </h2>
 
-            <p>Binary is release via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
+            <p>Binary is released via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
 <p><b>Download the latest version of CLI from </b><a onClick="getLatestVersion('cli','jar');" href="#">generate-cli.jar</a></p>
 <p><b>Download the latest version of Service from </b><a onClick="getLatestVersion('service','war');" href="#">generate-service.war</a></p>
 <div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;">
@@ -109,9 +109,9 @@ usage: java -jar
  -h,--help                   show help.
  -json,--json_content        JSON content
  -mp,--messaging_protocol    name of messaging protocol to be used,
-                             e.g. eiffel3, semantics
+                             e.g. eiffel3, eiffelsemantics
  -r,--response_file          file to store the response in, optional
- -t,--message_type           message type, mandatory if -f or -JSON
+ -t,--message_type           message type, mandatory if -f or -json
                              is given
  -v,--list_versions          lists the versions of generate and all loaded protocols
 </pre>
@@ -399,18 +399,19 @@ Sample result:
             <h2>Logging</h2>
 
 
-<p>REMReM Generate application logging is implemented using the logback-classic, and we required to configure the logback.xml file. <br/>
+<p>logback-classic. It requires user to configure the logback.xml file.<br/>
+When using without logback.xml log messages will look as below: <br/>
    With out logback.xml configuration log will get the PARSER_ERROR like below
 <pre><code>%PARSER_ERROR[wEx]%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr] 
   <br/>%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr]
 </code></pre>
-<br/>Here is configuration setting <strong>-Dlogging.config=path/logback.xml</strong>
+<br/>To configure the logback.xml file use <strong>-Dlogging.config=path/logback.xml</strong>
  <br/> 
 
 
 <a href="https://logback.qos.ch/manual/configuration.html">Click here</a> for info about logback configurations
 
-<br/> <a target="_blank" href="logback/logback-sample.xml">Get sample logback.xml</a>
+<br/>To get sample logback.xml to use  <a target="_blank" href="logback/logback-sample.xml">Click Here</a>
 </p>
 
       </section>
