@@ -1,4 +1,7 @@
 
+## 0.9.5
+- CLI changed to spring boot application and added logback support to remrem generate
+
 ## 0.9.4
 - Moved ldap related functionality from shared
 - Added functionality to disable the Remrem Generate Authentication.
