@@ -71,8 +71,8 @@ public class RemremGenerateController {
             @ApiResponse(code = 400, message = "Malformed JSON"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
-    @RequestMapping(value = "/{msgProtocol" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(@PathVariable("msgProtocol") String msgProtocol, @RequestParam("msgType") String msgType,
+    @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
+    public ResponseEntity<?> generate(@PathVariable("mp") String msgProtocol, @RequestParam("msgType") String msgType,
             @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(msgProtocol);
         String response;
@@ -99,7 +99,7 @@ public class RemremGenerateController {
      *
      * @return this method returns a json with version details.
      */
-    @ApiOperation(value = "To get versions of generate and all loaded protocols.", response = String.class)
+    @ApiOperation(value = "To get versions of generate and all loaded protocols", response = String.class)
     @RequestMapping(value = "/versions", method = RequestMethod.GET)
     public JsonElement getVersions() {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
@@ -115,8 +115,8 @@ public class RemremGenerateController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Event  types got successfully"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
-    @RequestMapping(value = "/event_types/{msgProtocol}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypes(@PathVariable("msgProtocol") String msgProtocol, @ApiIgnore final RequestEntity requestEntity) {
+    @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<?> getEventTypes(@PathVariable("mp") String msgProtocol, @ApiIgnore final RequestEntity requestEntity) {
     	MsgService msgService = getMessageService(msgProtocol);
     	try {
             if (msgService != null) {
@@ -141,8 +141,8 @@ public class RemremGenerateController {
             @ApiResponse(code = 400, message = "Requested template is not available"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
-    @RequestMapping(value = "/template/{msgType}/{msgProtocol}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypeTemplate(@PathVariable("msgType") String msgType, @PathVariable("msgProtocol") String msgProtocol,
+    @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
+    public ResponseEntity<?> getEventTypeTemplate(@PathVariable("type") String msgType, @PathVariable("mp") String msgProtocol,
             @ApiIgnore final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
