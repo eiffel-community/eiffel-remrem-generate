@@ -12,15 +12,22 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-package com.ericsson.eiffel.remrem.generate.constants;
+package com.ericsson.eiffel.remrem.generate.controller;
 
-public final class RemremGenerateServiceConstants {
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-        public static final String NO_SERVICE_ERROR = "{\"message\":\"No protocol service has been found registered.\"}";
-        public static final String NO_TEMPLATE_ERROR = "{\"message\":\"Requested template is not available.\"}";
-        public static final String INTERNAL_SERVER_ERROR = "{\"message\":\"Internal server error.\"}";
-        public static final String JSON_ERROR_MESSAGE_FIELD = "message";
+/**
+ *
+ * This class redirects the REMREM URL to swagger landing page
+ *
+ */
+@Controller
+public class RemremHomeController {
 
-        public static final String DOCUMENTATION_URL = "http://ericsson.github.io/eiffel-remrem-generate/index.html";
-
+        @RequestMapping(value = "/", method = RequestMethod.GET)
+        public String home() {
+                return "redirect:/swagger-ui.html";
+        }
 }
