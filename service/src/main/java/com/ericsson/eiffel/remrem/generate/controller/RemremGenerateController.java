@@ -43,7 +43,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/*")
-@Api(value = "REMReM Generate", description = "REST API for generating Eiffel messages")
+@Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
     // regular expression that exclude "swagger-ui.html" from request parameter
