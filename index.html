@@ -236,7 +236,7 @@ usage: java -jar
 ]</pre>
 
 <h3>
-<a id="same-example-but-output-the-result-on-the-console" class="anchor" href="#same-example-but-output-the-result-on-the-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example but output the result on the console:</h3>
+<a id="same-example-but-output-the-result-on-the-console" class="anchor" href="#same-example-but-output-the-result-on-the-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Same example, but output the result on the console:</h3>
 
 <pre><code> $ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfinished
 </code></pre>
@@ -268,7 +268,7 @@ usage: java -jar
 <p><strong>For loading protocol jars other than eiffel-remrem-semantics :</strong></p>
 <pre><code> $ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype
 </code></pre>
-<strong>Note: In the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
+<strong>Note: in the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
             <h2>
                 <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span
                     aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service
@@ -305,7 +305,7 @@ usage: java -jar
 
 URL:  http://&lt;host&gt;:&lt;port&gt;/&lt;application name&gt;/versions/ <br>
 
-Sample Result:
+Sample result:
 
 <pre>
         {
@@ -351,11 +351,11 @@ Sample Result:
 
 <pre>curl -H "Content-Type: application/json" -X POST -d '{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent", "tags": ["tag1","tag2"], "source": {"domainId": "example.domain", "host": "host", "name": "name", "uri": "http://java.sun.com/j2se/1.3/", "gav": {"groupId": "com.github.Ericsson", "artifactId": "eiffel-remrem-semantics", "version": "0.2.9"}}, "security": {"sdm": {"authorIdentity": "test", "encryptedDigest": "sample"}}}}, "eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"}, "persistentLogs": [{"name": "firstLog", "uri": "http://myHost.com/firstLog"}, {"name": "otherLog", "uri": "isbn:0-486-27557-4"}]}, "links": [{"type": "ACTIVITY_EXECUTION", "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}' http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
 
-<p><strong>NOTE:</strong> For eiffel-remrem-semantics inputEventType is not mandatory it will be added based on event type query, But from the input.json the eventType should be camelcase</p>
+<p><strong>NOTE:</strong> For eiffel-remrem-semantics inputEventType is not mandatory, it will be added based on event type query, but from the input.json the eventType should be camelcase</p>
 
 <p><strong>NOTE:</strong> For other than eiffelsemantics protocol, provide the Java opts as: </p>
 <pre>set JAVA_OPTS="-Djava.ext.dirs=/path/to/jars/" in catalina.sh</pre>
-<strong>Note: In the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
+<strong>Note: in the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
 <h3>
 <a id="example-with-event-body-in-a-file-body-singlejson-passed-to-service" class="anchor" href="#example-with-event-body-in-a-file-body-singlejson-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body in a file body-single.json passed to service:<br>
 </h3>
@@ -379,7 +379,7 @@ Sample Result:
                 <tr>
                     <td>400</td>
                     <td>Bad Request</td>
-                    <td>Malformed JSON (Missing braces etc..), client need to fix problem in event before
+                    <td>Malformed JSON (missing braces etc..), client need to fix problem in event before
                         submitting again</td>
                 </tr>
                 <tr>
@@ -399,7 +399,7 @@ Sample Result:
             <h2>Logging</h2>
 
 
-<p>REMReM Generate application logging is implemented using the logback-classic, and we required to configure the logback.xml file, <br/>
+<p>REMReM Generate application logging is implemented using the logback-classic, and we required to configure the logback.xml file. <br/>
    With out logback.xml configuration log will get the PARSER_ERROR like below
 <pre><code>%PARSER_ERROR[wEx]%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr] 
   <br/>%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr]
