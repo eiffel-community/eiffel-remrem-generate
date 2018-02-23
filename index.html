@@ -33,18 +33,22 @@
         <p>REMReM (<strong>REST Mailbox for Registered Messages</strong>) is a set of tools that can be used to generate validated Eiffel messages and publish them on a RabbitMQ message bus. They can be run as micro services or as stand-alone CLI versions. For more details on the micro services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">https://github.com/Ericsson/eiffel-remrem</a> </p>
 
 <p>Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message.</p>
-<h2>
-<a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility</h2>
+            <h2>
+                <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span
+                    aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility
+            </h2>
 
-<ul>
+            <ul>
 <li>JDK 8</li>
 <li>Tomcat 8</li>
 </ul>
 
-<h2>
-<a id="the-releases" class="anchor" href="#the-releases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The releases</h2>
+            <h2>
+                <a id="the-releases" class="anchor" href="#the-releases" aria-hidden="true"><span aria-hidden="true"
+                    class="octicon octicon-link"></span></a>The releases
+            </h2>
 
-<p>Binary is release via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
+            <p>Binary is release via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
 <p><b>Download the latest version of CLI from </b><a onClick="getLatestVersion('cli','jar');" href="#">generate-cli.jar</a></p>
 <p><b>Download the latest version of Service from </b><a onClick="getLatestVersion('service','war');" href="#">generate-service.war</a></p>
 <div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;">
@@ -80,18 +84,22 @@ function getLatestVersion(type,extn){
 }
 </script>
 
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation (Micro service)</h2>
+            <h2>
+                <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true"
+                    class="octicon octicon-link"></span></a>Installation (Micro service)
+            </h2>
 
-<p>Start the self executing JAR</p>
+            <p>Start the self executing JAR</p>
 <pre>java -jar generate-cli.jar</pre>
 
 <p>or deploy it in Tomcat.</p>
 
-<h2>
-<a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface).</h2>
+            <h2>
+                <a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface"
+                    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage CLI (Command Line Interface)
+            </h2>
 
-<p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
+            <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
 <pre>java -jar generate-cli.jar -h
 You passed help flag.
@@ -261,10 +269,12 @@ usage: java -jar
 <pre><code> $ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype
 </code></pre>
 <strong>Note: In the above example, protocol jar file must be present inside "/path/to/jars/" folder</strong>
-<h2>
-<a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service.</h2>
+            <h2>
+                <a id="usage-rest-service" class="anchor" href="#usage-rest-service" aria-hidden="true"><span
+                    aria-hidden="true" class="octicon octicon-link"></span></a>Usage REST service
+            </h2>
 
-<p> Deploy the generate-service.war in tomcat</p>
+            <p> Deploy the generate-service.war in tomcat</p>
 
 <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a></p>
 
@@ -330,10 +340,12 @@ Sample Result:
 <pre><code>$ curl -XPOST -H "Content-Type: application/json" -H 'Authorization: Basic cGFzc3dvcmQ=' --data @ActivityCanceled.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivitycanceled</code></pre>
 
 
-<h2>
-<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
+            <h2>
+                <a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true"
+                    class="octicon octicon-link"></span></a>Testing
+            </h2>
 
-<h3>
+            <h3>
 <a id="example-with-event-body-passed-to-service" class="anchor" href="#example-with-event-body-passed-to-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example with event body passed to service:<br>
 </h3>
 
@@ -350,7 +362,7 @@ Sample Result:
 
 <pre>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
 
-<p><h2>Status Codes:</h2></p>
+<p><h2>Status Codes</h2></p>
 <p>HTTP Status Code is the Response Code for the HTTP Request.</p>
             <table class="wikitable">
                 <tr>
@@ -373,7 +385,7 @@ Sample Result:
                 <tr>
                     <td>500</td>
                     <td>Internal Server Error</td>
-                    <td>When REMReM generate is down, Possible to try again later when server is up</td>
+                    <td>When REMReM generate is down, possible to try again later when server is up</td>
 
                 </tr>
                 <tr>
