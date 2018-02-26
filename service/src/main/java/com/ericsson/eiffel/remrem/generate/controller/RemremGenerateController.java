@@ -40,14 +40,13 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/*")
 @Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
     // regular expression that exclude "swagger-ui.html" from request parameter
-    public static final String REGEX = ":^(?!swagger-ui.html).*$";
+    private static final String REGEX = ":^(?!swagger-ui.html).*$";
 
     @Autowired
     private List<MsgService> msgServices;
