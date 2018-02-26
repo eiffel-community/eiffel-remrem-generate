@@ -71,7 +71,7 @@ public class CLIOptions {
         options.addOption("r", "response_file", true, "file to store the response in, optional");
         options.addOption("d", "debug", false, "enable debug traces");
         options.addOption("mp", "messaging_protocol", true,
-                "name of messaging protocol to be used, e.g. eiffel3, semantics");
+                "name of messaging protocol to be used, e.g. eiffel3, eiffelsemantics");
         contentGroup = new OptionGroup();
         contentGroup.addOption(new Option("f", "content_file", true, "message content file"));
         contentGroup.addOption(new Option("json", "json_content", true, "json content"));              
