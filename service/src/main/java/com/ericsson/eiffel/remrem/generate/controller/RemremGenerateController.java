@@ -72,8 +72,9 @@ public class RemremGenerateController {
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(@PathVariable("mp") String msgProtocol, @RequestParam("msgType") String msgType,
-                                      @RequestBody JsonObject bodyJson) {
+    public ResponseEntity<?> generate(@ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
+                                      @ApiParam(value = "message type") @RequestParam("msgType") String msgType,
+                                      @ApiParam(value = "JSON message") @RequestBody JsonObject bodyJson) {
         MsgService msgService = getMessageService(msgProtocol);
         String response;
         try {
@@ -116,7 +117,8 @@ public class RemremGenerateController {
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypes(@PathVariable("mp") String msgProtocol, @ApiIgnore final RequestEntity requestEntity) {
+    public ResponseEntity<?> getEventTypes(@ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
+                                           @ApiIgnore final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
             if (msgService != null) {
@@ -142,7 +144,8 @@ public class RemremGenerateController {
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypeTemplate(@PathVariable("type") String msgType, @PathVariable("mp") String msgProtocol,
+    public ResponseEntity<?> getEventTypeTemplate(@ApiParam(value = "message type") @PathVariable("type") String msgType,
+                                                  @ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
                                                   @ApiIgnore final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
