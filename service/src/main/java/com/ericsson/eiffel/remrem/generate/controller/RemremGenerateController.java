@@ -71,9 +71,9 @@ public class RemremGenerateController {
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(@ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
-                                      @ApiParam(value = "message type") @RequestParam("msgType") String msgType,
-                                      @ApiParam(value = "JSON message") @RequestBody JsonObject bodyJson) {
+    public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
+                                      @ApiParam(value = "JSON message", required = true) @RequestBody final JsonObject bodyJson) {
         MsgService msgService = getMessageService(msgProtocol);
         String response;
         try {
@@ -116,7 +116,7 @@ public class RemremGenerateController {
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypes(@ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
+    public ResponseEntity<?> getEventTypes(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
                                            @ApiIgnore final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
@@ -137,14 +137,14 @@ public class RemremGenerateController {
      *
      * @return json containing eiffel event template.
      */
-    @ApiOperation(value = "To get eiffel event template of specified type", response = String.class)
+    @ApiOperation(value = "To get eiffel event template of specified event type", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Template got successfully"),
             @ApiResponse(code = 400, message = "Requested template is not available"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
-    public ResponseEntity<?> getEventTypeTemplate(@ApiParam(value = "message type") @PathVariable("type") String msgType,
-                                                  @ApiParam(value = "message protocol") @PathVariable("mp") String msgProtocol,
+    public ResponseEntity<?> getEventTypeTemplate(@ApiParam(value = "message type", required = true) @PathVariable("type") final String msgType,
+                                                  @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
                                                   @ApiIgnore final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
@@ -163,7 +163,7 @@ public class RemremGenerateController {
         }
     }
 
-    private MsgService getMessageService(String messageProtocol) {
+    private MsgService getMessageService(final String messageProtocol) {
         for (MsgService service : msgServices) {
             if (service.getServiceName().equals(messageProtocol)) {
                 return service;
