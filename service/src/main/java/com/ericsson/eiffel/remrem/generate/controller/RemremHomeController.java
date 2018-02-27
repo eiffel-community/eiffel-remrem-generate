@@ -12,22 +12,22 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-package com.ericsson.eiffel.remrem.generate.cli;
+package com.ericsson.eiffel.remrem.generate.controller;
 
-import org.apache.commons.cli.MissingOptionException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-public class CLIExitCodes {
-    public static int CLI_EXCEPTION=1;
-    public static int CLI_MISSING_OPTION_EXCEPTION=2;
-    public static int CLI_READ_FILE_FAILED=3;
-    public static int READ_JSON_FROM_CONSOLE_FAILED=4;
-    public static int HANDLE_JSON_STRING_FAILED=5;
-    public static int MESSAGE_PROTOCOL_NOT_FOUND=6;
-	
-    public static int getExceptionCode(Exception e) {
-        if (e instanceof MissingOptionException) {
-            return CLI_MISSING_OPTION_EXCEPTION;
+/**
+ *
+ * This class redirects the REMREM URL to swagger landing page
+ *
+ */
+@Controller
+public class RemremHomeController {
+
+        @RequestMapping(value = "/", method = RequestMethod.GET)
+        public String home() {
+                return "redirect:/swagger-ui.html";
         }
-        return 1;
-    }
 }
