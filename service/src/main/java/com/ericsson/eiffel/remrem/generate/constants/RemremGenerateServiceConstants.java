@@ -16,9 +16,15 @@ package com.ericsson.eiffel.remrem.generate.constants;
 
 public final class RemremGenerateServiceConstants {
 
-        public static final String NO_SERVICE_ERROR = "{\"message\":\"No protocol service has been found registered.\"}";
-        public static final String NO_TEMPLATE_ERROR = "{\"message\":\"Requested template is not available.\"}";
-        public static final String INTERNAL_SERVER_ERROR = "{\"message\":\"Internal server error.\"}";
+        public static final String NO_SERVICE_ERROR = "{\"status_code\": 503, \"result\": \"FAIL\", "
+                + "\"message\":\"No protocol service has been found registered\"}";
+
+        public static final String NO_TEMPLATE_ERROR = "{\"status_code\": 404, \"result\": \"FAIL\", "
+                + "\"message\":\"Requested template is not available\"}";
+
+        public static final String INTERNAL_SERVER_ERROR = "{\"status_code\": 500, \"result\": \"FAIL\", "
+                + "\"message\":\"Internal server error\"}";
+
         public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
         public static final String DOCUMENTATION_URL = "http://ericsson.github.io/eiffel-remrem-generate/index.html";

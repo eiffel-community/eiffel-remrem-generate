@@ -1,4 +1,8 @@
 
+## 0.9.7
+- Added more information in error messages for generate service
+- Uplifted semantics version to 0.4.0
+
 ## 0.9.6
 - Added swagger for generate service
 - Added more verifications for generate service
