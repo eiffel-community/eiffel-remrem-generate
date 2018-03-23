@@ -35,33 +35,14 @@
         <h2>Introduction</h2>
         <p>REMReM (<strong>REST Mailbox for Registered Messages</strong>) is a set of tools that can be used to generate validated Eiffel messages and
             publish them on a RabbitMQ message bus. They can be run as micro services or as stand-alone CLI versions. For more details on the micro
-            services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">https://github.com/Ericsson/eiffel-remrem</a>
+            services and the REMReM design, see <a href="https://github.com/Ericsson/eiffel-remrem">Eiffel REMReM</a>
         </p>
-        <p>Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel
-            message.</p>
-        <h2>
-            <a id="installation" class="anchor" href="#installation" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span>
-            </a>Installation
-        </h2>
-        <p>You can use Eiffel REMReM Generate as a micro service or a java command line application.
-            This project is build by gradle, by executing following commands:</p>
-        <pre>./gradlew build</pre>
-        <p>The produced JAR file will be stored in eiffel-remrem-generate/cli/build/libs and
-            WAR will be in eiffel-remrem-generate/service/build/libs. Then you have 2 ways to execute it:
-            by running self executing JAR
-        <pre>java -jar generate-cli.jar</pre>
-        or deploy it in Tomcat (put it in tomcat/webapps/ folder and start the tomcat)
-        </p>
-        <p>Binary is released via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a></p>
-        <p><b>Download the latest version of CLI from </b><a onClick="getLatestVersion('cli','jar');" href="#">generate-cli.jar</a></p>
-        <p><b>Download the latest version of Service from </b><a onClick="getLatestVersion('service','war');" href="#">generate-service.war</a></p>
-        <div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;"></div>
-        <h2>Configuration</h2>
-        <p>This project does not need any configuration.</p>
+        <p>Eiffel REMReM Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete,
+            valid Eiffel message.</p>
         <h2>
             <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Compatibility
         </h2>
         <ul>
             <li>JDK 8</li>
@@ -70,13 +51,32 @@
         <p>For supporting latest features, Eiffel REMReM Publish should use the latest version of
             <a href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel REMReM Semantics</a>.
         </p>
-
-        <p>Start the self executing JAR</p>
-        <pre>java -jar generate-cli.jar</pre>
-        <p>or deploy it in Tomcat.</p>
-
         <h2>
-            <a id="usage-cli-command-line-interface" class="anchor" href="#usage-cli-command-line-interface" aria-hidden="true">
+            <a id="components" class="anchor" href="#components" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Components
+        </h2>
+        <ul>
+            <li>REMReM Generate CLI (Command Line Interface)</li>
+            <li>REMReM Generate Service</li>
+        </ul>
+        <h2>
+            <a id="installation" class="anchor" href="#installation" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Installation
+        </h2>
+        <p>Eiffel REMReM Publish is gradle project and can be built by executing following command:</p>
+        <pre>./gradlew build</pre>
+        <p>Binary is released via <a href="https://jitpack.io/#Ericsson/eiffel-remrem-generate">jitPack</a>.</p>
+        <p>The latest REMReM Publish CLI binary can be downloaded via
+            <a onClick="getLatestVersion('cli','jar');" href="#installation">generate-cli.jar</a>.
+        </p>
+        <p>The latest REMReM Publish Service binary can be downloaded via
+            <a onClick="getLatestVersion('service','war');" href="#installation">generate-service.war</a>.
+        </p>
+        <div id="downloadLink" style="visibility: hidden;color: red;font-size: 14px;"></div>
+        <h2>
+            <a id="usage" class="anchor" href="#usage" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
             </a>Usage
         </h2>
@@ -86,26 +86,23 @@
         <p>To get information about configuration and usage of <strong>REMReM Generate Service</strong> see
             <a href="serviceUsage.html">here</a>.
         </p>
-
-
-        <p>Examples used here are for the next generation of Eiffel events called semantics which is open source. Please follow
+        <p>Examples used here are for the next generation of Eiffel events called semantics, which is open source. Please follow
             <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-syntax-and-usage">eiffel syntax</a> and
             <a href="https://github.com/Ericsson/eiffel/tree/master/eiffel-vocabulary">eiffel vocabulary</a>.
         </p>
-
-        <h2>Logging</h2>
-
+        <h2>
+            <a id="logging" class="anchor" href="#logging" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Logging
+        </h2>
         <p>REMReM Generate application logging is implemented using the logback-classic. It requires user to configure the logback.xml file.<br>
             When used without logback.xml log messages will look as below:
         </p>
-
         <pre><code>%PARSER_ERROR[wEx]%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr]
             <br>%PARSER_ERROR[clr] %PARSER_ERROR[clr] %PARSER_ERROR[clr]</code></pre>
-
         <p>To configure the logback.xml file use <strong>-Dlogging.config=path/logback.xml</strong></p>
-        <p><a href="https://logback.qos.ch/manual/configuration.html">Click here</a> for info about logback configurations</p>
-        <p>To get sample logback.xml to use <a target="_blank" href="logback/logback-sample.xml">Click Here</a></p>
-
+        <p>To get info about logback configurations see <a href="https://logback.qos.ch/manual/configuration.html">here</a>.</p>
+        <p>To get sample logback.xml to use see <a target="_blank" href="logback/logback-sample.xml">here</a>.</p>
     </section>
 </div>
 
