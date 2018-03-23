@@ -39,7 +39,7 @@
         </h1>
 
         <p>REMReM Generate Service allows generating of Eiffel messages that will be send by <a
-                href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel REMReM Publish</a> to RabbitMQ</p>
+                href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel REMReM Publish</a> to RabbitMQ.</p>
 
         <p>Information about the REMReM Generate Service all endpoints can be got and easily accessed using next links:</p>
         <pre>http://&lt;host&gt;:&lt;port&gt;/&lt;application name&gt;/</pre>
@@ -66,36 +66,40 @@
         <pre>set JAVA_OPTS="-Djava.ext.dirs=/path/to/jars/" in catalina.sh</pre>
         <p><strong>NOTE:</strong> in the above example, protocol jar file must be present inside "/path/to/jars/" folder.</p>
 
-        <h3>Ldap configurations:</h3>
+        <h3>Ldap authentication configurations</h3>
 
         <p>Active Directory authentication can be enabled for the REMReM REST service by setting the configuration property
-            <code>activedirectory.generate.enabled=true</code>.
+            <code>activedirectory.generate.enabled: true</code>.
         </p>
 
-        <p>To authenticate with active ldap server we have to provide the following configurations in the
-            <strong>tomcat/conf/config.properties</strong> file.
-        </p>
+        <p><strong>NOTE:</strong> it is recommended to disable ldap authentication for REMReM Publish Service
+            for correct work of REMReM Publish Service endpoint <code>/generateAndPublish</code>.</p>
 
         <pre>
-  activedirectory.ldapUrl         : &lt;LDAP server url&gt;
-  activedirectory.managerPassword : &lt;LDAP server manager password(must be base64 Encrypted format)&gt;
-  activedirectory.managerDn       : &lt;LDAP managerDn pattern&gt;
-  activedirectory.rootDn          : &lt;LDAP rootDn pattern&gt;
-  activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;
-        </pre>
+activedirectory.generate.enabled: &lt;true | false&gt;
+activedirectory.ldapUrl:          &lt;LDAP server url&gt;
+activedirectory.managerPassword:  &lt;LDAP server manager password(must be base64 Encrypted format)&gt;
+activedirectory.managerDn:        &lt;LDAP managerDn pattern&gt;
+activedirectory.rootDn:           &lt;LDAP rootDn pattern&gt;
+activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
+
         <p><strong>LDAP authentication without Base64 encryption:</strong></p>
 
         <pre><code>$ curl -XPOST -H "Content-Type: application/json" --user username:password --data @ActivityCanceled.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivitycanceled</code></pre>
 
-        <p align="justify">Each HTTP request must then include an Authorization header with value <code>Basic &lt;Base64 encoded
-            username:password&gt;</code>.</p>
+        <p><strong>NOTE:</strong> each HTTP request must then include an Authorization header with value
+            <code>Basic &lt;Base64 encoded username:password&gt;</code>.</p>
 
         <p><strong>LDAP authentication with Base64 encryption:</strong></p>
 
         <pre><code>$ curl -XPOST -H "Content-Type: application/json" -H 'Authorization: Basic cGFzc3dvcmQ=' --data @ActivityCanceled.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivitycanceled</code></pre>
 
-
-        <p>Available REST resources for generate are:</p>
+        <h2>
+            <a id="usage" class="anchor" href="#usage" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Usage
+        </h2>
+        <p>Available REST resources for REMReM Generate Service are described below:</p>
 
         <table style="width:100%">
             <tr>
@@ -106,40 +110,11 @@
                 <th width="20%">Description</th>
             </tr>
             <tr>
-                <td>/event_types/{mp}</td>
-                <td>GET</td>
-                <td>
-                    <p>mp - message protocol, required</p>
-                </td>
-                <td>
-                </td>
-                <td>This endpoint is used to obtain Eiffel event types implemented in <a href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel
-                    REMReM Semantics</a>.
-                </td>
-            </tr>
-
-            <tr>
-                <td>/template/{type}/{mp}</td>
-                <td>GET</td>
-                <td>
-                    <p>type - Eiffel event type</p>
-                    <p>mp - message protocol, required</p>
-                </td>
-                <td>
-                </td>
-                <td>This endpoint is used to obtain Eiffel event templates implemented in <a
-                        href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel
-                    REMReM Semantics</a>.
-                </td>
-            </tr>
-
-            <tr>
                 <td>/mp</td>
                 <td>POST</td>
                 <td>
                     <p>mp - message protocol, required</p>
                     <p>msgType - Eiffel event type, required</p>
-                    <p>bodyJson - message body, required</p>
                 </td>
                 <td>
 <pre>{
@@ -164,6 +139,32 @@
                 </td>
             </tr>
             <tr>
+                <td>/event_types/{mp}</td>
+                <td>GET</td>
+                <td>
+                    <p>mp - message protocol, required</p>
+                </td>
+                <td>
+                </td>
+                <td>This endpoint is used to obtain Eiffel event types implemented in <a href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel
+                    REMReM Semantics</a>.
+                </td>
+            </tr>
+            <tr>
+                <td>/template/{type}/{mp}</td>
+                <td>GET</td>
+                <td>
+                    <p>type - Eiffel event type</p>
+                    <p>mp - message protocol, required</p>
+                </td>
+                <td>
+                </td>
+                <td>This endpoint is used to obtain Eiffel event templates implemented in <a
+                        href="http://ericsson.github.io/eiffel-remrem-semantics/">Eiffel
+                    REMReM Semantics</a>.
+                </td>
+            </tr>
+            <tr>
                 <td>/versions</td>
                 <td>GET</td>
                 <td></td>
@@ -172,63 +173,60 @@
             </tr>
         </table>
 
-
         <h2>
             <a id="examples" class="anchor" href="#examples" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
             </a>Examples
         </h2>
+        <p>Typical examples of usage Eiffel REMReM Generate Service endpoints are described below.</p>
+
+        <p>You can use command line tools like <a href="https://en.wikipedia.org/wiki/CURL">curl</a> or some plugin for your favorite browser. For example:</p>
+
+        <ul>
+            <li>
+                <a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a> for Chromium-based browsers
+            </li>
+            <li>
+                <a href="https://addons.mozilla.org/en-US/firefox/addon/httprequester/">HttpRequester</a> for Firefox
+            </li>
+        </ul>
 
         <h3>
             <a id="example1" class="anchor"
                href="#example1" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
-            </a>Examples for <code>/event_types/{mp}</code> endpoint
-        </h3>
-        <h5>
-            Retrieve the event types
-        </h5>
-        <pre>curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-service/event_types/eiffelsemantics'</pre>
-        <p>Result</p>
-        <pre>["EiffelArtifactPublishedEvent","EiffelActivityFinishedEvent","EiffelActivityCanceledEvent","EiffelArtifactCreatedEvent","EiffelActivityTriggeredEvent","EiffelConfidenceLevelModifiedEvent","EiffelActivityStartedEvent","EiffelAnnouncementPublishedEvent","EiffelCompositionDefinedEvent","EiffelTestCaseCanceledEvent","EiffelTestCaseTriggeredEvent","EiffelTestExecutionRecipeCollectionCreatedEvent","EiffelEnvironmentDefinedEvent","EiffelFlowContextDefinedEvent","EiffelSourceChangeCreatedEvent","EiffelSourceChangeSubmittedEvent","EiffelTestCaseFinishedEvent","EiffelTestCaseStartedEvent","EiffelTestSuiteFinishedEvent","EiffelTestSuiteStartedEvent","EiffelIssueVerifiedEvent","EiffelArtifactReusedEvent","EiffelServiceStoppedEvent","EiffelServiceStartedEvent","EiffelServiceReturnedEvent","EiffelServiceDiscontinuedEvent","EiffelServiceDeployedEvent","EiffelServiceAllocatedEvent","EiffelArtifactDeployedEvent","EiffelAlertAcknowledgedEvent","EiffelAlertCeasedEvent","EiffelAlertRaisedEvent"]
-</pre>
-
-        <h3>
-            <a id="example2" class="anchor"
-               href="#example2" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span>
-            </a>Examples for <code>/template/{type}/{mp}</code> endpoint
-        </h3>
-        <h5>
-            Retrieve the event template
-        </h5>
-        <pre>curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-service/template/EiffelArtifactPublishedEvent/eiffelsemantics'</pre>
-        <p>Result</p>
-        <pre>{"msgParams":{"meta":{"type":"EiffelArtifactPublishedEvent","version":"1.1.0","tags":[],"source":{"domainId":"","host":"","name":"","uri":""},"security":{"sdm":{"authorIdentity":"required if sdm present","encryptedDigest":"required if sdm present"}}}},"eventParams":{"data":{"locations":[{"type":"required ,can be anyone of ARTIFACTORY,NEXUS,PLAIN,OTHER","uri":"required"}],"customData":[{"key":"required if customData present","value":"required if customData present"}]},"links":[{"type":"required ARTIFACT and CAUSE,CONTEXT,FLOW_CONTEXT are optional","target":"required"}]}}
-</pre>
-
-        <h3>
-            <a id="example3" class="anchor"
-               href="#example3" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span>
             </a>Examples for <code>/mp</code> endpoint
         </h3>
-        <h5>Given one message in file body-single.json</h5>
+        <h5>Given one message in file <em>body-single.json</em>:</h5>
         <pre>curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
         <p>Result:</p>
         <pre>[{"meta":{"id":"7d8ea04d-b5a6-459f-a6fe-134e55556f0b","type":"EiffelActivityFinishedEvent","version":"1.1.0","time":1521545563096,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":{"groupId":"com.github.Ericsson","artifactId":"eiffel-remrem-semantics","version":"0.4.0"},"uri":"http://java.sun.com/j2se/1.3/"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}},"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}],"customData":[]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}]</pre>
 
-        <h5>
-            <a id="example-with-event-body-passed-to-service" class="anchor"
-               href="#example-with-event-body-passed-to-service" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span>
-            </a>Example with event body passed to service:<br>
-        </h5>
+        <h5>Example with event body passed to service:</h5>
         <pre>curl -H "Content-Type: application/json" -X POST -d '{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent", "tags": ["tag1","tag2"], "source": {"domainId": "example.domain", "host": "host", "name": "name", "uri": "http://java.sun.com/j2se/1.3/", "gav": {"groupId": "com.github.Ericsson", "artifactId": "eiffel-remrem-semantics", "version": "0.2.9"}}, "security": {"sdm": {"authorIdentity": "test", "encryptedDigest": "sample"}}}}, "eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"}, "persistentLogs": [{"name": "firstLog", "uri": "http://myHost.com/firstLog"}, {"name": "otherLog", "uri": "isbn:0-486-27557-4"}]}, "links": [{"type": "ACTIVITY_EXECUTION", "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}' http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished</pre>
         <p>Result:</p>
         <pre>[{"meta":{"id":"7d8ea04d-b5a6-459f-a6fe-134e55556f0b","type":"EiffelActivityFinishedEvent","version":"1.1.0","time":1521545563096,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":{"groupId":"com.github.Ericsson","artifactId":"eiffel-remrem-semantics","version":"0.4.0"},"uri":"http://java.sun.com/j2se/1.3/"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}},"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}],"customData":[]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}]</pre>
 
-        <!--versions-->
+        <h3>
+            <a id="example2" class="anchor" href="#example2" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Examples for <code>/event_types/{mp}</code> endpoint
+        </h3>
+        <h5>Retrieve the event types:</h5>
+        <pre>curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-service/event_types/eiffelsemantics'</pre>
+        <p>Result:</p>
+        <pre>["EiffelArtifactPublishedEvent","EiffelActivityFinishedEvent","EiffelActivityCanceledEvent","EiffelArtifactCreatedEvent","EiffelActivityTriggeredEvent","EiffelConfidenceLevelModifiedEvent","EiffelActivityStartedEvent","EiffelAnnouncementPublishedEvent","EiffelCompositionDefinedEvent","EiffelTestCaseCanceledEvent","EiffelTestCaseTriggeredEvent","EiffelTestExecutionRecipeCollectionCreatedEvent","EiffelEnvironmentDefinedEvent","EiffelFlowContextDefinedEvent","EiffelSourceChangeCreatedEvent","EiffelSourceChangeSubmittedEvent","EiffelTestCaseFinishedEvent","EiffelTestCaseStartedEvent","EiffelTestSuiteFinishedEvent","EiffelTestSuiteStartedEvent","EiffelIssueVerifiedEvent","EiffelArtifactReusedEvent","EiffelServiceStoppedEvent","EiffelServiceStartedEvent","EiffelServiceReturnedEvent","EiffelServiceDiscontinuedEvent","EiffelServiceDeployedEvent","EiffelServiceAllocatedEvent","EiffelArtifactDeployedEvent","EiffelAlertAcknowledgedEvent","EiffelAlertCeasedEvent","EiffelAlertRaisedEvent"]</pre>
+
+        <h3>
+            <a id="example3" class="anchor" href="#example3" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Examples for <code>/template/{type}/{mp}</code> endpoint
+        </h3>
+        <h5>Retrieve the event template:</h5>
+        <pre>curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-service/template/EiffelArtifactPublishedEvent/eiffelsemantics'</pre>
+        <p>Result:</p>
+        <pre>{"msgParams":{"meta":{"type":"EiffelArtifactPublishedEvent","version":"1.1.0","tags":[],"source":{"domainId":"","host":"","name":"","uri":""},"security":{"sdm":{"authorIdentity":"required if sdm present","encryptedDigest":"required if sdm present"}}}},"eventParams":{"data":{"locations":[{"type":"required ,can be anyone of ARTIFACTORY,NEXUS,PLAIN,OTHER","uri":"required"}],"customData":[{"key":"required if customData present","value":"required if customData present"}]},"links":[{"type":"required ARTIFACT and CAUSE,CONTEXT,FLOW_CONTEXT are optional","target":"required"}]}}</pre>
+
         <h3>
             <a id="examples4" class="anchor" href="#examples4" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
@@ -238,9 +236,13 @@
         <p>Result:</p>
         <pre>{"serviceVersion":{"version":"x.x.x"},"endpointVersions":{"semanticsVersion":"x.x.x","eiffel3MessagingVersion":"x.x.x"}}</pre>
 
-
-        <h2>Status Codes</h2>
-        <p>HTTP Status Code is the Response Code for the HTTP Request.</p>
+        <h2>
+            <a id="status-codes" class="anchor" href="#status-codes" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Status Codes
+        </h2>
+        <p>The response generated will have internal status codes for each and every event based on the input JSON provided.</p>
+        <p>Status codes are generated according to the below table.</p>
         <table class="wikitable">
             <tr>
                 <th style="text-align: left;">Status code</th>
