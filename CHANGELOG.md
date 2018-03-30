@@ -1,3 +1,6 @@
+## 0.9.8
+- Removed Protocol Interface dependency
+- Uplifted semantics version to 0.4.1
 
 ## 0.9.7
 - Added more information in error messages for generate service
