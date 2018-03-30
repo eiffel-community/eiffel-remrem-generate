@@ -65,7 +65,6 @@ subprojects {
         //Injectable Message Library and its Implementation
         compile("com.github.Ericsson:eiffel-remrem-shared:0.3.5")
         compile("com.github.Ericsson:eiffel-remrem-semantics:0.4.0")
-        compile("com.github.Ericsson:eiffel-remrem-protocol-interface:0.0.7")
 
         //Authentication
         compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
