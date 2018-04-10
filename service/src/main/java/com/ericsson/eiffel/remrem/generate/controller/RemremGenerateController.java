@@ -16,6 +16,10 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.EiffelEventType;
+import com.ericsson.eiffel.remrem.semantics.factory.EiffelOutputValidatorFactory;
+import com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException;
+import com.ericsson.eiffel.remrem.semantics.validator.EiffelValidator;
 import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -160,6 +164,30 @@ public class RemremGenerateController {
             }
         } catch (Exception e) {
             return presentResponse(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, requestEntity);
+        }
+    }
+
+
+    /**
+     * Returns message details about what is wrong in eiffel event
+     * @param msgType event type
+     * @param bodyJson eiffel event
+     * @return string with details about exception
+     */
+    @ApiOperation(value = "To validate eiffel event", response = String.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event sent successfully"),
+            @ApiResponse(code = 400, message = "Malformed JSON"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+    @RequestMapping(value = "/validate/{msgType}", method = RequestMethod.POST)
+    public ResponseEntity<?> validate(@ApiParam(value = "message type", required = true) @PathVariable("msgType") final String msgType,
+                                      @ApiParam(value = "JSON message", required = true) @RequestBody final JsonObject bodyJson) {
+        try {
+            EiffelValidator validator = EiffelOutputValidatorFactory.getEiffelValidator(EiffelEventType.fromString(msgType));
+            validator.validate(bodyJson.getAsJsonObject("msgParams"));
+            return new ResponseEntity<>( "Error not thrown", HttpStatus.NO_CONTENT);
+        } catch (EiffelValidationException e) {
+            return new ResponseEntity<>(new JsonParser().parse(e.getCause().getMessage()), HttpStatus.OK);
         }
     }
 
