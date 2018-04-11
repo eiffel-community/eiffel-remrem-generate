@@ -16,25 +16,19 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.EiffelEventType;
+import com.ericsson.eiffel.remrem.semantics.factory.EiffelOutputValidatorFactory;
+import com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException;
+import com.ericsson.eiffel.remrem.semantics.validator.EiffelValidator;
 import com.ericsson.eiffel.remrem.shared.VersionService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import com.google.gson.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -66,10 +60,10 @@ public class RemremGenerateController {
      * The event information as a json element
      */
     @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event sent successfully"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Event sent successfully"),
             @ApiResponse(code = 400, message = "Malformed JSON"),
             @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+            @ApiResponse(code = 503, message = "Message protocol is invalid")})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
                                       @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
@@ -112,9 +106,9 @@ public class RemremGenerateController {
      * @return string collection with event types.
      */
     @ApiOperation(value = "To get available eiffel event types based on the message protocol", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event  types got successfully"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Event  types got successfully"),
             @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+            @ApiResponse(code = 503, message = "Message protocol is invalid")})
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypes(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
                                            @ApiIgnore final RequestEntity requestEntity) {
@@ -138,10 +132,10 @@ public class RemremGenerateController {
      * @return json containing eiffel event template.
      */
     @ApiOperation(value = "To get eiffel event template of specified event type", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Template got successfully"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Template got successfully"),
             @ApiResponse(code = 400, message = "Requested template is not available"),
             @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+            @ApiResponse(code = 503, message = "Message protocol is invalid")})
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypeTemplate(@ApiParam(value = "message type", required = true) @PathVariable("type") final String msgType,
                                                   @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
@@ -153,13 +147,42 @@ public class RemremGenerateController {
                 if (template != null) {
                     return presentResponse(template, HttpStatus.OK, requestEntity);
                 } else {
-                    return presentResponse(parser.parse(RemremGenerateServiceConstants.NO_TEMPLATE_ERROR) , HttpStatus.NOT_FOUND, requestEntity);
+                    return presentResponse(parser.parse(RemremGenerateServiceConstants.NO_TEMPLATE_ERROR), HttpStatus.NOT_FOUND, requestEntity);
                 }
             } else {
                 return presentResponse(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR), HttpStatus.SERVICE_UNAVAILABLE, requestEntity);
             }
         } catch (Exception e) {
             return presentResponse(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR, requestEntity);
+        }
+    }
+
+
+    /**
+     * Returns message details about what is wrong in eiffel event
+     *
+     * @param msgType  event type
+     * @param bodyJson eiffel event
+     * @return string with details about exception
+     */
+    @ApiOperation(value = "To validate eiffel event", response = String.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Message is valid"),
+            @ApiResponse(code = 400, message = "Not valid message"),
+            @ApiResponse(code = 500, message = "Internal server error"),})
+    @RequestMapping(value = "/validate/{msgType}/{mp}", method = RequestMethod.POST)
+    public ResponseEntity<?> validate(@ApiParam(value = "message type", required = true) @PathVariable("msgType") final String msgType,
+                                      @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @ApiParam(value = "JSON message", required = true) @RequestBody final JsonObject bodyJson) {
+        try {
+            if (msgProtocol.equals("eiffelsemantics")) {
+                EiffelValidator validator = EiffelOutputValidatorFactory.getEiffelValidator(EiffelEventType.fromString(msgType));
+                validator.validate(bodyJson.getAsJsonObject("msgParams"));
+            }
+            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.MESSAGE_VALID), HttpStatus.OK);
+        } catch (EiffelValidationException e) {
+            return new ResponseEntity<>(parser.parse(e.getCause().getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -174,19 +197,21 @@ public class RemremGenerateController {
 
     /**
      * To display pretty formatted json in browser
+     *
      * @param rawJson json content
      * @return html formatted json string
      */
     private String buildHtmlReturnString(final String rawJson) {
         final String htmlHead = "<!DOCTYPE html><html><body><pre>";
         final String htmlTail = "</pre></body></html>";
-        return htmlHead + rawJson + htmlTail ;
+        return htmlHead + rawJson + htmlTail;
     }
 
     /**
      * To display response in browser or application
-     * @param message json content
-     * @param status  response code for the HTTP request
+     *
+     * @param message       json content
+     * @param status        response code for the HTTP request
      * @param requestEntity entity of the HTTP request
      * @return entity to present response in browser or application
      */

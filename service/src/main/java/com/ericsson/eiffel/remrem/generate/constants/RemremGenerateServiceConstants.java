@@ -25,6 +25,9 @@ public final class RemremGenerateServiceConstants {
         public static final String INTERNAL_SERVER_ERROR = "{\"status_code\": 500, \"result\": \"FAIL\", "
                 + "\"message\":\"Internal server error\"}";
 
+        public static final String MESSAGE_VALID = "{\"status_code\": 200, \"result\": \"OK\", "
+                + "\"message\":\"Message is valid\"}";
+
         public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
         public static final String DOCUMENTATION_URL = "http://ericsson.github.io/eiffel-remrem-generate/index.html";
