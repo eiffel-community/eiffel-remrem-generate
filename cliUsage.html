@@ -206,52 +206,6 @@ usage: java -jar
    }
 ]       </pre>
 
-        <h2>
-            <a id="status-codes" class="anchor" href="#status-codes" aria-hidden="true">
-                <span aria-hidden="true" class="octicon octicon-link"></span>
-            </a>Status Codes
-        </h2>
-        <p>The response generated will have internal status codes for each and every event based on the input JSON provided.</p>
-        <p>Status codes are generated according to the below table.</p>
-        <table class="wikitable">
-            <tr>
-                <th style="text-align: left;">Status code</th>
-                <th style="text-align: left;">Result</th>
-                <th style="text-align: left;">Message</th>
-                <th style="text-align: left;">Comment</th>
-            </tr>
-            <tr>
-                <td>200</td>
-                <td>OK</td>
-                <td></td>
-                <td>Event generated successfully</td>
-            </tr>
-            <tr>
-                <td>400</td>
-                <td>Bad Request</td>
-                <td>Could not read document: Unrecognized token</td>
-                <td>Malformed JSON (missing braces or wrong event type, etc..), client need to fix problem in event before submitting again</td>
-            </tr>
-            <tr>
-                <td>404</td>
-                <td>Not Found</td>
-                <td>Requested template is not available</td>
-                <td>The endpoint is not found, or template for specified event type is not found</td>
-            </tr>
-            <tr>
-                <td>500</td>
-                <td>Internal Server Error</td>
-                <td>Internal server error</td>
-                <td>When REMReM Generate is down, possible to try again later when server is up</td>
-            </tr>
-            <tr>
-                <td>503</td>
-                <td>Service Unavailable</td>
-                <td>"No protocol service has been found registered"</td>
-                <td>When specified message protocol is not loaded</td>
-            </tr>
-        </table>
-
     </section>
 </div>
 
