@@ -59,7 +59,7 @@ usage: java -jar
 
  -json,--json_content        JSON content
 
- -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffel3, eiffelsemantics
+ -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffelsemantics
 
  -r,--response_file          file to store the response in, optional
 
@@ -147,6 +147,10 @@ usage: java -jar
         <pre><code>$ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype</code></pre>
 
         <p><strong>NOTE:</strong> in the above example, protocol jar file must be present inside "/path/to/jars/" folder.</p>
+        <p><strong>NOTE:</strong> <code>-Djava.ext.dirs</code> is no longer working in some JAVA8 versions and in JAVA9.
+            So users should create a wrapper project to include both Generate/Publish and their protocol in
+            or place the protocol library in the folder for external dependencies of their JVM installation.
+        </p>
 
         <p>Typical output for these examples is:</p>
 
@@ -205,6 +209,43 @@ usage: java -jar
       ]
    }
 ]       </pre>
+
+        <h2>
+            <a id="exit-codes" class="anchor" href="#exitCodes" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Exit Codes
+        </h2>
+        <p>If CLI fails internally before trying to generate Eiffel message, user will get exit code. Exit codes are described in the table below.</p>
+
+        <table class="wikitable">
+            <tr>
+                <th style="text-align: left;">Exit code</th>
+                <th style="text-align: left;">Description</th>
+            <tr>
+                <td>1</td>
+                <td>User will get this exit code in case of some error that is not described below</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Some CLI options are missed</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Unable to read content from passed file path</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Unable to read passed JSON string from command line</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Unable to send JSON message to message service</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Passed message protocol is not correct</td>
+            </tr>
+        </table>
 
     </section>
 </div>
