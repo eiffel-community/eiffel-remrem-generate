@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Eiffel-remrem-generate : eiffel-remrem-generate">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Eiffel REMReM Generate</title>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/Ericsson/eiffel-remrem-generate">View on GitHub</a>
+
+        <h1><a class="project_title" href="index.html#project_title">Eiffel REMReM Generate</a></h1>
+
+        <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/Ericsson/eiffel-remrem-generate/zipball/master">Download this project as a .zip
+                file</a>
+            <a class="tar_download_link" href="https://github.com/Ericsson/eiffel-remrem-generate/tarball/master">Download this project as a tar.gz
+                file</a>
+        </section>
+    </header>
+</div>
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <h1>
+            <a id="remrem-generate-cli" class="anchor" href="#remrem-generate-cli" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>REMReM Generate CLI
+        </h1>
+
+        <h2>
+            <a id="usage" class="anchor" href="#usage" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Usage
+        </h2>
+        <p>For using Eiffel REMReM Generate CLI self executing <strong>generate-cli.jar</strong> file should be executed in command line with parameters
+            described below.</p>
+
+
+        <pre>java -jar generate-cli.jar -h
+
+You passed help flag.
+usage: java -jar
+
+ -d,--debug                  enable debug traces
+
+ -f,--content_file           message content file
+
+ -h,--help                   show help
+
+ -json,--json_content        JSON content
+
+ -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffelsemantics
+
+ -r,--response_file          file to store the response in, optional
+
+ -t,--message_type           message type, mandatory if -f or -json is given
+
+ -v,--list_versions          lists the versions of generate and all loaded protocols
+        </pre>
+
+        <p><strong>Generate templates for Eiffel REMReM Semantics to be used are available
+            <a href="http://ericsson.github.io/eiffel-remrem-semantics/">here.</a></strong>
+        </p>
+
+        <p>The message must exist in a JSON file, for example <strong><em>eiffelactivityfinished.json</em></strong> might contain the following
+            message:</p>
+
+        <pre>
+{
+  "msgParams": {
+    "meta": {
+    "type": "EiffelActivityFinishedEvent",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "domainId": "example.domain",
+        "host": "host",
+        "name": "name",
+        "uri": "http://java.sun.com/j2se/1.3/",
+        "gav": {
+          "groupId": "com.github.Ericsson",
+          "artifactId": "eiffel-remrem-semantics",
+          "version": "0.2.9"
+        }
+      },
+      "security": {
+        "sdm": {
+          "authorIdentity": "test",
+          "encryptedDigest": "sample"
+        }
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+      "outcome": {
+        "conclusion": "SUCCESSFUL"
+      },
+      "persistentLogs": [{
+          "name": "firstLog",
+          "uri": "http://myHost.com/firstLog"
+        },
+        {
+          "name": "otherLog",
+          "uri": "isbn:0-486-27557-4"
+        }
+      ]
+    },
+    "links": [
+        {
+            "type": "ACTIVITY_EXECUTION",
+            "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
+        }
+    ]
+  }
+}       </pre>
+
+        <h2>
+            <a id="examples" class="anchor" href="#examples" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Examples
+        </h2>
+        <p>Typical examples of usage Eiffel REMReM Generate CLI are described below.</p>
+
+        <h5>With input from the example file shown above and output to a file:</h5>
+        <pre><code>$ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfinishedevent -r output.json</code></pre>
+
+        <h5>Same example, but output the result on the console:</h5>
+        <pre><code>$ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfinished</code></pre>
+
+        <h5>Same example, but this time the data is supplied as a command line argument:</h5>
+        <pre><code style="font-size: 11px">$ java -jar generate-cli.jar -t eiffelactivityfinished -json {\"msgParams\":{\"meta\":{\"type\":\"EiffelActivityFinishedEvent\",\"tags\":[\"tag1\",\"tag2\"],\"source\":{\"domainId\":\"example.domain\",\"host\":\"host\",\"name\":\"name\",\"uri\":\"http://java.sun.com/j2se/1.3/\",\"gav\":{\"groupId\":\"com.github.Ericsson\",\"artifactId\":\"eiffel-remrem-semantics\",\"version\":\"0.4.0\"}},\"security\":{\"sdm\":{\"authorIdentity\":\"test\",\"encryptedDigest\":\"sample\"}}}},\"eventParams\":{\"data\":{\"outcome\":{\"conclusion\":\"SUCCESSFUL\"},\"persistentLogs\":[{\"name\":\"firstLog\",\"uri\":\"http://myHost.com/firstLog\"},{\"name\":\"otherLog\",\"uri\":\"isbn:0-486-27557-4\"}]},\"links\":[{\"type\":\"ACTIVITY_EXECUTION\",\"target\":\"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1\"}]}}</code></pre>
+
+        <h5>For loading protocol jars other than <em>eiffelsemantics</em>:</h5>
+        <pre><code>$ java -Djava.ext.dirs="/path/to/jars/" -jar generate-cli.jar -f eiffeljobfinished.json -t eiffeljobfinished -mp protocoltype</code></pre>
+
+        <p><strong>NOTE:</strong> in the above example, protocol jar file must be present inside "/path/to/jars/" folder.</p>
+        <p><strong>NOTE:</strong> <code>-Djava.ext.dirs</code> is no longer working in some JAVA8 versions and in JAVA9.
+            So users should create a wrapper project to include both Generate/Publish and their protocol in
+            or place the protocol library in the folder for external dependencies of their JVM installation.
+        </p>
+
+        <p>Typical output for these examples is:</p>
+
+        <pre>[
+   {
+      "meta":{
+         "id":"534c0b84-9348-422b-8bee-c4023488cd5d",
+         "type":"EiffelActivityFinishedEvent",
+         "version":"1.1.0",
+         "time":1521534547653,
+         "tags":[
+            "tag1",
+            "tag2"
+         ],
+         "source":{
+            "domainId":"example.domain",
+            "host":"host",
+            "name":"name",
+            "serializer":{
+               "groupId":"com.github.Ericsson",
+               "artifactId":"eiffel-remrem-semantics",
+               "version":"0.4.0"
+            },
+            "uri":"http://java.sun.com/j2se/1.3/"
+         },
+         "security":{
+            "sdm":{
+               "authorIdentity":"test",
+               "encryptedDigest":"sample"
+            }
+         }
+      },
+      "data":{
+         "outcome":{
+            "conclusion":"SUCCESSFUL"
+         },
+         "persistentLogs":[
+            {
+               "name":"firstLog",
+               "uri":"http://myHost.com/firstLog"
+            },
+            {
+               "name":"otherLog",
+               "uri":"isbn:0-486-27557-4"
+            }
+         ],
+         "customData":[
+
+         ]
+      },
+      "links":[
+         {
+            "type":"ACTIVITY_EXECUTION",
+            "target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
+         }
+      ]
+   }
+]       </pre>
+
+        <h2>
+            <a id="exit-codes" class="anchor" href="#exitCodes" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>Exit Codes
+        </h2>
+        <p>If CLI fails internally before trying to generate Eiffel message, user will get exit code. Exit codes are described in the table below.</p>
+
+        <table class="wikitable">
+            <tr>
+                <th style="text-align: left;">Exit code</th>
+                <th style="text-align: left;">Description</th>
+            <tr>
+                <td>1</td>
+                <td>User will get this exit code in case of some error that is not described below</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Some CLI options are missed</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Unable to read content from passed file path</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Unable to read passed JSON string from command line</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Unable to send JSON message to message service</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Passed message protocol is not correct</td>
+            </tr>
+        </table>
+
+    </section>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+    <footer class="inner">
+        <p class="copyright">Eiffel REMReM Generate maintained by <a href="https://github.com/ericsson">Ericsson</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+    </footer>
+</div>
+
+</body>
+</html>
