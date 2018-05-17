@@ -65,11 +65,15 @@
         <p><strong>NOTE:</strong> for other than eiffelsemantics protocol, provide the Java opts as:</p>
         <pre>set JAVA_OPTS="-Djava.ext.dirs=/path/to/jars/" in catalina.sh</pre>
         <p><strong>NOTE:</strong> in the above example, protocol jar file must be present inside "/path/to/jars/" folder.</p>
+        <p><strong>NOTE:</strong> <code>-Djava.ext.dirs</code> is no longer working in some JAVA8 versions and in JAVA9.
+            So users should create a wrapper project to include both Generate/Publish and their protocol in
+            or place the protocol library in the folder for external dependencies of their JVM installation.
+        </p>
 
         <h3>Ldap authentication configurations</h3>
 
         <p>Active Directory authentication can be enabled for the REMReM REST service by setting the configuration property
-            <code>activedirectory.generate.enabled: true</code>.
+            <code>activedirectory.generate.enabled:true</code>.
         </p>
 
         <p><strong>NOTE:</strong> it is recommended to disable ldap authentication for REMReM Publish Service
