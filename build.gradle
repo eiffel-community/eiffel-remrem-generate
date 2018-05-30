@@ -30,6 +30,7 @@ plugins{
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
+    maven { url 'https://repo.spring.io/libs-milestone' }
     mavenLocal()
 }
 
@@ -53,11 +54,12 @@ subprojects {
 	targetCompatibility = 1.8
 	
 	//Latest version for generate
-	version = "0.9.8"
+	version = "0.9.9"
 	
 	repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url 'https://repo.spring.io/libs-milestone' }
         mavenLocal()
     }
     
@@ -70,6 +72,7 @@ subprojects {
         compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
         compile("org.springframework.security:spring-security-ldap:4.1.3.RELEASE")
         compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
+        compile 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.0.0'
         // Test framework
         testCompile("junit:junit:4.12")
         testCompile("org.assertj:assertj-core:3.4.1")
