@@ -1,3 +1,6 @@
+## 0.9.9
+- - Added jasypt-spring-boot-starter dependency to support open text encryption
+
 ## 0.9.8
 - Removed Protocol Interface dependency
 - Uplifted semantics version to 0.4.1
