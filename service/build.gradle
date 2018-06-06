@@ -115,11 +115,11 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-tomcat")
     
     //gson support
-    compile('com.google.code.gson:gson:2.6.2')
+    compile('com.google.code.gson:gson:2.8.1')
     
     //swagger UI
-    compile 'io.springfox:springfox-swagger2:2.4.0'
-    compile 'io.springfox:springfox-swagger-ui:2.4.0'
+    compile 'io.springfox:springfox-swagger2:2.6.1'
+    compile 'io.springfox:springfox-swagger-ui:2.6.1'
     
     // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator:$sprintBootVersion")
