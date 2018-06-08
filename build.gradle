@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
     }
 }
 
@@ -44,7 +44,7 @@ subprojects {
     	    mavenCentral()
     	}
     	dependencies {
-	        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+	        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
 	    }
 	}
 	
@@ -65,8 +65,8 @@ subprojects {
     
     dependencies {
         //Injectable Message Library and its Implementation
-        compile("com.github.Ericsson:eiffel-remrem-shared:0.3.5")
-        compile("com.github.Ericsson:eiffel-remrem-semantics:0.4.1")
+        compile("com.github.Ericsson:eiffel-remrem-shared:0.3.6")
+        compile("com.github.Ericsson:eiffel-remrem-semantics:0.4.3")
 
         //Authentication
         compile("org.springframework.boot:spring-boot-starter-security:$sprintBootVersion")
