@@ -14,8 +14,6 @@
 */
 package com.ericsson.eiffel.remrem.generate.config;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         LOGGER.debug("LDAP server url: "+ldapUrl);
         auth.ldapAuthentication().userSearchFilter(userSearchFilter).contextSource().managerDn(managerDn).root(rootDn)
-                .managerPassword(decode(managerPassword)).url(ldapUrl);
+                .managerPassword(managerPassword).url(ldapUrl);
     }
 
     @Override
@@ -69,11 +67,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated().and().sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and().httpBasic().and().csrf().disable();
         
-    }
-    
- // To decrypt Base64 encode ldap manager password
-    private String decode(String password) {
-        return StringUtils.newStringUtf8(Base64.decodeBase64(password));
     }
     
 }

@@ -1,3 +1,6 @@
+## 0.10.0
+- Removed based64 encryption mechanism for ldap manager password
+
 ## 0.9.9
 - - Added jasypt-spring-boot-starter dependency to support open text encryption
 
