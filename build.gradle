@@ -9,7 +9,7 @@
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
+ See the License for the specific language governing permissions 
  limitations under the License.
 */
 buildscript {
@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
     }
 }
 
@@ -35,16 +35,16 @@ repositories {
 }
 
 ext {
-    sprintBootVersion = "2.0.1.RELEASE"
+    sprintBootVersion = "1.4.1.RELEASE"
 }
-//Adding dependencies and sub projects common build script
+//Adding dependencies  sub projects common build script
 subprojects {
 	buildscript {
  	   repositories {
     	    mavenCentral()
     	}
     	dependencies {
-	        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
+	        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
 	    }
 	}
 	
@@ -64,7 +64,7 @@ subprojects {
     }
     
     dependencies {
-        //Injectable Message Library and its Implementation
+        //Injectable Message Library  its Implementation
         compile("com.github.Ericsson:eiffel-remrem-shared:0.3.6")
         compile("com.github.Ericsson:eiffel-remrem-semantics:0.4.3")
 
