@@ -30,15 +30,15 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "file:${catalina.home}/conf/config.properties", ignoreResourceNotFound = true)
 public class App extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        startService(args);
-    }
+	public static void main(String[] args) {
+		startService(args);
+	}
 
-    private static void startService(String[] args) {
-        SpringApplication application = new SpringApplication(App.class);
-        application.setBannerMode(Banner.Mode.OFF);
-        application.setLogStartupInfo(false);
-        application.setWebEnvironment(true);
-        ApplicationContext ctx = application.run(args);
-    }
+	private static void startService(String[] args) {
+		SpringApplication application = new SpringApplication(App.class);
+		application.setBannerMode(Banner.Mode.OFF);
+		application.setLogStartupInfo(false);
+		application.setWebEnvironment(true);
+		ApplicationContext ctx = application.run(args);
+	}
 }
