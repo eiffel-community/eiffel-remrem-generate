@@ -6,10 +6,10 @@ jdk:
   - oraclejdk8
 
 before_install:
-  - chmod +x ./gradlew
+  - chmod +x pom.xml
 
 script:
-  - ./gradlew test integrationTest --stacktrace
+  - mvn test integrationTest --stacktrace
 
 after_success:
-- ./gradlew jacocoTestReport coveralls
+- mvn jacocoTestReport coveralls
