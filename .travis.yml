@@ -6,10 +6,9 @@ jdk:
   - oraclejdk8
 
 before_install:
-  - chmod +x pom.xml
 
 script:
-  - mvn test integrationTest --stacktrace
+- mvn -V -B -U clean test
 
 after_success:
-- mvn jacocoTestReport coveralls
+
