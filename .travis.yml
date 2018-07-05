@@ -8,7 +8,7 @@ jdk:
 before_install:
 
 script:
-- mvn -V -B -U clean test
+ - mvn -V -B -U clean test jacoco:report
 
 after_success:
 

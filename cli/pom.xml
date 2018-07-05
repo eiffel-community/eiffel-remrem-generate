@@ -3,31 +3,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>generate-cli</artifactId>
+    <packaging>jar</packaging>
     <parent>
         <groupId>com.github.Ericsson</groupId>
         <artifactId>eiffel-remrem-generate</artifactId>
         <version>0.10.2</version>
     </parent>
-    <artifactId>generate-cli</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<version>1.5.2.RELEASE</version> -->
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
-                <configuration> <archive> <manifest> <mainClass>com.ericsson.eiffel.remrem.generate.cli.CLI 
-                </mainClass> </manifest> </archive> </configuration> </plugin> -->
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>com.github.Ericsson</groupId>
@@ -144,4 +126,29 @@
             </exclusions>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.4.1.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*.class</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
