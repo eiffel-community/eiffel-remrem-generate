@@ -16,7 +16,7 @@ package com.ericsson.eiffel.remrem.generate.cli;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer;
+import org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -34,7 +34,7 @@ public class SpringLoggingInitializer implements ApplicationContextInitializer {
 	@Override
 	public void initialize(ConfigurableApplicationContext applicationContext) {
 		Class[] loggers = {SpringApplication.class, /*App.class,*/ ConfigFileApplicationListener.class,
-				AutoConfigurationReportLoggingInitializer.class};
+				ConditionEvaluationReportLoggingListener.class};
 		Logger log = (Logger) LoggerFactory.getLogger("ROOT");
 		log.setLevel(Level.ERROR);
 		for (Class logger : loggers) {
