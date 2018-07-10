@@ -23,7 +23,7 @@
     </properties>
     <groupId>com.github.Ericsson</groupId>
     <artifactId>eiffel-remrem-generate</artifactId>
-    <version>${eiffel-remrem-generate.version}</version>
+    <version>0.10.2</version>
     <packaging>pom</packaging>
     <modules>
         <module>cli</module>
