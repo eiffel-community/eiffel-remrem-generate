@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.github.Ericsson</groupId>
         <artifactId>eiffel-remrem-generate</artifactId>
-        <version>0.10.2</version>
+        <version>${eiffel-remrem-generate.version}</version>
     </parent>
     <dependencies>
         <dependency>
