@@ -4,7 +4,7 @@
     xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <eiffel-shared.version>0.3.7</eiffel-shared.version>
+        <eiffel-shared.version>0.3.6</eiffel-shared.version>
         <eiffel-semantics.version>0.4.5</eiffel-semantics.version>
         <slf4j.version>1.7.25</slf4j.version>
         <springboot.version>2.0.1.RELEASE</springboot.version>
