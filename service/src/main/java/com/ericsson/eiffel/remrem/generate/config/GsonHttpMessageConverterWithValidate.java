@@ -56,8 +56,7 @@ public class GsonHttpMessageConverterWithValidate extends GsonHttpMessageConvert
             final ObjectMapper mapper = new ObjectMapper();
             mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
             mapper.readTree(json);
-
-    		return getGson().fromJson(reader, resolvedType);
+    		return this.gson.fromJson(json, resolvedType);
         } catch (JsonParseException ex) {
             throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
         }
