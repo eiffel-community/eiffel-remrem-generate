@@ -52,7 +52,6 @@ public class GsonHttpMessageConverterWithValidate extends GsonHttpMessageConvert
 	protected Object readInternal(Type resolvedType, Reader reader) throws Exception {
     	try {
             final String json = IOUtils.toString(reader);
-            reader.close();
             // do the actual validation
             final ObjectMapper mapper = new ObjectMapper();
             mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
