@@ -12,7 +12,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-package com.ericsson.eiffel.remrem.generate;
+package com.ericsson.eiffel.remrem.generate.integrationtest;
 
 import com.google.gson.JsonParser;
 import com.jayway.restassured.RestAssured;
@@ -43,7 +43,7 @@ import static com.jayway.restassured.RestAssured.given;
 @ActiveProfiles("integration-test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-public class EiffelRemremControllerIntegrationTest {
+public class EiffelRemremControllerIT {
     JsonParser parser = new JsonParser();
 
     @Value("${local.server.port}")
