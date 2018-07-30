@@ -13,7 +13,6 @@
     limitations under the License.
 */
 package com.ericsson.eiffel.remrem.generate.config;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -24,7 +23,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -51,36 +49,16 @@ public class GsonHttpMessageConverterWithValidate extends GsonHttpMessageConvert
     }
 
     @Override
-    public Object read(final Type type, final Class<?> contextClass, final HttpInputMessage inputMessage)
-        throws IOException, HttpMessageNotReadableException {
-
-        final TypeToken<?> token = getTypeToken(type);
-        return readTypeToken(token, inputMessage);
-    }
-
-    private Object readTypeToken(final TypeToken<?> token, final HttpInputMessage inputMessage) throws IOException {
-        final Reader reader = new InputStreamReader(inputMessage.getBody(), getCharset(inputMessage.getHeaders()));
-
-        try {
+	protected Object readInternal(Type resolvedType, Reader reader) throws Exception {
+    	try {
             final String json = IOUtils.toString(reader);
-            reader.close();
-
             // do the actual validation
             final ObjectMapper mapper = new ObjectMapper();
             mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
             mapper.readTree(json);
-
-            return this.gson.fromJson(json, token.getType());
+    		return this.gson.fromJson(json, resolvedType);
         } catch (JsonParseException ex) {
             throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
         }
-    }
-
-    private Charset getCharset(final HttpHeaders headers) {
-        if (headers == null || headers.getContentType() == null || headers.getContentType().getCharset() == null) {
-            return DEFAULT_CHARSET;
-        }
-        return headers.getContentType().getCharset();
-    }
-
+	}
 }
