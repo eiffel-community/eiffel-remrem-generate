@@ -84,7 +84,7 @@
 - Added HttpStatus codes for generated ouput
 
 ## 0.7.7
-- Changed the project structure to build seperate
+- Changed the project structure to build separate
   binaries for CLI and Service.
 
 ## 0.7.6
