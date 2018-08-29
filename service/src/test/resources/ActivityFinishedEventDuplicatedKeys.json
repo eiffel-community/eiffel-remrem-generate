@@ -2,7 +2,7 @@
   "msgParams": {
     "meta": {
       "type": "EiffelActivityFinishedEvent",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "tags": [
         "tag1",
         "tag2"
@@ -16,13 +16,18 @@
           "groupId": "G",
           "artifactId": "A",
           "version": "V"
+        },
+        "serializer": {
+          "groupId": "G",
+          "artifactId": "A",
+          "version": "V"
         }
       }
     }
   },
   "eventParams": {
     "data": {
-     "customData": [
+      "customData": [
         {
           "key": "firstLog",
           "value": "http:\/\/myHost.com\/firstLog"

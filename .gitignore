@@ -1,9 +1,6 @@
 .idea/
 *.iml
 
-build/
-.gradle/
-
 libs/
 out/
 
@@ -14,3 +11,4 @@ libs/
 .classpath
 .project
 .settings/
+/target/

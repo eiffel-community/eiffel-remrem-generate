@@ -1,3 +1,25 @@
+## 0.10.3
+- Updated parent version
+
+## 0.10.2
+- Migrated from gradle to maven
+
+## 0.10.1
+- Updated versions of few dependencies.
+
+## 0.10.0
+- Removed based64 encryption mechanism for ldap manager password
+
+## 0.9.9
+- - Added jasypt-spring-boot-starter dependency to support open text encryption
+
+## 0.9.8
+- Removed Protocol Interface dependency
+- Uplifted semantics version to 0.4.1
+
+## 0.9.7
+- Added more information in error messages for generate service
+- Uplifted semantics version to 0.4.0
 
 ## 0.9.6
 - Added swagger for generate service
