@@ -9,9 +9,9 @@
         <version>0.0.4</version>
     </parent>
     <properties>
-    	<eiffel-remrem-generate.version>0.10.3</eiffel-remrem-generate.version>
-    	<eiffel-remrem-shared.version>0.3.6</eiffel-remrem-shared.version>
-    	<eiffel-remrem-semantics.version>0.4.8</eiffel-remrem-semantics.version>
+        <eiffel-remrem-generate.version>0.10.4</eiffel-remrem-generate.version>
+        <eiffel-remrem-shared.version>0.3.8</eiffel-remrem-shared.version>
+        <eiffel-remrem-semantics.version>0.4.9</eiffel-remrem-semantics.version>
     </properties>
     <artifactId>eiffel-remrem-generate</artifactId>
     <version>${eiffel-remrem-generate.version}</version>
