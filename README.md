@@ -1,10 +1,36 @@
+<!---
+   Copyright 2018 Ericsson AB.
+   For a full list of individual contributors, please see the commit history.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--->
+
+<img src="./images/logo.png" alt="Eiffel RemRem" width="350"/>
+
 # Eiffel REMReM Generate
 
-[![Build Status](https://travis-ci.org/Ericsson/eiffel-remrem-generate.svg?branch=master)](https://travis-ci.org/Ericsson/eiffel-remrem-generate)
-[![Coverage Status](https://coveralls.io/repos/github/Ericsson/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/Ericsson/eiffel-remrem-generate?branch=master)
-[![](https://jitpack.io/v/Ericsson/eiffel-remrem-generate.svg)](https://jitpack.io/#Ericsson/eiffel-remrem-generate)
+[![Build Status](https://travis-ci.org/eiffel-community/eiffel-remrem-generate.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-remrem-generate)
+[![Coverage Status](https://coveralls.io/repos/github/eiffel-community/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/eiffel-community/eiffel-remrem-generate?branch=master)
+[![](https://jitpack.io/v/eiffel-community/eiffel-remrem-generate.svg)](https://jitpack.io/#eiffel-community/eiffel-remrem-generate)
 
-## Documentation
-Further documentation is provided at the following link: [http://ericsson.github.io/eiffel-remrem-generate/](http://ericsson.github.io/eiffel-remrem-generate/).
+Eiffel REMReM Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message. Further documentation is provided at the following link: [http://ericsson.github.io/eiffel-remrem-generate/](http://eiffel-community.github.io/eiffel-remrem-generate/).
 
-__IMPORTANT NOTICE:__ The contents of this repository currently reflect a __DRAFT__. The Eiffel framework has been used in production within Ericsson for several years to great effect; what is presented here is a revision and evolution of that framework - an evolution that is currently ongoing. In other words, anything in this repository should be regarded as tentative and subject to change. It is published here to allow early access and trial and to solicit early feedback.
+# About this repository
+The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
+
+To get involved, please see [Code of Conduct](./CODE_OF_CONDUCT.md) and [contribution guidelines](./CONTRIBUTING.md).
+
+# About Eiffel
+This repository forms part of the Eiffel Community. Eiffel is a protocol for technology agnostic machine-to-machine communication in continuous integration and delivery pipelines, aimed at securing scalability, flexibility and traceability. Eiffel is based on the concept of decentralized real time messaging, both to drive the continuous integration and delivery system and to document it.
+
+Visit [Eiffel Community](https://eiffel-community.github.io) to get started and get involved.
