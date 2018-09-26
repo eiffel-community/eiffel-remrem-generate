@@ -21,7 +21,7 @@ Thank you for contributing to the Eiffel Community!
 The following is a set of guidelines for contributing to this repository.
 
 ## How to Propose Changes
-Anyone is welcome to propose changes to the contents of this repository by creating a new [Issue](https://github.com/eiffel-community/eiffel-remrem/issues) ticket in GitHub. These requests may concern anything contained in the repo: changes to documentation, bug fixes, requests for additional information, additional event types, requests for additional examples, new featuers et cetera.
+Anyone is welcome to propose changes to the contents of this repository by creating a new [Issue](https://github.com/eiffel-community/eiffel-remrem-generate/issues) ticket in GitHub. These requests may concern anything contained in the repo: changes to documentation, bug fixes, requests for additional information, additional event types, requests for additional examples, new featuers et cetera.
 
 When posting a new issue, try to be as precise as possible and phrase your arguments for your request carefully. Keep in mind that collaborating on software development is often an exercise in finding workable compromises between multiple and often conflicting needs; this is particularly true for defining a shared protocol such as Eiffel. In particular, pay attention to the following:
 1. What type of change is requested?
