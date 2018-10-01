@@ -1,3 +1,6 @@
+## 0.10.5
+- Updated parent, shared and semantics version
+
 ## 0.10.4
 - Updated remrem shared and semantics version
 
