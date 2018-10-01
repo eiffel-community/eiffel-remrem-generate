@@ -16,7 +16,7 @@
             <artifactId>eiffel-remrem-shared</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.xmairaa</groupId>
+            <groupId>com.github.Ericsson</groupId>
             <artifactId>eiffel-remrem-semantics</artifactId>
         </dependency>
         <dependency>
