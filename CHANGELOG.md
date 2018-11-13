@@ -1,3 +1,7 @@
+## 0.10.6
+- Updated versions of parent from 0.0.5 to 0.0.6 and shared from 0.3.9 to 0.4.0
+- Uplifted semantics version from 0.5.0 to 0.5.1
+
 ## 0.10.5
 - Updated parent, shared and semantics version
 
