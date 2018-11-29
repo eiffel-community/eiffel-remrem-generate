@@ -1,3 +1,8 @@
+## 0.10.7
+- Upgraded eiffel-remrem-parent version from 0.0.6 to 0.0.7.
+- Upgraded eiffel-remrem-shared version from 0.4.0 to 0.4.1.
+- Upgraded eiffel-remrem-semantics version from 0.5.1 to 0.5.2.
+
 ## 0.10.6
 - Updated versions of parent from 0.0.5 to 0.0.6 and shared from 0.3.9 to 0.4.0
 - Uplifted semantics version from 0.5.0 to 0.5.1
