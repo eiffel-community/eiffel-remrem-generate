@@ -69,6 +69,21 @@
             So users should create a wrapper project to include both Generate/Publish and their protocol in
             or place the protocol library in the folder for external dependencies of their JVM installation.
         </p>
+
+        <h4>Running and configuring RemRem-Generate without Tomcat installation</h4>
+        <p>It is also possible to execute RemRem-Generate without external Tomcat installation and using the embedded tomcat in Spring application instead.</p>
+        <p>If RemRem-Generate is executed without external Tomcat installation, the configuration should be based on Spring application properties, see generate-service/src/main/resources/application.properties file for available properties.</p>
+        
+        <p>If running with java command, example:</p>
+        <pre>java -jar generate-service/target/generate-service.war -Dproperties.parameter1="value" -Dproperties.parameter2="value" -Dproperties.parameter3="value" ......</pre>
+        <p>It is also possible to provide path to the spring properties file:</p>
+        <pre>java -jar generate-service/target/generate-service.war -Dspring.config.location=path/to/applicattion.propeties</pre>
+
+        <p>Second option to execute RemRem-Generate is to execute maven commands from the source code, example:</p>
+        <pre>mvn spring-boot:run -Dproperties.parameter1="value" -Dproperties.parameter2="value" -Dproperties.parameter3="value" ......</pre>
+        <p>When using maven command, Spring properties can also be changed by editing generate-service/src/main/resources/application.properties file.</p>
+
+
         <h3>Jasypt configurations</h3>
         <p>Jasypt Spring Boot provides Encryption support for property sources(passwords, secret info ..etc) in Spring Boot Applications.
         To support this functionality in our application we need to add the following property in property file</p>
