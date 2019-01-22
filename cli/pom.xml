@@ -75,6 +75,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.ericsson.eiffel.remrem.generate.cli.CLI</mainClass>
+                    <fork>true</fork>
+                    <skip>false</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -96,6 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+				
                 <configuration>
                     <archive>
                         <manifestEntries>
