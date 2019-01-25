@@ -5,7 +5,7 @@ docker build -t remrem-generate:0.10.8 --build-arg URL=https://jitpack.io/com/gi
 
 
 B: Build RemRem-Generate based on local RemRem-Generate source code changes
-1. Build RemRem-Generate service artiface:
+1. Build RemRem-Generate service artifact:
 cd (git root dir)/service
 mvn package -DskipTests
 
