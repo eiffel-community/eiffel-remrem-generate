@@ -27,7 +27,7 @@ Eiffel REMReM Generate takes a partial message in JSON format, validates it and 
 
 # Documentation
 
-1. [**Running RemRem-Publish service**]()
+1. [**Running RemRem-Generate service**]()
     - [**Run in Docker**](wiki/markdown/docker.md)
 
 
