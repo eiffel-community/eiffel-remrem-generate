@@ -25,6 +25,12 @@
 
 Eiffel REMReM Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message. Further documentation is provided at the following link: [http://ericsson.github.io/eiffel-remrem-generate/](http://eiffel-community.github.io/eiffel-remrem-generate/).
 
+# Documentation
+
+1. [**Running RemRem-Publish service**]()
+    - [**Run in Docker**](wiki/markdown/docker.md)
+
+
 # About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
 
