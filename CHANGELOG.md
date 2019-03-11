@@ -1,5 +1,6 @@
 ## 1.0.1
-- Changed Link from http://ericsson.github.io to http://eiffel-community.github.io.
+- Changed Link from http://ericsson.github.io to https://eiffel-community.github.io.
+- Upgraded eiffel-remrem-generate version from 1.0.0 to 1.0.1.
 
 ## 1.0.0
 - Upgraded eiffel-remrem-parent version from 0.0.8 to 1.0.0.
