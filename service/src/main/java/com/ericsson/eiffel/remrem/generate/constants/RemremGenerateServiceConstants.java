@@ -27,6 +27,6 @@ public final class RemremGenerateServiceConstants {
 
         public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
-        public static final String DOCUMENTATION_URL = "http://ericsson.github.io/eiffel-remrem-generate/index.html";
+        public static final String DOCUMENTATION_URL = "https://eiffel-community.github.io/eiffel-remrem-generate/index.html";
 
 }
