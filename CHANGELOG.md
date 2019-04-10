@@ -1,5 +1,6 @@
 ## 2.0.0
-- Upgraded eiffel-remrem-semantics version from 1.0.1 to 2.0.0.
+- Upgraded eiffel-remrem-semantics version from 1.0.1 to 2.0.1.
+- Parent group changed from Ericsson to eiffel-community.
 
 ## 1.0.1
 - Changed Link from http://ericsson.github.io to https://eiffel-community.github.io.
