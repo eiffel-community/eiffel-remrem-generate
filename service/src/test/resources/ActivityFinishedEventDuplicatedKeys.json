@@ -2,7 +2,7 @@
   "msgParams": {
     "meta": {
       "type": "EiffelActivityFinishedEvent",
-      "version": "1.1.0",
+      "version": "3.0.0",
       "tags": [
         "tag1",
         "tag2"
@@ -12,22 +12,14 @@
         "host": "host",
         "name": "name",
         "uri": "http:\/\/java.sun.com\/j2se\/1.3\/",
-        "serializer": {
-          "groupId": "G",
-          "artifactId": "A",
-          "version": "V"
-        },
-        "serializer": {
-          "groupId": "G",
-          "artifactId": "A",
-          "version": "V"
-        }
+        "serializer":"pkg://mvn",
+        "serializer":"pkg://mvn"
       }
     }
   },
   "eventParams": {
     "data": {
-      "customData": [
+     "customData": [
         {
           "key": "firstLog",
           "value": "http:\/\/myHost.com\/firstLog"
