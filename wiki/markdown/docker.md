@@ -18,7 +18,7 @@ With the Docker image user can try-out the RemRem-Generate on a Docker Host or i
 1. Change to service directory: 
 `cd service`
 
-1. Execute maven package command to build the RemRem-Generate war file:
+2. Execute maven package command to build the RemRem-Generate war file:
 `mvn package -DskipTests`
 
 This will produce a war file in the "target" folder.
@@ -28,7 +28,7 @@ This will produce a war file in the "target" folder.
 3. Build the Docker image with the war file that was produced from previous step: 
 
 
-`docker build -t remrem-generate:0.10.9 --build-arg URL=./target/generate-service-0.10.9.war -f src/main/docker/Dockerfile .` 
+`docker build -t remrem-generate --build-arg URL=./target/generate-service-<version>.war -f src/main/docker/Dockerfile .` 
 
 
 Now docker image has build with tag "remrem-generate:0.10.9"
@@ -37,9 +37,9 @@ Now docker image has build with tag "remrem-generate:0.10.9"
 To run the produced docker image on the local Docker host, execute this command: 
 
 
-`docker run -p 8080:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG remrem-generate:0.10.9`
+`docker run -p 8081:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG remrem-generate`
 
-RabbitMq and other RemRem-Generate required components need to running and configured via these application properties that is provided to the docker command above. See the application.properties file for all available/required properties:
+RabbitMq and other RemRem-Generate required components need to running and configured via application properties that is provided to the docker command above. See the application.properties file for all available/required properties:
 [application.properties](https://github.com/eiffel-community/eiffel-remrem-generate/blob/master/service/src/main/resources/application.properties)
 
 # Some info of all flags to this command
@@ -48,7 +48,7 @@ RabbitMq and other RemRem-Generate required components need to running and confi
 ## RemRem-Generate Spring Properties
 
 
-<B>"-e server.port=8080"</B> - Is the Spring property setting for RemRem-Generate applications web port.
+<B>"-e server.port=8080"</B> - Is the Spring property setting for RemRem-Generate application web port.
 
 
 <B>"-e logging.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e 
@@ -67,17 +67,17 @@ It is possible to set all Spring available properties via docker envrionment "-e
 <B>"--expose 8080"</B> - this Docker flag tells that containers internal port shall be exposed to outside of the Docker Host. This flag do not set which port that should be allocated outside Docker Host on the actual server/machine.
 
 
-<B>"-p 8080:8080"</B> - this Docker flag is mapping the containers external port 8080 to the internal exposed port 8080. Port 8080 will be allocated outside Docker host and user will be able to access the containers service via port 8080.
+<B>"-p 8081:8080"</B> - this Docker flag is mapping the containers external port 8081 to the internal exposed port 8080. Port 8081 will be allocated outside Docker host and user will be able to access the containers service via port 8081.
 
 
-When RemRem-Generate container is running on your local Docker host, RemRem-Generate should be reachable with address "localhost:8080/\<Rest End-Point\>" or "\<docker host ip\>:8080/\<Rest End-Point\>"
+When RemRem-Generate container is running on your local Docker host, RemRem-Generate should be reachable with address "localhost:8081/\<Rest End-Point\>" or "\<docker host ip\>:8081/\<Rest End-Point\>"
 
 
 Another option to configure RemRem-Generate is to provide the application properties file into the container, which can be made in two ways:
 1. Put application.properties file in Tomcat Catalina config folder in container and run RemRem-Generate:
 
-`docker run -p 8080:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties remrem-generate:0.10.9`
+`docker run -p 8081:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties remrem-generate`
 
 2. Put application.properties file in a different folder in container and tell RemRem-Generate where the application.properties is located in the container:
 
-`docker run -p 8080:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties remrem-generate:0.10.9`
+`docker run -p 8081:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties remrem-generate`
