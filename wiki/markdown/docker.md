@@ -31,7 +31,7 @@ This will produce a war file in the "target" folder.
 `docker build -t remrem-generate --build-arg URL=./target/generate-service-<version>.war -f src/main/docker/Dockerfile .` 
 
 
-Now docker image has build with tag "remrem-generate:0.10.9"
+Now docker image is built with tag "remrem-generate"
 
 ## Run Docker image on local Docker Host
 To run the produced docker image on the local Docker host, execute this command: 
@@ -39,10 +39,10 @@ To run the produced docker image on the local Docker host, execute this command:
 
 `docker run -p 8081:8080 --expose 8080 -e server.port=8080 -e logging.level.log.level.root=DEBUG -e logging.level.org.springframework.web=DEBUG -e logging.level.com.ericsson.ei=DEBUG remrem-generate`
 
-RabbitMq and other RemRem-Generate required components need to running and configured via application properties that is provided to the docker command above. See the application.properties file for all available/required properties:
+RabbitMq and other RemRem-Generate required components need to be running and configured via application properties that is provided to the docker command above. See the application.properties file for all available/required properties:
 [application.properties](https://github.com/eiffel-community/eiffel-remrem-generate/blob/master/service/src/main/resources/application.properties)
 
-# Some info of all flags to this command
+# Some info of the flags to this command
 
 
 ## RemRem-Generate Spring Properties
