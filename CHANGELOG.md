@@ -1,3 +1,8 @@
+## 2.0.5
+- Uplifted eiffel-remrem-parent version from 2.0.1 to 2.0.2.
+- Uplifted eiffel-remrem-shared version from 2.0.1 to 2.0.2.
+- Uplifted eiffel-remrem-semantics version from 2.0.5 to 2.0.6.
+
 ## 2.0.4
 - Uplifted eiffel-remrem-parent version from 2.0.0 to 2.0.1.
 - Uplifted eiffel-remrem-shared version from 2.0.0 to 2.0.1.
