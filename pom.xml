@@ -17,7 +17,7 @@
     <artifactId>eiffel-remrem-generate</artifactId>
     <version>${eiffel-remrem-generate.version}</version>
     <packaging>pom</packaging>
-    <dependencyManagement>
+    <dependencyManagement> 
         <dependencies>
             <dependency>
                 <groupId>com.github.eiffel-community</groupId>
