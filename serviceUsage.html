@@ -157,7 +157,24 @@ activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
         <p><strong>LDAP authentication with Base64 encryption of user details::</strong></p>
 
         <pre><code>$ curl -XPOST -H "Content-Type: application/json" -H 'Authorization: Basic cGFzc3dvcmQ=' --data @ActivityCanceled.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivitycanceled</code></pre>
+		<h3>Event Repository Lookup Configurations</h3>
 
+        <p>ER lookup configurations define whether to enable querying towards Event Repository or not. ER lookup configurations are enabled by configuring below property in configuration file. </p>
+            <pre>
+            event-repository.enabled : &lt;true | false&gt;</pre>
+            <p><strong>NOTE: </strong>Allowed value for <em>event-repository-lookup.enabled</em> is <em>true/false</em>.If the value is not one of this the service will be terminated. </p>
+            <p>If <em>event-repository-lookup.enabled</em> is false then REMReM Generate will not Lookup ER data. Refer below snippet for instance,</p>
+            <pre>
+            event-repository-lookup.enabled : false
+            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+        <p>If <em>event-repository-lookup.enabled</em> is true then Event Repository URL should be mandatory. </p>
+            <pre>
+            event-repository-lookup.enabled : true
+            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+        <p><strong>NOTE: </strong>If Lookup configurations are enabled and EventRepository URL is not provided then the remrem service gets terminated.</p>
+        <pre>
+            event-repository-lookup.enabled : true
+            event-repository.url     :</pre>
         <h2>
             <a id="usage" class="anchor" href="#usage" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
@@ -345,8 +362,94 @@ activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
                 <td>When specified message protocol is not loaded</td>
             </tr>
         </table>
-
-    </section>
+		<h2>
+            <a id="examples" class="anchor" href="#examples" aria-hidden="true">
+                <span aria-hidden="true" class="octicon octicon-link"></span>
+            </a>
+        </h2>
+		<h2> Lookups </h2>
+		<p> Presently, to generate Eiffel messages, Eiffel REMREM-Generate is being used. This process requires input mapping exactly one-to-one to Eiffel message Schema.</p>
+		<p> The "Link" field of Eiffel Message requires UUIDs of earlier sent events to link to. Passing these UUID's each time is a little bit difficult, some times user lookup the ER and manually place those IDs in REMReM Generate semi-structured event. In order to resolve this , we need to provide LOOKUP's for the Link's field ,which will have eventType and Properties. eventType will contain type of event.</p>
+		<p> Properties will contain any field of event mentioned in eventType or RepoUri or artifact identity (Purl identity including version) to Eiffel,
+			which will make sure it is linked to the correct events. The lookups are used in filling the information for links, which will help users to know what event they want to query with the parameters so that they are automatically fetched and linked by Generate instead of the users adding them as a mandatory param when generating events.
+		</p>
+		<p> <em>parameters</em> specified should be enough to replace the listed event id as input will help to prepare the Query to ER and Lookup the ER data.</p>
+		<p><h6>Example:</h6>
+			As a User, I want to place the LINK type ARTIFACT to Event ID of EiffelArtifactCreatedEvent from Event Repository.
+			The user passes the below template information to REMReM Generate, REMReM Generate will Query to configured Event Repository and place the event ID in LINK's and generate the Eiffel message.
+		</p>
+		<h5> Templates for LOOKUPS : </h5>
+		<pre>
+		"links":[
+					{
+			"type": "ARTIFACT",
+			"%lookup%": {
+			"eventType": "EiffelArtifactCreatedEvent",
+			"properties": [
+				{ “data.identifier": "some purl identifier defining the artifact" }]
+					}
+				}]
+		</pre>
+		<p><h6>ER Query will look like:</h6></p>
+		<pre>https://<host>:<port>/eventrepository/events/?eventType=EiffelArtifactCreatedEvent&data.identifier=some purl identifier defining the artifact</pre>
+		<h5> Examples for Lookups:</h5>
+		<h6> Example 1:</h6>
+		<pre>
+		"links": [
+			"type": “ARTIFACT",​
+			"%lookup%": {​
+			"eventType": "EiffelArtifactCreatedEvent",​
+			"properties": [
+					{​“data.identity": "pkg:maven/test/testartifact@0.0.21"}
+					]​
+			}​
+		]
+		</pre>
+		<h6> Example 2 : </h6>
+		<pre>
+		"links": [
+			"type": “ARTIFACT",​
+			"%lookup%": {​
+			"eventType": "EiffelArtifactCreatedEvent",​
+			"properties": [
+					{​“data.identity": "pkg:maven/test/batik-anim@1.9.1"}
+					]​
+			}​
+		]
+		</pre>
+		<h6> Example 3 (For SourceChangeCreated/SourceChangeSubmitted Events Identifier will be repoUri): </h6>
+		<pre>
+			"links": [
+			"type": “CHANGE",​
+			"%lookup%": {​
+			"eventType": "EiffelSourceChangeCreatedEventEvent",​
+			"properties": [
+					{​"data.gitIdentifier.repoUri": "https://gerrit.ericsson.se"​}
+					]​
+			}​
+		]
+		</pre>
+		<h5>Lookups are provided with two options in swagger page:</h5>
+		<table class="lookups">
+		<tr>
+            <th style="text-align: left;">Options</th>
+			<th style="text-align: left;">Default Value</th>
+            <th style="text-align: left;">Description</th>
+         </tr>
+		<tr>
+            <td><h6>failIfMultipleFound:</h6></td>
+			<td>False</td>
+            <td>If value is set to false then all upstream/downstream event ids of that particular event are fetched from event repository  and adds them in links section of the target field.
+				If value is set to true, if only one event is found then REMReM generates the event successfully and if multiple event ids are found then REMReM fails to generate any event and displays relevant error message to the user.</td>
+		 </tr>
+		 <tr>
+            <td><h6>failIfNoneFound:</h6></td>
+			<td>False</td>
+            <td>If value is set to true, no event ids fetched from event repository , REMReM fails to generate any event and displays relevant error message to the user.
+				If value is set to false,REMReM generates event if no event found or atleast one event fetched from the event repository configured in configuration file.</td>
+		 </tr>
+		</table>
+	</section>
 </div>
 
 <!-- FOOTER  -->
@@ -356,6 +459,5 @@ activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
     </footer>
 </div>
-
 </body>
 </html>
