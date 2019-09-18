@@ -16,6 +16,7 @@ package com.ericsson.eiffel.remrem.generate.integrationtest;
 
 import com.google.gson.JsonParser;
 import com.jayway.restassured.RestAssured;
+
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -39,6 +40,9 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integration-test")
 @RunWith(SpringRunner.class)
@@ -58,6 +62,10 @@ public class EiffelRemremControllerIT {
     private String activityFinishedDuplicateKeysBody;
 
     private String version = "3.0.0";
+    @Value("${event-repository.enabled}")
+    private boolean eventRepositoryEnabled;
+    @Value("${event-repository.url}")
+    private String erURL;
 
     private String credentials = "Basic " + Base64.getEncoder().encodeToString("user:secret".getBytes());
 
@@ -80,7 +88,7 @@ public class EiffelRemremControllerIT {
         final byte[] bytes = Files.readAllBytes(file.toPath());
         return new String(bytes);
     }
-    
+
     public static String getMessagingVersion() {
         Enumeration resEnum;
         try {
@@ -194,5 +202,17 @@ public class EiffelRemremControllerIT {
                     .get("/template/EiffelNotAnEvent/eiffelsemantics")
                 .then()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+    @Test
+    public void testErLookUpConfigurations(){
+        if(eventRepositoryEnabled){
+            if(!erURL.isEmpty())
+                assertTrue(erURL,true);
+            else
+                assertNull(erURL,null);
+            }
+        else{
+            assertFalse(eventRepositoryEnabled);
+        }
     }
 }
