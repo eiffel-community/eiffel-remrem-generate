@@ -1,0 +1,59 @@
+{
+  "pageNo": 1,
+  "pageSize": 500,
+  "totalNumberItems": 1,
+  "items": [
+    {
+      "meta": {
+        "type": "EiffelSourceChangeCreatedEvent",
+        "version": "4.0.0",
+        "time": 1234567890,
+        "id": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee0"
+      },
+      "data": {
+        "gitIdentifier": {
+          "commitId": "fd090b60a4aedc5161da9c035a49b14a319829b4",
+          "branch": "myBranch",
+          "repoName": "myPrivateRepo",
+          "repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+        },
+        "author": {
+          "name": "John Doe",
+          "email": "john.doe@company.com",
+          "id": "johndoe",
+          "group": "Team Gophers"
+        },
+        "change": {
+          "files": "https://company.com/changes/fd090b60a4aedc5161da9c035a49b14a319829b4",
+          "insertions": 173,
+          "deletions": 79,
+          "tracker": "GitHub",
+          "details": "https://github.com/johndoe/myPrivateRepo/commit/fd090b60a4aedc5161da9c035a49b14a319829b4",
+          "id": "42"
+        }
+      },
+      "links": [
+        {
+          "type": "BASE",
+          "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
+        },
+        {
+          "type": "PREVIOUS_VERSION",
+          "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee2"
+        },
+        {
+          "type": "FLOW_CONTEXT",
+          "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee3"
+        },
+        {
+          "type": "FLOW_CONTEXT",
+          "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee4"
+        },
+        {
+          "type": "RESOLVED_ISSUE",
+          "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee5"
+        }
+      ]
+    }
+  ]
+}

@@ -15,11 +15,13 @@
 package com.ericsson.eiffel.remrem.generate.config;
 
 import javax.annotation.PostConstruct;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import ch.qos.logback.classic.Logger;
 
@@ -29,7 +31,6 @@ import ch.qos.logback.classic.Logger;
 *
 */
 
-@Profile("!integration-test")
 @Configuration
 @Component("event-repository")
 public class ErLookUpConfig {
@@ -47,18 +48,9 @@ public class ErLookUpConfig {
         return erURL;
     }
 
-    public void setErURL(String erURL) {
-        this.erURL = erURL;
+    public Boolean getEventRepositoryEnabled() {
+        return eventRepositoryCheck;
     }
-
-    public String getEventRepositoryEnabled() {
-        return eventRepositoryEnabled;
-    }
-
-    public void setEventRepositoryEnabled(String eventRepositoryEnabled) {
-        this.eventRepositoryEnabled = eventRepositoryEnabled;
-    }
-
 
     /**
     * This method is used to check whether to enable Event-Repository lookup .
@@ -76,7 +68,6 @@ public class ErLookUpConfig {
             if (eventRepositoryCheck) {
                 if (!erURL.isEmpty()) {
                     log.info("Event Repository configurations for lookup are enabled");
-                    setErURL(erURL);
                     log.info("Configured Event Repository URL for lookup : " + getErURL());
                 } else {
                     log.error("Enabled Event Repository configurations for lookUp but not provided Event Repository URL");

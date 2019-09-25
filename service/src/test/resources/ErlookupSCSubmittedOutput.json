@@ -1,0 +1,4 @@
+{
+  "message": "Cannot validate given JSON string",
+  "cause": "com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException: Multiple trace links are not allowed for link type CHANGE"
+}

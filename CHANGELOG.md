@@ -1,6 +1,6 @@
 ## 2.0.6
-- Added ER Lookup configurations for a link when generating events
-- Uplifted eiffel-remrem-generate cersion from 2.0.5 to 2.0.6
+- Added ER Lookup configurations for a link and code to handle the lookup towards ER when generating events.
+- Uplifted eiffel-remrem-generate version from 2.0.5 to 2.0.6
 
 ## 2.0.5
 - Uplifted eiffel-remrem-parent version from 2.0.1 to 2.0.2.

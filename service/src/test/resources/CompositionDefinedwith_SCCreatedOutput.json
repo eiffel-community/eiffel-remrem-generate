@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "id": "ad9232ba-53e3-4aaf-bd59-a7c20cd12c5d",
+    "type": "EiffelCompositionDefinedEvent",
+    "version": "3.0.0",
+    "time": 1570705707675,
+    "tags": [
+      ""
+    ],
+    "source": {
+      "domainId": "",
+      "host": "",
+      "name": "",
+      "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.6",
+      "uri": ""
+    }
+  },
+  "data": {
+    "name": "required",
+    "version": "",
+    "customData": []
+  },
+  "links": [
+    {
+      "type": "ELEMENT",
+      "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee0"
+    }
+  ]
+}

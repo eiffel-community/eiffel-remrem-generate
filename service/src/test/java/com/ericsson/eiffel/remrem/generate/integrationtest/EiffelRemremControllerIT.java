@@ -63,10 +63,11 @@ public class EiffelRemremControllerIT {
 
     private String version = "3.0.0";
     @Value("${event-repository.enabled}")
-    private boolean eventRepositoryEnabled;
+    private String eventRepositoryEnabled;
     @Value("${event-repository.url}")
     private String erURL;
 
+    private boolean eventRepositoryCheck;
     private String credentials = "Basic " + Base64.getEncoder().encodeToString("user:secret".getBytes());
 
     @Before
@@ -205,14 +206,14 @@ public class EiffelRemremControllerIT {
     }
     @Test
     public void testErLookUpConfigurations(){
-        if(eventRepositoryEnabled){
+        if(eventRepositoryCheck){
             if(!erURL.isEmpty())
                 assertTrue(erURL,true);
             else
                 assertNull(erURL,null);
             }
         else{
-            assertFalse(eventRepositoryEnabled);
+            assertFalse(eventRepositoryCheck);
         }
     }
 }

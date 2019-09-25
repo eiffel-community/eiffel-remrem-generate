@@ -1,0 +1,35 @@
+{
+    "msgParams": {
+        "meta": {
+            "type": "EiffelCompositionDefinedEvent",
+            "version": "3.0.0",
+            "tags": [
+                ""
+            ],
+            "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+            }
+        }
+    },
+    "eventParams": {
+        "data": {
+            "name": "required",
+            "version": "",
+            "customData": [
+
+            ]
+        },
+        "links": [{
+            "type": "ELEMENT",
+            "%lookup%": {
+                "eventType": "EiffelArtifactCreatedEvent",
+                "properties": [{
+                    "data.identity": "swdi.up/CXP102051_22@R21EK"
+                }]
+            }
+        }]
+    }
+}
