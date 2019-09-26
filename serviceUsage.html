@@ -158,6 +158,24 @@ activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
 
         <pre><code>$ curl -XPOST -H "Content-Type: application/json" -H 'Authorization: Basic cGFzc3dvcmQ=' --data @ActivityCanceled.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivitycanceled</code></pre>
 
+        <h3>ER LookUp Configurations</h3>
+
+        <p>ER lookUp configurations handle the need to query ER for performing lookups. ER lookup configurations are enabled by configuring below property in configuration file. </p>
+            <pre>
+            event-repository.enabled : &lt;true | false&gt;</pre>
+            <p><strong>NOTE: </strong>Allowed value for <em>event-repository.enabled</em> is <em>true/false</em>.If value is not given or incorrect then service gets terminated . </p>
+            <p>If event-repository.enabled is false then ER lookUp configurations does not work . Refer below snippet for instance,</p>
+            <pre>
+            event-repository.enabled : false
+            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+        <p>If <em>event-repository.enabled</em> is true then EventRepository URL should be mandatory. </p>
+            <pre>
+            event-repository.enabled : true
+            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+        <p><strong>NOTE: </strong>If Lookup configurations are enabled and EventRepository URL is not provided then the remrem service gets terminated.</p>
+        <pre>
+            event-repository.enabled : true
+            event-repository.url     :</pre>
         <h2>
             <a id="usage" class="anchor" href="#usage" aria-hidden="true">
                 <span aria-hidden="true" class="octicon octicon-link"></span>
