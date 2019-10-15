@@ -1,0 +1,5 @@
+{
+  "status_code": 417,
+  "result": "FAIL",
+  "message": "Muliple event ids found with ERLookup properties"
+}

@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Ericsson AB.
+    Copyright 2019 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
@@ -59,6 +60,8 @@ public class EiffelRemremControllerUnitTest {
     @Mock
     JsonElement body;
 
+    @Spy
+    ErLookUpConfig erLookupConfig;
 
     @SuppressWarnings("resource")
 	@Before
@@ -74,7 +77,6 @@ public class EiffelRemremControllerUnitTest {
         File jsonFile = new File(inputFilePath);
         String successOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
 
-        
         jsonInputURL = getClass().getClassLoader().getResource("errorInput.json");
         inputFilePath = jsonInputURL.getPath().replace("%20"," ");
         jsonFile = new File(inputFilePath);
@@ -100,31 +102,31 @@ public class EiffelRemremControllerUnitTest {
     
     @Test
     public void testSemanticsSuccessEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     
     @Test
     public void testSemanticsFailureEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     
     @Test
     public void testEiffel3SuccessEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     
     @Test
     public void testEiffel3FailureEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     
     @Test
     public void testMessageServiceUnavailableEvent() throws Exception {        
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
      

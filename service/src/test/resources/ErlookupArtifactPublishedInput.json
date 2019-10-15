@@ -1,0 +1,42 @@
+{
+    "msgParams": {
+        "meta": {
+            "type": "EiffelArtifactPublishedEvent",
+            "version": "3.0.0",
+            "tags": [
+                ""
+            ],
+            "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+            }
+        }
+    },
+    "eventParams": {
+        "data": {
+            "locations": [{
+                "type": "OTHER",
+                "uri": "required"
+            }],
+            "customData": [
+
+            ]
+        },
+        "links": [{
+                "type": "ARTIFACT",
+                "%lookup%": {
+                    "eventType": "EiffelArtifactCreatedEvent",
+                    "properties": [{
+                        "data.identity": "swdi.up/CXP102051_22@R21EK"
+                    }]
+                }
+            },
+            {
+                "type": "CAUSE",
+                "target": "b5a2c3e0-3515-49d8-baa8-9b0f6cec025c"
+            }
+        ]
+    }
+}
