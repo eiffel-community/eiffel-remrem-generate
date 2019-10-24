@@ -37,9 +37,9 @@ public class ErLookUpConfig {
 
     Logger log = (Logger) LoggerFactory.getLogger(ErLookUpConfig.class);
 
-    @Value("${event-repository.url}")
+    @Value("${event-repository.url:null}")
     private String erURL;
-    @Value("${event-repository.enabled}")
+    @Value("${event-repository.enabled:false}")
     private String eventRepositoryEnabled;
 
     private boolean eventRepositoryCheck;

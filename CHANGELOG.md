@@ -1,3 +1,9 @@
+## 2.0.8
+- REMReM generate service is being started when ER not configured.
+
+## 2.0.7
+- Update pom.xml
+
 ## 2.0.6
 - Added ER Lookup configurations for a link and code to handle the lookup towards ER when generating events.
 - Uplifted eiffel-remrem-generate version from 2.0.5 to 2.0.6
