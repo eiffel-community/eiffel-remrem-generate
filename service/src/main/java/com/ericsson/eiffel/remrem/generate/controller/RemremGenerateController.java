@@ -122,6 +122,7 @@ public class RemremGenerateController {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
             }
         } catch (Exception e) {
+            log.error("Unexpected exception caught", e);
             return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -214,6 +215,7 @@ public class RemremGenerateController {
                         HttpStatus.SERVICE_UNAVAILABLE, requestEntity);
             }
         } catch (Exception e) {
+            log.error("Unexpected exception caught", e);
             return presentResponse(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
                     HttpStatus.INTERNAL_SERVER_ERROR, requestEntity);
         }
@@ -249,6 +251,7 @@ public class RemremGenerateController {
                         HttpStatus.SERVICE_UNAVAILABLE, requestEntity);
             }
         } catch (Exception e) {
+            log.error("Unexpected exception caught", e);
             return presentResponse(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
                     HttpStatus.INTERNAL_SERVER_ERROR, requestEntity);
         }
