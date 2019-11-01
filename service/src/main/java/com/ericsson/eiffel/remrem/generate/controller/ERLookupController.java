@@ -32,7 +32,7 @@ public class ERLookupController {
             final JsonObject lookup = link.get("%lookup%").getAsJsonObject();
             final String eventType = lookup.get("eventType").getAsString();
             final JsonArray lookUpParams = lookup.get("properties").getAsJsonArray();
-            final StringBuilder queryBuilder = new StringBuilder("/eventrepository/events?meta.type=" + eventType);
+            final StringBuilder queryBuilder = new StringBuilder("/events?meta.type=" + eventType);
             StreamSupport.stream(lookUpParams.spliterator(), false)
             .forEach(jsonArray -> {
                 for (Entry<String, JsonElement> entry : jsonArray.getAsJsonObject().entrySet()) {
