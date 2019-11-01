@@ -166,11 +166,11 @@ activedirectory.userSearchFilter: &lt;LDAP userSearchFilter pattern&gt;</pre>
             <p>If <em>event-repository.enabled</em> is false then REMReM Generate will not Lookup ER data. Refer below snippet for instance,</p>
             <pre>
             event-repository.enabled : false
-            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+            event-repository.url     : http(s)://&lt;host&gt;:&lt;port&gt;/&lt;context-path&gt;</pre>
         <p>If <em>event-repository.enabled</em> is true then Event Repository URL should be mandatory. </p>
             <pre>
             event-repository.enabled : true
-            event-repository.url     : &lt;ER URL for lookup&gt;</pre>
+            event-repository.url     : http(s)://&lt;host&gt;:&lt;port&gt;/&lt;context-path&gt;</pre>
         <p><strong>NOTE: </strong>If Lookup configurations are enabled and EventRepository URL is not provided then the remrem service gets terminated.</p>
         <pre>
             event-repository.enabled : true
