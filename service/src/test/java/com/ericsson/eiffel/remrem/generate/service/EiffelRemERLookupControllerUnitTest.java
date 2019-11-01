@@ -141,22 +141,22 @@ public class EiffelRemERLookupControllerUnitTest {
 
         ResponseEntity erresponse = new ResponseEntity(response, HttpStatus.OK);
         when(restTemplate.getForEntity(
-                Mockito.contains("/eventrepository/events?meta.type=EiffelArtifactCreatedEvent&data.identity=swdi.up/CXP102051_22@R21EK"),
+                Mockito.contains("/events?meta.type=EiffelArtifactCreatedEvent&data.identity=swdi.up/CXP102051_22@R21EK"),
                 Mockito.eq(String.class))).thenReturn(erresponse);
 
         ResponseEntity compositionErResponse = new ResponseEntity(compositionResponse, HttpStatus.OK);
         Mockito.when(restTemplate.getForEntity(
-                Mockito.contains("/eventrepository/events?meta.type=EiffelSourceChangeCreatedEvent&data.gitIdentifier.commitId=fd090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/johndoe/myPrivateRepo.git"),
+                Mockito.contains("/events?meta.type=EiffelSourceChangeCreatedEvent&data.gitIdentifier.commitId=fd090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/johndoe/myPrivateRepo.git"),
                 Mockito.eq(String.class))).thenReturn(compositionErResponse);
 
         ResponseEntity compositionEr1Response = new ResponseEntity(compositionSCSubmittedResponse, HttpStatus.OK);
         Mockito.when(restTemplate.getForEntity(
-                Mockito.contains("/eventrepository/events?meta.type=EiffelSourceChangeSubmittedEvent&data.gitIdentifier.commitId=fd090b60aedc535a49b14a&data.gitIdentifier.repoUri=https://github.com/johndoe/myPrivateRepo.git"),
+                Mockito.contains("/events?meta.type=EiffelSourceChangeSubmittedEvent&data.gitIdentifier.commitId=fd090b60aedc535a49b14a&data.gitIdentifier.repoUri=https://github.com/johndoe/myPrivateRepo.git"),
                 Mockito.eq(String.class))).thenReturn(compositionEr1Response);
 
         ResponseEntity SCSubmittedErResponse = new ResponseEntity(SCSubmittedResponse, HttpStatus.OK);
         Mockito.when(restTemplate.getForEntity(
-                Mockito.contains("/eventrepository/events?meta.type=EiffelSourceChangeCreatedEvent&data.gitIdentifier.commitId=fd090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/myPrivateRepo.git"),
+                Mockito.contains("/events?meta.type=EiffelSourceChangeCreatedEvent&data.gitIdentifier.commitId=fd090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/myPrivateRepo.git"),
                 Mockito.eq(String.class))).thenReturn(SCSubmittedErResponse);
     }
 
