@@ -1,3 +1,9 @@
+## 2.0.10
+- Uplifted eiffel-remrem-semantics version from 2.0.6 to 2.0.7.
+
+## 2.0.9
+- Fixed for ER Lookup functionality do not work due to hardcoded context path.
+
 ## 2.0.8
 - REMReM generate service is being started when ER not configured.
 
