@@ -64,9 +64,6 @@ It is possible to set all Spring available properties via docker envrionment "-e
 ## Docker flags
 
 
-<B>"--expose 8080"</B> - this Docker flag tells that containers internal port shall be exposed to outside of the Docker Host. This flag do not set which port that should be allocated outside Docker Host on the actual server/machine.
-
-
 <B>"-p 8081:8080"</B> - this Docker flag is mapping the containers external port 8081 to the internal exposed port 8080. Port 8081 will be allocated outside Docker host and user will be able to access the containers service via port 8081.
 
 
@@ -74,10 +71,18 @@ When RemRem-Generate container is running on your local Docker host, RemRem-Gene
 
 
 Another option to configure RemRem-Generate is to provide the application properties file into the container, which can be made in two ways:
-1. Put application.properties file in Tomcat Catalina config folder in container and run RemRem-Generate:
+1. Put application.properties file in the container's /deployments folder and run RemRem-Generate:
 
-`docker run -p 8081:8080 --expose 8080 --volume /path/to/application.properties:/usr/local/tomcat/config/application.properties remrem-generate`
+`docker run -p 8081:8080 --volume /path/to/application.properties:/deployments/application.properties remrem-generate`
 
 2. Put application.properties file in a different folder in container and tell RemRem-Generate where the application.properties is located in the container:
 
-`docker run -p 8081:8080 --expose 8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties remrem-generate`
+`docker run -p 8081:8080 --volume /path/to/application.properties:/tmp/application.properties -e spring.config.location=/tmp/application.properties remrem-generate`
+
+If you need to pass additional flags to the JVM (like setting a custom
+heap size) you can include those flags in the JAVA_OPTIONS environment
+variable. See the documentation of the
+[fabric8/java-centos-openjdk8-jre][docker-image-docs] Docker image for
+full details.
+
+[docker-image-docs]: https://hub.docker.com/r/fabric8/java-centos-openjdk8-jre
