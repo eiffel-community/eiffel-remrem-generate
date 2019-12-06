@@ -12,7 +12,7 @@
     <properties>
         <eiffel-remrem-generate.version>2.0.10</eiffel-remrem-generate.version>
         <eiffel-remrem-shared.version>2.0.2</eiffel-remrem-shared.version>
-        <eiffel-remrem-semantics.version>2.0.7</eiffel-remrem-semantics.version>
+        <eiffel-remrem-semantics.version>2.0.8</eiffel-remrem-semantics.version>
     </properties>
     <artifactId>eiffel-remrem-generate</artifactId>
     <version>${eiffel-remrem-generate.version}</version>
