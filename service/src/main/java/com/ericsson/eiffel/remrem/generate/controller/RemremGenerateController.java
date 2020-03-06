@@ -97,10 +97,12 @@ public class RemremGenerateController {
             @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
             @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+            @ApiParam(value = RemremGenerateServiceConstants.SHALLOW) @RequestParam(value = "shallow", required = false, defaultValue = "true") final Boolean shallow,
+            @ApiParam(value = RemremGenerateServiceConstants.PAGESIZE) @RequestParam(value = "pageSize", required = false, defaultValue = "1") final int pageSize,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
-            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound);
+            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, shallow, pageSize);
             MsgService msgService = getMessageService(msgProtocol);
             String response;
             if (msgService != null) {
@@ -128,7 +130,8 @@ public class RemremGenerateController {
         }
     }
 
-    private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound)
+    private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
+    		final Boolean shallow, final int pageSize)
             throws REMGenerateException {
 
         // Checking ER lookup enabled or not
@@ -141,7 +144,7 @@ public class RemremGenerateController {
 
                     // prepare ER Query
                     String Query = ERLookupController.getQueryfromLookup(lookupLinks.get(i).getAsJsonObject());
-                    String url = erlookupConfig.getErURL() + Query;
+                    String url = erlookupConfig.getErURL() + Query + String.format("&shallow=%s&pageSize=%d",shallow, pageSize);
 
                     // Execute ER Query
                     int j = 0;

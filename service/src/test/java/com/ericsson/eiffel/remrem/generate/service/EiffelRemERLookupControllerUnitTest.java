@@ -167,7 +167,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelconfidencelevel", false, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelconfidencelevel", false, false, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -178,7 +178,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
     }
 
@@ -188,7 +188,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -198,7 +198,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -208,7 +208,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -218,7 +218,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 }
