@@ -35,9 +35,9 @@ public final class RemremGenerateServiceConstants {
         public static final String UNAVAILABLE_FOR_FAILIFNONEFOUND = "{\"status_code\": 406, \"result\": \"FAIL\", "
                 + "\"message\":\"No event id found with ERLookup properties\"}";
 
-        public static final String PAGESIZE = "The number of events to be displayed.";
+        public static final String LIMIT = "The number of events to be displayed.";
 
-        public static final String SHALLOW = "Determines if external ER's should be used to compile the results of query."
+        public static final String CONNECT_TO_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use false to use External ER's.";
 
 }
