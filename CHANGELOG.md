@@ -1,5 +1,5 @@
 ## 2.0.13
-- Added the pageSize and shallow parameters to ER lookup.
+- Added the connectToExternalERs and limit parameters to ER lookup.
 
 ## 2.0.12
 - Uplifted eiffel-remrem-parent version from 2.0.2 to 2.0.4.
