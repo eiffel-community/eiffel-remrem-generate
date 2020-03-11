@@ -1,7 +1,7 @@
 ## 2.0.12
 - Uplifted eiffel-remrem-parent version from 2.0.2 to 2.0.4.
 - Uplifted eiffel-remrem-shared version from 2.0.2 to 2.0.4.
-- Uplifted eiffel-remrem-semantics version from 2.0.9 to 2.0.11.
+- Uplifted eiffel-remrem-semantics version from 2.0.9 to 2.0.12.
 
 ## 2.0.11
 - Added REMReM Generate documentation in master branch
