@@ -38,6 +38,6 @@ public final class RemremGenerateServiceConstants {
         public static final String LOOKUP_LIMIT = "The number of events to be displayed.";
 
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
-                + "Use false to use External ER's.";
+                + "Use true to use External ER's.";
 
 }

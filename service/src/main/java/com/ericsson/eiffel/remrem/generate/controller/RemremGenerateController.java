@@ -98,7 +98,7 @@ public class RemremGenerateController {
             @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
             @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "true")  final Boolean lookupInExternalERs,
+            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false")  final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
@@ -145,7 +145,7 @@ public class RemremGenerateController {
 
                     // prepare ER Query
                     String Query = ERLookupController.getQueryfromLookup(lookupLinks.get(i).getAsJsonObject());
-                    String url = erlookupConfig.getErURL() + Query + String.format("&shallow=%s&pageSize=%d", lookupInExternalERs, lookupLimit);
+                    String url = erlookupConfig.getErURL() + Query + String.format("&shallow=%s&pageSize=%d", !lookupInExternalERs, lookupLimit);
 
                     // Execute ER Query
                     int j = 0;
