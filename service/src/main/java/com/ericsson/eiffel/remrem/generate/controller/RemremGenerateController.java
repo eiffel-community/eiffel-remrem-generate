@@ -31,6 +31,7 @@ import io.swagger.annotations.*;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -97,10 +98,12 @@ public class RemremGenerateController {
             @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
             @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false")  final Boolean lookupInExternalERs,
+            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
-            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound);
+            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
             MsgService msgService = getMessageService(msgProtocol);
             String response;
             if (msgService != null) {
@@ -128,7 +131,8 @@ public class RemremGenerateController {
         }
     }
 
-    private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound)
+    private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
+    		final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
 
         // Checking ER lookup enabled or not
@@ -141,7 +145,7 @@ public class RemremGenerateController {
 
                     // prepare ER Query
                     String Query = ERLookupController.getQueryfromLookup(lookupLinks.get(i).getAsJsonObject());
-                    String url = erlookupConfig.getErURL() + Query;
+                    String url = erlookupConfig.getErURL() + Query + String.format("&shallow=%s&pageSize=%d", !lookupInExternalERs, lookupLimit);
 
                     // Execute ER Query
                     int j = 0;

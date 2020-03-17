@@ -1,3 +1,6 @@
+## 2.0.13
+- Added the lookupInExternalERs and lookupLimit parameters to ER lookup.
+
 ## 2.0.12
 - Uplifted eiffel-remrem-parent version from 2.0.2 to 2.0.4.
 - Uplifted eiffel-remrem-shared version from 2.0.2 to 2.0.4.
