@@ -23,7 +23,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/eiffel-community/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/eiffel-community/eiffel-remrem-generate?branch=master)
 [![](https://jitpack.io/v/eiffel-community/eiffel-remrem-generate.svg)](https://jitpack.io/#eiffel-community/eiffel-remrem-generate)
 
-Eiffel REMReM Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message. Further documentation is provided at the following link: [https://eiffel-community.github.io/eiffel-remrem-generate/](https://eiffel-community.github.io/eiffel-remrem-generate/).
+Eiffel REMReM Generate takes a partial message in JSON format, validates it and adds mandatory fields before outputting a complete, valid Eiffel message.
 
 # Documentation
 
