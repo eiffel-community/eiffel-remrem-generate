@@ -27,7 +27,7 @@ public final class RemremGenerateServiceConstants {
 
         public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
-        public static final String DOCUMENTATION_URL = "https://eiffel-community.github.io/eiffel-remrem-generate/index.html";
+        public static final String DOCUMENTATION_URL = "https://github.com/eiffel-community/eiffel-remrem-generate/blob/master/wiki/markdown/index.md";
 
         public static final String UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND = "{\"status_code\": 417, \"result\": \"FAIL\", "
                 + "\"message\":\"Muliple event ids found with ERLookup properties\"}";
