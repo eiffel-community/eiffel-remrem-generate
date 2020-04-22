@@ -1,5 +1,5 @@
 ## 2.0.15
-- Fixed broken link in swagger ui page.
+- Fixed the broken link which points to generate documentation in swagger.
 
 ## 2.0.14
 - Uplifted eiffel-remrem-semantics version from 2.0.12 to 2.0.13.
