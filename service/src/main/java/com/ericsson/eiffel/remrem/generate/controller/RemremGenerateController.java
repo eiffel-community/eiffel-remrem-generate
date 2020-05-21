@@ -48,6 +48,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 @RestController
 @RequestMapping("/*")
@@ -121,8 +122,12 @@ public class RemremGenerateController {
         } catch (REMGenerateException e1) {
             if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.NOT_ACCEPTABLE);
-            } else {
+            }
+            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
+            }
+            else {
+                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } catch (Exception e) {
             log.error("Unexpected exception caught", e);
@@ -132,7 +137,7 @@ public class RemremGenerateController {
     }
 
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
-    		final Boolean lookupInExternalERs, final int lookupLimit)
+               final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
 
         // Checking ER lookup enabled or not
@@ -163,6 +168,26 @@ public class RemremGenerateController {
                     }
                     String responseBody = response.getBody();
                     ids = ERLookupController.getIdsfromResponseBody(responseBody);
+
+                    // Checking ER lookup has options field present or not
+                    if (lookupLinks.get(i).toString().contains("options")) {
+                        final JsonObject lookup = lookupLinks.get(i).getAsJsonObject().get("%lookup%")
+                                .getAsJsonObject();
+                        for (Entry<String, JsonElement> options : lookup.get("options").getAsJsonObject().entrySet()) {
+                            final String optionKey = options.getKey();
+                            final String optionValue = options.getValue().getAsString();
+                            if (optionKey.equals("failIfNoneFound") && (optionValue.equalsIgnoreCase("true")
+                                    || optionValue.equalsIgnoreCase("false"))) {
+                                failIfNoneFound = Boolean.parseBoolean(optionValue);
+                            } else if (optionKey.equals("failIfMultipleFound") && (optionValue.equalsIgnoreCase("true")
+                                    || optionValue.equalsIgnoreCase("false"))) {
+                                failIfMultipleFound = Boolean.parseBoolean(optionValue);
+                            } else {
+                                throw new REMGenerateException(
+                                        RemremGenerateServiceConstants.UNAVAILABLE_LOOKUP_OPTIONS);
+                            }
+                        }
+                    }
 
                     // Checking ER lookup result
                     if (failIfMultipleFound && ids != null && ids.length > 1) {

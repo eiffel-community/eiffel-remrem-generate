@@ -1,0 +1,43 @@
+{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelTestCaseStartedEvent",
+      "version": "3.0.0",
+      "tags": [
+        ""
+      ],
+      "source": {
+        "domainId": "",
+        "host": "",
+        "name": "",
+        "uri": ""
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+      "executor": "",
+      "liveLogs": [],
+      "customData": []
+    },
+    "links": [
+      {
+        "type": "TEST_CASE_EXECUTION",
+        "target": "245227ed-9d6f-4485-9330-1cc92b1f947a"
+      },
+      {
+            "type": "ELEMENT",
+            "%lookup%": {
+                "eventType": "EiffelArtifactCreatedEvent",
+                "properties": [{
+                    "data.identity": "pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test"
+                }],
+                "options": {
+                    "failIfNoneFound": "true",
+                    "falIfMultipleFound": "true"
+                }
+            }
+        }
+    ]
+  }
+}

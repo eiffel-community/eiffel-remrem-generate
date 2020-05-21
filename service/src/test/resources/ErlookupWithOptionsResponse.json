@@ -1,0 +1,76 @@
+{
+    "pageNo": 1,
+    "pageSize": 2,
+    "totalNumberItems": 2,
+    "items": [{
+        "meta": {
+            "id": "de9ca618-3df0-4ed2-9c73-c6f38b725841",
+            "type": "EiffelArtifactCreatedEvent",
+            "version": "3.0.0",
+            "time": 1569489548707,
+            "tags": [],
+            "source": {
+                "domainId": "eiffel001.seki.upbuildtrigger",
+                "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.4"
+            }
+        },
+        "data": {
+            "identity": "pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test",
+            "fileInformation": [],
+            "dependsOn": [],
+            "implements": [],
+            "customData": [{
+                "key": "project",
+                "value": "LTE_RBS"
+            }, {
+                "key": "lmrG1Track",
+                "value": "main"
+            }, {
+                "key": "path",
+                "value": "/proj/lterbsFtp_up/up/CXP102051%22_R21EK"
+            }, {
+                "key": "track",
+                "value": "22.10"
+            }, {
+                "key": "translatedSourceID",
+                "value": "de9ca618-3df0-4ed2-9c73-c6f38b725841"
+            }]
+        },
+        "links": []
+    }, {
+        "meta": {
+            "id": "02e01b71-6463-4c98-9aae-1e8863d58eca",
+            "type": "EiffelArtifactCreatedEvent",
+            "version": "3.0.0",
+            "time": 1569489530127,
+            "tags": [],
+            "source": {
+                "domainId": "eiffel001.seki.upbuildtrigger",
+                "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.4"
+            }
+        },
+        "data": {
+            "identity": "pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test",
+            "fileInformation": [],
+            "dependsOn": [],
+            "implements": [],
+            "customData": [{
+                "key": "project",
+                "value": "LTE_RBS"
+            }, {
+                "key": "lmrG1Track",
+                "value": "main"
+            }, {
+                "key": "path",
+                "value": "/proj/lterbsFtp_up/up/CXP102051%22_R21EK"
+            }, {
+                "key": "track",
+                "value": "22.10"
+            }, {
+                "key": "translatedSourceID",
+                "value": "02e01b71-6463-4c98-9aae-1e8863d58eca"
+            }]
+        },
+        "links": []
+    }]
+}

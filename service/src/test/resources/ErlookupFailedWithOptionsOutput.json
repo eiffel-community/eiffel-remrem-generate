@@ -1,0 +1,5 @@
+{
+  "status_code": 422,
+  "result": "FAIL",
+  "message": "Link specific options could not be fulfilled"
+}
