@@ -22,18 +22,5 @@
     "uri": "",
     "customData": []
   },
-  "links": [
-    {
-      "type": "PREVIOUS_VERSION",
-      "target": "de9ca618-3df0-4ed2-9c73-c6f38b725841"
-    },
-    {
-      "type": "PREVIOUS_VERSION",
-      "target": "02e01b71-6463-4c98-9aae-1e8863d58eca"
-    },
-    {
-      "type": "CAUSE",
-      "target": "d96d1c6d-e67e-4235-865a-0470ff0b005a"
-    }
-  ]
+  "links": []
 }

@@ -168,6 +168,8 @@ public class RemremGenerateController {
                     }
                     String responseBody = response.getBody();
                     ids = ERLookupController.getIdsfromResponseBody(responseBody);
+                    boolean failIfNoneFoundValue=failIfNoneFound;
+                    boolean failIfMultipleFoundValue=failIfMultipleFound;
 
                     // Checking ER lookup has options field present or not
                     if (lookupLinks.get(i).toString().contains("options")) {
@@ -178,10 +180,10 @@ public class RemremGenerateController {
                             final String optionValue = options.getValue().getAsString();
                             if (optionKey.equals("failIfNoneFound") && (optionValue.equalsIgnoreCase("true")
                                     || optionValue.equalsIgnoreCase("false"))) {
-                                failIfNoneFound = Boolean.parseBoolean(optionValue);
+                                failIfNoneFoundValue = Boolean.parseBoolean(optionValue);
                             } else if (optionKey.equals("failIfMultipleFound") && (optionValue.equalsIgnoreCase("true")
                                     || optionValue.equalsIgnoreCase("false"))) {
-                                failIfMultipleFound = Boolean.parseBoolean(optionValue);
+                                failIfMultipleFoundValue = Boolean.parseBoolean(optionValue);
                             } else {
                                 throw new REMGenerateException(
                                         RemremGenerateServiceConstants.UNAVAILABLE_LOOKUP_OPTIONS);
@@ -190,10 +192,10 @@ public class RemremGenerateController {
                     }
 
                     // Checking ER lookup result
-                    if (failIfMultipleFound && ids != null && ids.length > 1) {
+                    if (failIfMultipleFoundValue && ids != null && ids.length > 1) {
                         throw new REMGenerateException(
                                 RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND);
-                    } else if (failIfNoneFound && ids.length == 0) {
+                    } else if (failIfNoneFoundValue && ids.length == 0) {
                         throw new REMGenerateException(RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFNONEFOUND);
                     }
 

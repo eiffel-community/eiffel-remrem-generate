@@ -23,10 +23,6 @@
     "links": [
       {
         "type": "TEST_CASE_EXECUTION",
-        "target": "245227ed-9d6f-4485-9330-1cc92b1f947a"
-      },
-      {
-            "type": "ELEMENT",
             "%lookup%": {
                 "eventType": "EiffelArtifactCreatedEvent",
                 "properties": [{
@@ -34,7 +30,21 @@
                 }],
                 "options": {
                     "failIfNoneFound": "true",
-                    "falIfMultipleFound": "true"
+                    "failIfMultipleFound": "false"
+                }
+            }
+      },
+      {
+            "type": "CAUSE",
+            "%lookup%": {
+                "eventType": "EiffelSourceChangeSubmittedEvent",
+                "properties": [{
+                    "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829b4",
+                    "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+                }],
+                "options": {
+                    "failIfNoneFound": "true",
+                    "falIfMultipleFoud": "true"
                 }
             }
         }

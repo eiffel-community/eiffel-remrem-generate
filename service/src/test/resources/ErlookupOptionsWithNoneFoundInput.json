@@ -1,7 +1,7 @@
 {
     "msgParams": {
         "meta": {
-            "type": "EiffelCompositionDefinedEvent",
+            "type": "EiffelConfidenceLevelModifiedEvent",
             "version": "3.0.0",
             "tags": [
                 ""
@@ -16,37 +16,40 @@
     },
     "eventParams": {
         "data": {
-            "name": "required",
-            "version": "",
+            "name": "0",
+            "value": "SUCCESS",
+            "issuer": {
+                "name": "",
+                "email": "",
+                "id": "",
+                "group": ""
+            },
             "customData": [
 
             ]
         },
         "links": [{
-            "type": "ELEMENT",
+                "type": "SUBJECT",
             "%lookup%": {
                 "eventType": "EiffelArtifactCreatedEvent",
                 "properties": [{
                     "data.identity": "pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test"
-                }],
-                "options": {
-                    "failIfNoneFound": "true",
-                    "failIfMultipleFound": "true"
-                }
+                }]
             }
-        },{
-            "type": "CAUSE",
+            },
+            {
+                "type": "CAUSE",
             "%lookup%": {
                 "eventType": "EiffelSourceChangeSubmittedEvent",
                 "properties": [{
-                    "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829b4",
-                    "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+                    "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829e1",
+                    "data.gitIdentifier.repoUri": "https://github.com/myPrivateRepo.git"
                 }],
                 "options": {
-                    "failIfNoneFound": "false",
-                    "failIfMultipleFound": "true"
+                    "failIfNoneFound": "true"
                 }
             }
-        }]
+            }
+        ]
     }
 }
