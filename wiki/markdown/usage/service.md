@@ -122,9 +122,9 @@ Status codes are generated according to the below table.
 | 404         | Not Found             | Requested template is not available               | The endpoint is not found, or template for specified event type is not found                                            |
 | 406         | Not Acceptable        | No event id found with ERLookup properties        | Is returned if no event id fetched from configured event repository in REMReM generate.                                 |
 | 417         | Expectation Failed    | Multiple event ids found with ERLookup properties | Is returned if multiple event ids fetched from configured event repository in REMReM generate.                          |
+| 422         | Unprocessable Entity  | Link specific options could not fetch information from ER   | Is returned if could not fetch information from ER with specific options.                                     |
 | 500         | Internal Server Error | Internal server error                             | When REMReM Generate is down, possible to try again later when server is up                                             |
 | 503         | Service Unavailable   | "No protocol service has been found registered"   | When specified message protocol is not loaded                                                                           |
-
 
 ## Lookups
 
@@ -199,7 +199,7 @@ https://localhost:8080/eventrepository/events/?meta.type=EiffelArtifactCreatedEv
             "%lookup%": {
             "eventType": "EiffelSourceChangeCreatedEvent",
             "properties": [
-                { "data.identity": "data.gitIdentifier.repoUri": "https://gerrit.ericsson.se" }]
+                { "data.gitIdentifier.repoUri": "https://github.com/testRepo/myRepo.git" }]
                    }
                 }]
 ```
@@ -212,3 +212,87 @@ https://localhost:8080/eventrepository/events/?meta.type=EiffelArtifactCreatedEv
 | failIfNoneFound:     | False         | If value is set to True and no event id is found through (at least one of) the provided lookup definitions, then no event will be generated.|                                                                                                 
 | lookupInExternalERs:             | False          | If value is set to True then REMReM will query external ERs and not just the locally used ER. The reason for the default value to be False is to decrease the load on external ERs. Here local ER means Single ER which is using REMReM generate.  External ER means multiple ER's which are configured in Local ER.|
 | lookupLimit:            | 1             | The number of events returned, through any lookup definition given, is limited to this number. |
+
+### Lookups with Options:
+
+The options in lookups is useful to configure the parameters failIfNoneFound and failIfMultipleFound for each lookup.
+If the failIfNoneFound and failIfMultipleFound are available in lookup then it will consider this values rather than the global values.
+
+#### Examples for Lookups with Options:
+
+**Example 1 (Single Lookup with Options): **
+
+```
+          "links":[
+                  {
+            "type": "ARTIFACT",
+            "%lookup%": {
+            "eventType": "EiffelArtifactCreatedEvent",
+            "properties": [
+                { "data.identity": "pkg:maven/test/testartifact@0.0.21" }],
+                "options": {
+                    "failIfNoneFound": "true",
+                    "failIfMultipleFound": "true"
+                    }
+                  }
+                }]
+```
+
+**Example 2 (Multiple Lookups with Options):**
+
+```
+          "links":[
+                  {
+            "type": "PREVIOUS_VERSION",
+            "%lookup%": {
+            "eventType": "EiffelArtifactCreatedEvent",
+            "properties": [
+                { "data.identity": "pkg:maven/test/batik-anim@1.9.1" }],
+                "options": {
+                    "failIfNoneFound": "true",
+                    "failIfMultipleFound": "false"
+                    }
+                  }
+                },
+                {
+            "type": "CAUSE",
+            "%lookup%": {
+            "eventType": "EiffelSourceChangeSubmittedEvent",
+            "properties": [
+                { "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829b4",
+                  "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git" }],
+                "options": {
+                    "failIfNoneFound": "true"
+                    }
+                  }
+                }]
+```
+
+**Example 3 :**
+
+```
+          "links":[
+                  {
+            "type": "PREVIOUS_VERSION",
+            "%lookup%": {
+            "eventType": "EiffelArtifactCreatedEvent",
+            "properties": [
+                { "data.identity": "pkg:maven/test/batik-anim@1.9.1" }],
+                "options": {
+                    "failIfMultipleFound": "true"
+                    }
+                  }
+                },
+                {
+            "type": "CAUSE",
+            "%lookup%": {
+            "eventType": "EiffelConfidenceLevelModifiedEvent",
+            "properties": [
+                { "data.value": "SUCCESS",
+                  "data.name": "readyForDelivery" }],
+                "options": {
+                    "failIfNoneFound": "true",
+                    }
+                  }
+                }]
+```
