@@ -35,8 +35,8 @@ public final class RemremGenerateServiceConstants {
         public static final String UNAVAILABLE_FOR_FAILIFNONEFOUND = "{\"status_code\": 406, \"result\": \"FAIL\", "
                 + "\"message\":\"No event id found with ERLookup properties\"}";
 
-        public static final String UNAVAILABLE_LOOKUP_OPTIONS = "{\"status_code\": 422, \"result\": \"FAIL\", "
-                + "\"message\":\"Link specific options could not fetch information from ER\"}";
+        public static final String LOOKUP_OPTIONS_NOT_FULFILLED = "{\"status_code\": 422, \"result\": \"FAIL\", "
+                + "\"message\":\"Link specific lookup options could not be fulfilled\"}";
 
         public static final String LOOKUP_LIMIT = "The maximum number of events returned from a lookup. If more events "
         		+ "are found they will be disregarded. The order of the events is undefined, which means that what events are "

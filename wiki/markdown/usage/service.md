@@ -122,7 +122,7 @@ Status codes are generated according to the below table.
 | 404         | Not Found             | Requested template is not available               | The endpoint is not found, or template for specified event type is not found                                            |
 | 406         | Not Acceptable        | No event id found with ERLookup properties        | Is returned if no event id fetched from configured event repository in REMReM generate.                                 |
 | 417         | Expectation Failed    | Multiple event ids found with ERLookup properties | Is returned if multiple event ids fetched from configured event repository in REMReM generate.                          |
-| 422         | Unprocessable Entity  | Link specific options could not fetch information from ER   | Is returned if could not fetch information from ER with specific options.                                     |
+| 422         | Unprocessable Entity  | Link specific lookup options could not be fulfilled   | Is returned if Link specific lookup options could not be matched with failIfMultipleFound and failIfNoneFound.      |
 | 500         | Internal Server Error | Internal server error                             | When REMReM Generate is down, possible to try again later when server is up                                             |
 | 503         | Service Unavailable   | "No protocol service has been found registered"   | When specified message protocol is not loaded                                                                           |
 
@@ -220,7 +220,7 @@ If the failIfNoneFound and failIfMultipleFound are available in lookup then it w
 
 #### Examples for Lookups with Options:
 
-**Example 1 (Single Lookup with Options): **
+**Example 1 (Single Lookup with Options):**
 
 ```
           "links":[

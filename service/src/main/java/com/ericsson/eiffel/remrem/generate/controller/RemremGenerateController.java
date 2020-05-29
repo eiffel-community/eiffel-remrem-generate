@@ -186,7 +186,7 @@ public class RemremGenerateController {
                                 failIfMultipleFoundValue = Boolean.parseBoolean(optionValue);
                             } else {
                                 throw new REMGenerateException(
-                                        RemremGenerateServiceConstants.UNAVAILABLE_LOOKUP_OPTIONS);
+                                        RemremGenerateServiceConstants.LOOKUP_OPTIONS_NOT_FULFILLED);
                             }
                         }
                     }
