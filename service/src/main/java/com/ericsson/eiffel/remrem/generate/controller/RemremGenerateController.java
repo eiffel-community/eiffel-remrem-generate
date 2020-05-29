@@ -168,8 +168,8 @@ public class RemremGenerateController {
                     }
                     String responseBody = response.getBody();
                     ids = ERLookupController.getIdsfromResponseBody(responseBody);
-                    boolean failIfNoneFoundValue=failIfNoneFound;
-                    boolean failIfMultipleFoundValue=failIfMultipleFound;
+                    boolean failIfNoneFoundValue = failIfNoneFound;
+                    boolean failIfMultipleFoundValue = failIfMultipleFound;
 
                     // Checking ER lookup has options field present or not
                     if (lookupLinks.get(i).toString().contains("options")) {

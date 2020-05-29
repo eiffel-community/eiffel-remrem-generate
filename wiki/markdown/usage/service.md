@@ -223,76 +223,80 @@ If the failIfNoneFound and failIfMultipleFound are available in lookup then it w
 **Example 1 (Single Lookup with Options):**
 
 ```
-          "links":[
-                  {
-            "type": "ARTIFACT",
-            "%lookup%": {
+    "links": [{
+        "type": "ARTIFACT",
+        "%lookup%": {
             "eventType": "EiffelArtifactCreatedEvent",
-            "properties": [
-                { "data.identity": "pkg:maven/test/testartifact@0.0.21" }],
-                "options": {
-                    "failIfNoneFound": "true",
-                    "failIfMultipleFound": "true"
-                    }
-                  }
-                }]
+            "properties": [{
+                "data.identity": "pkg:maven/test/testartifact@0.0.21"
+            }],
+            "options": {
+                "failIfNoneFound": "true",
+                "failIfMultipleFound": "true"
+            }
+        }
+    }]
 ```
 
 **Example 2 (Multiple Lookups with Options):**
 
 ```
-          "links":[
-                  {
+    "links": [{
             "type": "PREVIOUS_VERSION",
             "%lookup%": {
-            "eventType": "EiffelArtifactCreatedEvent",
-            "properties": [
-                { "data.identity": "pkg:maven/test/batik-anim@1.9.1" }],
+                "eventType": "EiffelArtifactCreatedEvent",
+                "properties": [{
+                    "data.identity": "pkg:maven/test/batik-anim@1.9.1"
+                }],
                 "options": {
                     "failIfNoneFound": "true",
                     "failIfMultipleFound": "false"
-                    }
-                  }
-                },
-                {
+                }
+            }
+        },
+        {
             "type": "CAUSE",
             "%lookup%": {
-            "eventType": "EiffelSourceChangeSubmittedEvent",
-            "properties": [
-                { "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829b4",
-                  "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git" }],
+                "eventType": "EiffelSourceChangeSubmittedEvent",
+                "properties": [{
+                    "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829b4",
+                    "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+                }],
                 "options": {
                     "failIfNoneFound": "true"
-                    }
-                  }
-                }]
+                }
+            }
+        }
+    ]
 ```
 
 **Example 3 :**
 
 ```
-          "links":[
-                  {
+    "links": [{
             "type": "PREVIOUS_VERSION",
             "%lookup%": {
-            "eventType": "EiffelArtifactCreatedEvent",
-            "properties": [
-                { "data.identity": "pkg:maven/test/batik-anim@1.9.1" }],
+                "eventType": "EiffelArtifactCreatedEvent",
+                "properties": [{
+                    "data.identity": "pkg:maven/test/batik-anim@1.9.1"
+                }],
                 "options": {
                     "failIfMultipleFound": "true"
-                    }
-                  }
-                },
-                {
+                }
+            }
+        },
+        {
             "type": "CAUSE",
             "%lookup%": {
-            "eventType": "EiffelConfidenceLevelModifiedEvent",
-            "properties": [
-                { "data.value": "SUCCESS",
-                  "data.name": "readyForDelivery" }],
+                "eventType": "EiffelConfidenceLevelModifiedEvent",
+                "properties": [{
+                    "data.value": "SUCCESS",
+                    "data.name": "readyForDelivery"
+                }],
                 "options": {
-                    "failIfNoneFound": "true",
-                    }
-                  }
-                }]
+                    "failIfNoneFound": "true"
+                }
+            }
+        }
+    ]
 ```
