@@ -1,3 +1,6 @@
+## 2.0.17
+- Fixed failed testcase in EiffelRemERLookupControllerUnitTest class.
+
 ## 2.0.16
 - REMReM lookups controlled 'failIfNoneFound' and 'failIfMultipleFound' lookups per lookup
   object within an event instead of globally per call.

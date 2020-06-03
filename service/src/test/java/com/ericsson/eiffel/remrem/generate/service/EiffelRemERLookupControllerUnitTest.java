@@ -140,7 +140,7 @@ public class EiffelRemERLookupControllerUnitTest {
                 .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupFailedWithOptionsOutput.json"), ENCODING);
         
         String erlookupOptionsWithNoneFoundOutput = FileUtils
-                .readFileToString(new File(TEST_RESOURCES_PATH+"erlookupOptionsWithNoneFoundOutput.json"), ENCODING);
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupOptionsWithNoneFoundOutput.json"), ENCODING);
 
         Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.anyObject()))
         .thenReturn(erlookupOptionsWithNoneFoundOutput);
