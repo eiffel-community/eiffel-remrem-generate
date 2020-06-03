@@ -1,3 +1,7 @@
+## 2.0.16
+- REMReM lookups controlled 'failIfNoneFound' and 'failIfMultipleFound' lookups per lookup
+  object within an event instead of globally per call.
+
 ## 2.0.15
 - Fixed the broken link which points to generate documentation in swagger.
 

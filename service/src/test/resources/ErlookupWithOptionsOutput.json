@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "id": "34f7bcf9-64b6-48fa-9e6f-36498564acf1",
+    "type": "EiffelEnvironmentDefinedEvent",
+    "version": "3.0.0",
+    "time": 1590071770808,
+    "tags": [
+      ""
+    ],
+    "source": {
+      "domainId": "",
+      "host": "",
+      "name": "",
+      "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.13",
+      "uri": ""
+    }
+  },
+  "data": {
+    "name": "required",
+    "version": "",
+    "image": "",
+    "uri": "",
+    "customData": []
+  },
+  "links": [
+    {
+      "type": "PREVIOUS_VERSION",
+      "target": "de9ca618-3df0-4ed2-9c73-c6f38b725841"
+    },
+    {
+      "type": "PREVIOUS_VERSION",
+      "target": "02e01b71-6463-4c98-9aae-1e8863d58eca"
+    },
+    {
+      "type": "CAUSE",
+      "target": "d96d1c6d-e67e-4235-865a-0470ff0b005a"
+    }
+  ]
+}

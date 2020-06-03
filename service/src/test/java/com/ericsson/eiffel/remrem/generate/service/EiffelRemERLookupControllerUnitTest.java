@@ -121,6 +121,30 @@ public class EiffelRemERLookupControllerUnitTest {
         String SCSubmittedResponse = FileUtils
                 .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupSCSubmittedResponse.json"), ENCODING);
 
+        String erLookupWithOptionsOutput = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupWithOptionsOutput.json"), ENCODING);
+
+        String erlookupOptionsWithEmptyResponseOutput = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupOptionsWithEmptyResponseOutput.json"), ENCODING);
+
+        String erLookupWithOptionsResponse = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupWithOptionsResponse.json"), ENCODING);
+
+        String erLookupWithOptionsResponse2 = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupWithOptionsResponse2.json"), ENCODING);
+        
+        String emptyResponse = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"EmptyResponse.json"), ENCODING);
+
+        String ErlookupFailedWithOptionsOutput = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupFailedWithOptionsOutput.json"), ENCODING);
+        
+        String erlookupOptionsWithNoneFoundOutput = FileUtils
+                .readFileToString(new File(TEST_RESOURCES_PATH+"erlookupOptionsWithNoneFoundOutput.json"), ENCODING);
+
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.anyObject()))
+        .thenReturn(erlookupOptionsWithNoneFoundOutput);
+        
         Mockito.when(service.generateMsg(Mockito.eq("eiffelconfidencelevel"), Mockito.anyObject()))
                 .thenReturn(confidenceLevelOutput);
 
@@ -138,6 +162,18 @@ public class EiffelRemERLookupControllerUnitTest {
 
         Mockito.when(service.generateMsg(Mockito.eq("eiffelSCSubmitted"), Mockito.anyObject()))
                 .thenReturn(SCSubmittedOutput);
+
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefined"), Mockito.anyObject()))
+        .thenReturn(erLookupWithOptionsOutput);
+
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefinedEvent"), Mockito.anyObject()))
+        .thenReturn(erlookupOptionsWithEmptyResponseOutput);
+
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEventt"), Mockito.anyObject()))
+        .thenReturn(compositionDefinedOutput);
+
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelTestCaseStarted"), Mockito.anyObject()))
+        .thenReturn(ErlookupFailedWithOptionsOutput);
 
         ResponseEntity erresponse = new ResponseEntity(response, HttpStatus.OK);
         when(restTemplate.getForEntity(
@@ -158,6 +194,25 @@ public class EiffelRemERLookupControllerUnitTest {
         Mockito.when(restTemplate.getForEntity(
                 Mockito.contains("/events?meta.type=EiffelSourceChangeCreatedEvent&data.gitIdentifier.commitId=fd090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/myPrivateRepo.git"),
                 Mockito.eq(String.class))).thenReturn(SCSubmittedErResponse);
+
+        ResponseEntity erLookupWithOptionsErResponse = new ResponseEntity(erLookupWithOptionsResponse, HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(
+                Mockito.contains("/events?meta.type=EiffelArtifactCreatedEvent&data.identity=pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test"),
+                Mockito.eq(String.class))).thenReturn(erLookupWithOptionsErResponse);
+        
+        ResponseEntity erLookupWithOptionsErResponse2 = new ResponseEntity(erLookupWithOptionsResponse2, HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(
+                Mockito.contains("/events?meta.type=EiffelSourceChangeSubmittedEvent&data.gitIdentifier.commitId=ad090b60a4aedc5161da9c035a49b14a319829b4&data.gitIdentifier.repoUri=https://github.com/johndoe/myPrivateRepo.git"),
+                Mockito.eq(String.class))).thenReturn(erLookupWithOptionsErResponse2);
+        
+        ResponseEntity erLookupOptionsWithEmptyResponse = new ResponseEntity(emptyResponse, HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(
+                Mockito.contains("/events?meta.type=EiffelSourceChangeSubmittedEvent&data.gitIdentifier.commitId=ad090b60a4aedc5161da9c035a49b14a319829e1&data.gitIdentifier.repoUri=https://github.com/myPrivateRepo.git"),
+                Mockito.eq(String.class))).thenReturn(erLookupOptionsWithEmptyResponse);
+        
+        Mockito.when(restTemplate.getForEntity(
+                Mockito.contains("/events?meta.type=EiffelArtifactCreatedEvent&data.identity=pkg:maven/swdi.up/CXP102051_22@R21EK?classifier=test"),
+                Mockito.eq(String.class))).thenReturn(erLookupOptionsWithEmptyResponse);
     }
 
     @Test
@@ -220,5 +275,55 @@ public class EiffelRemERLookupControllerUnitTest {
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void testErlookupOptions() throws Exception {
+        File file = new File("src/test/resources/ErlookupWithOptionsInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefined", false, false, true, 2, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+    
+    @Test
+    public void testErlookupOptionsWithEmptyResponse() throws Exception {
+        File file = new File("src/test/resources/ErlookupOptionsWithEmptyResponseInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefinedEvent", true, true, true, 2, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void testErlookupOptionsWithMultipleFound() throws Exception {
+        File file = new File("src/test/resources/ErlookupOptionsWithMultipleFoundInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
+    }
+    
+    @Test
+    public void testErlookupOptionsWithNoneFound() throws Exception {
+        File file = new File("src/test/resources/ErlookupOptionsWithNoneFoundInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @Test
+    public void testErlookupFailedWithOptions() throws Exception {
+        File file = new File("src/test/resources/ErlookupFailedWithOptionsInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

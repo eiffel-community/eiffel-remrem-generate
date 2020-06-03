@@ -1,0 +1,55 @@
+{
+    "msgParams": {
+        "meta": {
+            "type": "EiffelConfidenceLevelModifiedEvent",
+            "version": "3.0.0",
+            "tags": [
+                ""
+            ],
+            "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+            }
+        }
+    },
+    "eventParams": {
+        "data": {
+            "name": "0",
+            "value": "SUCCESS",
+            "issuer": {
+                "name": "",
+                "email": "",
+                "id": "",
+                "group": ""
+            },
+            "customData": [
+
+            ]
+        },
+        "links": [{
+                "type": "SUBJECT",
+            "%lookup%": {
+                "eventType": "EiffelArtifactCreatedEvent",
+                "properties": [{
+                    "data.identity": "pkg:maven/swdi.up/CXP102051_22@R21EK?type=xml&classifier=test"
+                }]
+            }
+            },
+            {
+                "type": "CAUSE",
+            "%lookup%": {
+                "eventType": "EiffelSourceChangeSubmittedEvent",
+                "properties": [{
+                    "data.gitIdentifier.commitId": "ad090b60a4aedc5161da9c035a49b14a319829e1",
+                    "data.gitIdentifier.repoUri": "https://github.com/myPrivateRepo.git"
+                }],
+                "options": {
+                    "failIfNoneFound": "true"
+                }
+            }
+            }
+        ]
+    }
+}

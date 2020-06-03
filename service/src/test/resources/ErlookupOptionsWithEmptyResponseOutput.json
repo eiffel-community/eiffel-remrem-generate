@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "id": "34f7bcf9-64b6-48fa-9e6f-36498564acf1",
+    "type": "EiffelEnvironmentDefinedEvent",
+    "version": "3.0.0",
+    "time": 1590071770808,
+    "tags": [
+      ""
+    ],
+    "source": {
+      "domainId": "",
+      "host": "",
+      "name": "",
+      "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.13",
+      "uri": ""
+    }
+  },
+  "data": {
+    "name": "required",
+    "version": "",
+    "image": "",
+    "uri": "",
+    "customData": []
+  },
+  "links": []
+}
