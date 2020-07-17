@@ -101,6 +101,7 @@ public class RemremGenerateController {
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false")  final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+            @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "lenientValidation", required = false, defaultValue = "false")  final Boolean lenientValidation,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
@@ -108,7 +109,7 @@ public class RemremGenerateController {
             MsgService msgService = getMessageService(msgProtocol);
             String response;
             if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson);
+                response = msgService.generateMsg(msgType, bodyJson, lenientValidation);
                 JsonElement parsedResponse = parser.parse(response);
                 if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
                     return new ResponseEntity<>(parsedResponse, HttpStatus.OK);

@@ -94,4 +94,11 @@ public class CliOptionsUnitTests {
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
     
+    @Test
+    public void testlenientValidationGiven() throws Exception {
+        String[] args = {"-f", "input_file", "-t", "artifactpublished", "-lv", "true"};
+        CLIOptions.parse(args);
+        assertTrue(CLIOptions.getErrorCodes().isEmpty());
+    }
+    
 }

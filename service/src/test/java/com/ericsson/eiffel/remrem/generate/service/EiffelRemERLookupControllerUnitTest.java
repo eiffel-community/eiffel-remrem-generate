@@ -142,37 +142,37 @@ public class EiffelRemERLookupControllerUnitTest {
         String erlookupOptionsWithNoneFoundOutput = FileUtils
                 .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupOptionsWithNoneFoundOutput.json"), ENCODING);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.anyObject(), Mockito.anyBoolean()))
         .thenReturn(erlookupOptionsWithNoneFoundOutput);
         
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelconfidencelevel"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelconfidencelevel"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(confidenceLevelOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelartifactpublished"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelartifactpublished"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(artifactPublishedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelcompositiondefined"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelcompositiondefined"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefined"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefined"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedSCCreatedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEvent"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEvent"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedSCSubmittedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelSCSubmitted"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelSCSubmitted"), Mockito.anyObject(), Mockito.anyBoolean()))
                 .thenReturn(SCSubmittedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefined"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefined"), Mockito.anyObject(), Mockito.anyBoolean()))
         .thenReturn(erLookupWithOptionsOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefinedEvent"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefinedEvent"), Mockito.anyObject(), Mockito.anyBoolean()))
         .thenReturn(erlookupOptionsWithEmptyResponseOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEventt"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEventt"), Mockito.anyObject(), Mockito.anyBoolean()))
         .thenReturn(compositionDefinedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelTestCaseStarted"), Mockito.anyObject()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelTestCaseStarted"), Mockito.anyObject(), Mockito.anyBoolean()))
         .thenReturn(ErlookupFailedWithOptionsOutput);
 
         ResponseEntity erresponse = new ResponseEntity(response, HttpStatus.OK);
@@ -222,7 +222,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelconfidencelevel", false, false, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelconfidencelevel", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -233,7 +233,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
     }
 
@@ -243,7 +243,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -253,7 +253,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -263,7 +263,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -273,7 +273,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -283,7 +283,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefined", false, false, true, 2, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefined", false, false, true, 2, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     
@@ -293,7 +293,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefinedEvent", true, true, true, 2, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefinedEvent", true, true, true, 2, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -303,7 +303,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
     }
     
@@ -313,7 +313,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -323,7 +323,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
