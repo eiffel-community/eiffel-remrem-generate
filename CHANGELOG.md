@@ -1,3 +1,6 @@
+## 2.1.0
+- Updated REMReM Generate to support lenient validation for Eiffel Protocol.
+
 ## 2.0.17
 - Fixed failed testcase in EiffelRemERLookupControllerUnitTest class.
 
