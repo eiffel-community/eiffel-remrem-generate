@@ -1,14 +1,14 @@
 ## Lenient Validation
-The Lenient validation introduced in REMReM Generate science the version 2.1.0
+The Lenient validation introduced in REMReM Generate since the version 2.1.0
 
 Using the lenient validation user continue the Eiffel generate with non-fatal fields in the message.
-This validation fexibility is applicable on only Eiffel message optional fields. see
+This validation flexibility applies to only Eiffel's message optional fields. see
  [Eiffel REMReM semantics](https://github.com/eiffel-community/eiffel/tree/master/schemas)
 for more about mandatory and optional fields.
 
 The Lenient validation will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
 
-The lenientValidation is optional parameter to CLI and service and possible inputs are true and false. The default lenientValidation is false.
+The lenientValidation is an optional parameter to CLI and service and possible inputs are true and false. The default lenientValidation is false.
 
 #### Example 1: lenientValidation = true and Input invalid optional field (links.type.COMPOSITION)
 ```
