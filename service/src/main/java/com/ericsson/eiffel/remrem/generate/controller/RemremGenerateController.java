@@ -140,74 +140,85 @@ public class RemremGenerateController {
                final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
 
-        // Checking ER lookup enabled or not
-        if (erlookupConfig.getEventRepositoryEnabled() && bodyJson.toString().contains("%lookup%")) {
-            JsonArray lookupLinks = bodyJson.get("eventParams").getAsJsonObject().get("links").getAsJsonArray();
-            JsonArray links = new JsonArray();
-            for (int i = 0; i < lookupLinks.size(); i++) {
-                if (lookupLinks.get(i).toString().contains("%lookup%")) {
-                    String[] ids = null;
+        // Checking ER lookup limit
+        if(lookupLimit > 0) {
+            // Checking ER lookup enabled or not
+            if (erlookupConfig.getEventRepositoryEnabled() && bodyJson.toString().contains("%lookup%")) {
+                JsonArray lookupLinks = bodyJson.get("eventParams").getAsJsonObject().get("links").getAsJsonArray();
+                JsonArray links = new JsonArray();
+                for (int i = 0; i < lookupLinks.size(); i++) {
+                    if (lookupLinks.get(i).toString().contains("%lookup%")) {
+                        String[] ids = null;
 
-                    // prepare ER Query
-                    String Query = ERLookupController.getQueryfromLookup(lookupLinks.get(i).getAsJsonObject());
-                    String url = erlookupConfig.getErURL() + Query + String.format("&shallow=%s&pageSize=%d", !lookupInExternalERs, lookupLimit);
+                        // prepare ER Query
+                        String Query = ERLookupController.getQueryfromLookup(lookupLinks.get(i).getAsJsonObject());
+                        String url = erlookupConfig.getErURL() + Query
+                                + String.format("&shallow=%s&pageSize=%d", !lookupInExternalERs, lookupLimit);
 
-                    // Execute ER Query
-                    int j = 0;
-                    while (j < 2) {
-                        try {
-                            response = restTemplate.getForEntity(url, String.class);
-                            if (response.getStatusCode() == HttpStatus.OK) {
-                                log.info("The result from Event Repository is: " + response.getStatusCodeValue());
-                                break;
-                            }
-                        } catch (Exception e) {
-                            if (++j >= 2)
-                                log.error("unable to connect configured Event Repository URL" + e.getMessage());
-                        }
-                    }
-                    String responseBody = response.getBody();
-                    ids = ERLookupController.getIdsfromResponseBody(responseBody);
-                    boolean failIfNoneFoundValue = failIfNoneFound;
-                    boolean failIfMultipleFoundValue = failIfMultipleFound;
-
-                    // Checking ER lookup has options field present or not
-                    if (lookupLinks.get(i).toString().contains("options")) {
-                        final JsonObject lookup = lookupLinks.get(i).getAsJsonObject().get("%lookup%")
-                                .getAsJsonObject();
-                        for (Entry<String, JsonElement> options : lookup.get("options").getAsJsonObject().entrySet()) {
-                            final String optionKey = options.getKey();
-                            final String optionValue = options.getValue().getAsString();
-                            if (optionKey.equals("failIfNoneFound") && (optionValue.equalsIgnoreCase("true")
-                                    || optionValue.equalsIgnoreCase("false"))) {
-                                failIfNoneFoundValue = Boolean.parseBoolean(optionValue);
-                            } else if (optionKey.equals("failIfMultipleFound") && (optionValue.equalsIgnoreCase("true")
-                                    || optionValue.equalsIgnoreCase("false"))) {
-                                failIfMultipleFoundValue = Boolean.parseBoolean(optionValue);
-                            } else {
-                                throw new REMGenerateException(
-                                        RemremGenerateServiceConstants.LOOKUP_OPTIONS_NOT_FULFILLED);
+                        // Execute ER Query
+                        int j = 0;
+                        while (j < 2) {
+                            try {
+                                response = restTemplate.getForEntity(url, String.class);
+                                if (response.getStatusCode() == HttpStatus.OK) {
+                                    log.info("The result from Event Repository is: " + response.getStatusCodeValue());
+                                    break;
+                                }
+                            } catch (Exception e) {
+                                if (++j >= 2)
+                                    log.error("unable to connect configured Event Repository URL" + e.getMessage());
                             }
                         }
-                    }
+                        String responseBody = response.getBody();
+                        ids = ERLookupController.getIdsfromResponseBody(responseBody);
+                        boolean failIfNoneFoundValue = failIfNoneFound;
+                        boolean failIfMultipleFoundValue = failIfMultipleFound;
 
-                    // Checking ER lookup result
-                    if (failIfMultipleFoundValue && ids != null && ids.length > 1) {
-                        throw new REMGenerateException(
-                                RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND);
-                    } else if (failIfNoneFoundValue && ids.length == 0) {
-                        throw new REMGenerateException(RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFNONEFOUND);
-                    }
+                        // Checking ER lookup has options field present or not
+                        if (lookupLinks.get(i).toString().contains("options")) {
+                            final JsonObject lookup = lookupLinks.get(i).getAsJsonObject().get("%lookup%")
+                                    .getAsJsonObject();
+                            for (Entry<String, JsonElement> options : lookup.get("options").getAsJsonObject()
+                                    .entrySet()) {
+                                final String optionKey = options.getKey();
+                                final String optionValue = options.getValue().getAsString();
+                                if (optionKey.equals("failIfNoneFound") && (optionValue.equalsIgnoreCase("true")
+                                        || optionValue.equalsIgnoreCase("false"))) {
+                                    failIfNoneFoundValue = Boolean.parseBoolean(optionValue);
+                                } else if (optionKey.equals("failIfMultipleFound")
+                                        && (optionValue.equalsIgnoreCase("true")
+                                                || optionValue.equalsIgnoreCase("false"))) {
+                                    failIfMultipleFoundValue = Boolean.parseBoolean(optionValue);
+                                } else {
+                                    throw new REMGenerateException(
+                                            RemremGenerateServiceConstants.LOOKUP_OPTIONS_NOT_FULFILLED);
+                                }
+                            }
+                        }
 
-                    // Replace lookup values
-                    ERLookupController.convertbodyJsontoLookupJson(ids, lookupLinks.get(i).getAsJsonObject(), links);
-                } else {
-                    links.add(lookupLinks.get(i).getAsJsonObject());
+                        // Checking ER lookup result
+                        if (failIfMultipleFoundValue && ids != null && ids.length > 1) {
+                            throw new REMGenerateException(
+                                    RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND);
+                        } else if (failIfNoneFoundValue && ids.length == 0) {
+                            throw new REMGenerateException(
+                                    RemremGenerateServiceConstants.UNAVAILABLE_FOR_FAILIFNONEFOUND);
+                        }
+
+                        // Replace lookup values
+                        ERLookupController.convertbodyJsontoLookupJson(ids, lookupLinks.get(i).getAsJsonObject(),
+                                links);
+                    } else {
+                        links.add(lookupLinks.get(i).getAsJsonObject());
+                    }
+                    bodyJson.get("eventParams").getAsJsonObject().add("links", links);
                 }
-                bodyJson.get("eventParams").getAsJsonObject().add("links", links);
+            } else {
+                return bodyJson;
             }
         } else {
-            return bodyJson;
+            log.info("Lookup limit must be greater than or equals to 1");
+            throw new REMGenerateException(RemremGenerateServiceConstants.LOOKUP_LIMIT_NOT_FULFILLED);
         }
         return bodyJson;
     }

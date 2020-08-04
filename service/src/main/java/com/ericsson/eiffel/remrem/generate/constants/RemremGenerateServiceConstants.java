@@ -45,4 +45,7 @@ public final class RemremGenerateServiceConstants {
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use true to use External ER's.";
 
+		public static final String LOOKUP_LIMIT_NOT_FULFILLED = "{\"status_code\": 400, \"result\": \"FAIL\", "
+                + "\"message\":\"Lookup limit must be greater than or equals to 1\"}";
+
 }
