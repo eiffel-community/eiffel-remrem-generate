@@ -126,6 +126,9 @@ public class RemremGenerateController {
             else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
             }
+            else if (e1.getMessage().contains(Integer.toString(HttpStatus.BAD_REQUEST.value()))) {
+                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.BAD_REQUEST);
+            }
             else {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
             }
@@ -139,7 +142,6 @@ public class RemremGenerateController {
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
                final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
-
         // Checking ER lookup limit
         if(lookupLimit > 0) {
             // Checking ER lookup enabled or not

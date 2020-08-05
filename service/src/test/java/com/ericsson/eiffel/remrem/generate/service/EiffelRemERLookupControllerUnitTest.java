@@ -327,7 +327,7 @@ public class EiffelRemERLookupControllerUnitTest {
         assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-	@Test
+    @Test
     public void testErLookUpLimitZero() throws Exception {
         File file = new File("src/test/resources/ErlookupFailedWithOptionsInput.json");
         JsonParser parser = new JsonParser();
