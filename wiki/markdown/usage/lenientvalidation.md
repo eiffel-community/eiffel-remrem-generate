@@ -7,7 +7,7 @@ This validation flexibility applies to only Eiffel's message optional fields. se
  [Eiffel REMReM semantics](https://github.com/eiffel-community/eiffel/tree/master/schemas)
 for more about mandatory and optional fields.
 
-The Lenient validation will perform the only mandatory and type field validation and other validation failures will place in Eiffel message as a new property(remremGenerateFailures)
+The Lenient validation will perform the only on mandatory and type field validation and other validation failures will place in Eiffel message as a new customData property(remremGenerateFailures).
 
 #### Other Validations are:
 - pattern validations
@@ -184,7 +184,7 @@ The REMreM Generate service ignoreOptionalFieldValidationErrors is set through c
 ]
 ```
 
-The ignoreOptionalFieldValidationErrors = true created new message property with "remremGenerateFailures"
+The ignoreOptionalFieldValidationErrors = true created new element property with "remremGenerateFailures"
 ```
 "remremGenerateFailures":[
                   {
