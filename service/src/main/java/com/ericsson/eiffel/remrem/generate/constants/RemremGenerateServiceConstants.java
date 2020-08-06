@@ -44,7 +44,4 @@ public final class RemremGenerateServiceConstants {
 
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use true to use External ER's.";
-
-        public static final String LenientValidation = "Lenient Validation true will perform the validation only on mandatory fields, non-mandatory validation failures add into eiffel message as property remremGenerateFailures";
-
 }

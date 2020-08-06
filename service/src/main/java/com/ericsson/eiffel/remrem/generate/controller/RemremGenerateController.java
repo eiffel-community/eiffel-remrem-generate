@@ -69,6 +69,17 @@ public class RemremGenerateController {
     private ErLookUpConfig erlookupConfig;
 
     private static ResponseEntity<String> response;
+    
+    @Value("${ignoreOptionalFieldValidationErrors:false}")
+    private boolean ignoreOptionalFieldValidationErrors;
+
+    public void setIgnoreOptionalFieldValidationErrors(boolean ignoreOptionalFieldValidationErrors) {
+        this.ignoreOptionalFieldValidationErrors = ignoreOptionalFieldValidationErrors;
+    }
+
+    public boolean isIgnoreOptionalFieldValidationErrors() {
+        return ignoreOptionalFieldValidationErrors;
+    }
 
     private static RestTemplate restTemplate = new RestTemplate();
 
@@ -99,9 +110,8 @@ public class RemremGenerateController {
             @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
             @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false")  final Boolean lookupInExternalERs,
+            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
-            @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "lenientValidation", required = false, defaultValue = "false")  final Boolean lenientValidation,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
@@ -109,7 +119,7 @@ public class RemremGenerateController {
             MsgService msgService = getMessageService(msgProtocol);
             String response;
             if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson, lenientValidation);
+                response = msgService.generateMsg(msgType, bodyJson, isIgnoreOptionalFieldValidationErrors());
                 JsonElement parsedResponse = parser.parse(response);
                 if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
                     return new ResponseEntity<>(parsedResponse, HttpStatus.OK);

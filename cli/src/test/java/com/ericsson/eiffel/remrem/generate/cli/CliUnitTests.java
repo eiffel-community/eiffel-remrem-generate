@@ -117,13 +117,13 @@ public class CliUnitTests {
     }
     
     @Test
-    public void testHandlelenientValidationArgsPass() throws Exception {
+    public void testHandleIgnoreOptionalFieldValidationErrorsArgsPass() throws Exception {
         URL url = getClass().getClassLoader().getResource("jsonTest.json");
         String path = url.getPath().replace("%20"," ");
         File file = new File(path);
         String filePath = file.getAbsolutePath();
 
-        String[] args = {"-t", "eiffelactivityfinished", "-f", filePath, "-lv" , "true"};
+        String[] args = {"-t", "eiffelactivityfinished", "-f", filePath, "-iov" , "true"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		

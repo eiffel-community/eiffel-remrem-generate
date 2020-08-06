@@ -1,16 +1,26 @@
 ## Lenient Validation
 The Lenient validation introduced in REMReM Generate since the version 2.1.0
 
-Using the lenient validation user continue the Eiffel generate with non-fatal fields in the message.
+Using the lenient validation user can continue the Eiffel message generate with non-fatal error fields in the message.
+
 This validation flexibility applies to only Eiffel's message optional fields. see
  [Eiffel REMReM semantics](https://github.com/eiffel-community/eiffel/tree/master/schemas)
 for more about mandatory and optional fields.
 
-The Lenient validation will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
+The Lenient validation will perform the only mandatory and type field validation and other validation failures will place in Eiffel message as a new property(remremGenerateFailures)
 
-The lenientValidation is an optional parameter to CLI and service and possible inputs are true and false. The default lenientValidation is false.
+#### Other Validations are:
+- pattern validations
+- enum
+- format
 
-#### Example 1: lenientValidation = true and Input invalid optional field (links.type.COMPOSITION)
+The ignoreOptionalFieldValidationErrors is an optional parameter to CLI and service and possible inputs are true and false. The default ignoreOptionalFieldValidationErrors is false.
+
+The REMReM Generate CLI the ignoreOptionalFieldValidationErrors option user can pass through command line option -iov (true/false)
+
+The REMreM Generate service ignoreOptionalFieldValidationErrors is set through configuration file.
+
+#### Example 1: ignoreOptionalFieldValidationErrors = true and Input invalid optional field (links.type.COMPOSITION)
 ```
 {
    "msgParams":{
@@ -174,7 +184,7 @@ The lenientValidation is an optional parameter to CLI and service and possible i
 ]
 ```
 
-The lenient validation created new message property with "remremGenerateFailures"
+The ignoreOptionalFieldValidationErrors = true created new message property with "remremGenerateFailures"
 ```
 "remremGenerateFailures":[
                   {
@@ -185,7 +195,7 @@ The lenient validation created new message property with "remremGenerateFailures
                ]
 ```
 
-#### Example 2: lenientValidation = true and Input invalid optional field (links.type.COMPOSITION)
+#### Example 2: ignoreOptionalFieldValidationErrors = true and Input invalid optional field (links.type.COMPOSITION)
 Input same as example1
 
 ##### output

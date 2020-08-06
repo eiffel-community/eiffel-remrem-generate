@@ -95,8 +95,8 @@ public class CliOptionsUnitTests {
     }
     
     @Test
-    public void testlenientValidationGiven() throws Exception {
-        String[] args = {"-f", "input_file", "-t", "artifactpublished", "-lv", "true"};
+    public void testIgnoreOptionalFieldValidationErrorsGiven() throws Exception {
+        String[] args = {"-f", "input_file", "-t", "artifactpublished", "-iov", "true"};
         CLIOptions.parse(args);
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }

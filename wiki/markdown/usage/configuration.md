@@ -157,3 +157,10 @@ If _event-repository.enabled_ is true then Event Repository URL should be mandat
             event-repository.enabled : true
             event-repository.url     :
 ```
+
+### Lenient Validation Configurations
+
+More about [Lenient Validation](../usage/lenientValidation.md).
+```
+ ignoreOptionalFieldValidationErrors : <true | false>
+``` 
