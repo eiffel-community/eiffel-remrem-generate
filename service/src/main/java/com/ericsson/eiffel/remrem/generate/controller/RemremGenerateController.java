@@ -142,10 +142,10 @@ public class RemremGenerateController {
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
                final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
-        // Checking ER lookup limit
-        if(lookupLimit > 0) {
-            // Checking ER lookup enabled or not
-            if (erlookupConfig.getEventRepositoryEnabled() && bodyJson.toString().contains("%lookup%")) {
+        // Checking ER lookup enabled or not
+        if (erlookupConfig.getEventRepositoryEnabled() && bodyJson.toString().contains("%lookup%")) {
+            // Checking ER lookup limit
+            if(lookupLimit > 0) {
                 JsonArray lookupLinks = bodyJson.get("eventParams").getAsJsonObject().get("links").getAsJsonArray();
                 JsonArray links = new JsonArray();
                 for (int i = 0; i < lookupLinks.size(); i++) {
@@ -216,11 +216,11 @@ public class RemremGenerateController {
                     bodyJson.get("eventParams").getAsJsonObject().add("links", links);
                 }
             } else {
-                return bodyJson;
+                log.error("Lookup limit must be greater than or equals to 1");
+                throw new REMGenerateException(RemremGenerateServiceConstants.LOOKUP_LIMIT_NOT_FULFILLED);
             }
         } else {
-            log.info("Lookup limit must be greater than or equals to 1");
-            throw new REMGenerateException(RemremGenerateServiceConstants.LOOKUP_LIMIT_NOT_FULFILLED);
+            return bodyJson;
         }
         return bodyJson;
     }
