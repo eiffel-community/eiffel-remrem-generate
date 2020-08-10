@@ -110,6 +110,9 @@ public class RemremGenerateController {
             if (msgService != null) {
                 response = msgService.generateMsg(msgType, bodyJson);
                 JsonElement parsedResponse = parser.parse(response);
+                if(lookupLimit <= 0) {
+                    return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
+                }
                 if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
                     return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
                 } else {
@@ -125,9 +128,6 @@ public class RemremGenerateController {
             }
             else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.BAD_REQUEST.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.BAD_REQUEST);
             }
             else {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
@@ -217,7 +217,6 @@ public class RemremGenerateController {
                 }
             } else {
                 log.error("Lookup limit must be greater than or equals to 1");
-                throw new REMGenerateException(RemremGenerateServiceConstants.LOOKUP_LIMIT_NOT_FULFILLED);
             }
         } else {
             return bodyJson;

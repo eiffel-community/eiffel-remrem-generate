@@ -38,14 +38,10 @@ public final class RemremGenerateServiceConstants {
         public static final String LOOKUP_OPTIONS_NOT_FULFILLED = "{\"status_code\": 422, \"result\": \"FAIL\", "
                 + "\"message\":\"Link specific lookup options could not be fulfilled\"}";
 
-        public static final String LOOKUP_LIMIT = "The maximum number of events returned from a lookup. If more events "
+        public static final String LOOKUP_LIMIT = "<strong>*LookupLimit must be greater than or equals to 1</strong>. The maximum number of events returned from a lookup. If more events "
         		+ "are found they will be disregarded. The order of the events is undefined, which means that what events are "
         		+ "disregarded is also undefined.";
 
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use true to use External ER's.";
-
-		public static final String LOOKUP_LIMIT_NOT_FULFILLED = "{\"status_code\": 400, \"result\": \"FAIL\", "
-                + "\"message\":\"Lookup limit must be greater than or equals to 1\"}";
-
 }
