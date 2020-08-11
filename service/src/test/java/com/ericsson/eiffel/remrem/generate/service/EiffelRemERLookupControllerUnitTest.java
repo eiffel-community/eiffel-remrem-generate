@@ -326,4 +326,14 @@ public class EiffelRemERLookupControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, json);
         assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @Test
+    public void testErLookUpLimitZero() throws Exception {
+        File file = new File("src/test/resources/ErlookupFailedWithOptionsInput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 0, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
 }
