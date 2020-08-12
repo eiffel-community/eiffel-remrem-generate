@@ -347,7 +347,7 @@ public class RemremGenerateController {
             return true;
         }
         else if(!this.lenientValidationEnabledToUsers && okToLeaveOutInvalidOptionalFields) {
-            throw new REMGenerateException("Not Acceptable - Lenient validation is not enabled in configuration, your not alloed to use this option.");
+            throw new REMGenerateException(RemremGenerateServiceConstants.NOT_ACCEPTABLE);
         }
         return false;
     }
