@@ -7,20 +7,29 @@ This validation flexibility applies to only Eiffel's message optional fields. se
  [Eiffel REMReM semantics](https://github.com/eiffel-community/eiffel/tree/master/schemas)
 for more about mandatory and optional fields.
 
-The Lenient validation will perform the only on mandatory and type field validation and other validation failures will place in Eiffel message as a new customData property(remremGenerateFailures).
+The Lenient validation will perform the only on mandatory field validation and other validation failures will place in Eiffel message as a new customData property(remremGenerateFailures).
 
 #### Other Validations are:
 - pattern validations
 - enum
 - format
+- type
 
-The ignoreOptionalFieldValidationErrors is an optional parameter to CLI and service and possible inputs are true and false. The default ignoreOptionalFieldValidationErrors is false.
+The lenientValidationEnabledToUsers is an optional parameter to CLI and service and possible inputs are true and false. The default lenientValidationEnabledToUsers is false.
 
-The REMReM Generate CLI the ignoreOptionalFieldValidationErrors option user can pass through command line option -iov (true/false)
+The REMReM Generate CLI the lenientValidationEnabled option user can pass through command line option -lv (true/false)
 
-The REMreM Generate service ignoreOptionalFieldValidationErrors is set through configuration file.
+The REMreM Generate service the lenient validation is enable with two options one is lenientValidationEnabledToUsers is set through configuration file 
+and second one is REST endpoint(/generate) option okToLeaveOutInvalidOptionalFields
 
-#### Example 1: ignoreOptionalFieldValidationErrors = true and Input invalid optional field (links.type.COMPOSITION)
+The Configuration parameter for the whole REMReM Generate instance lenientValidationEnabledToUsers (default false)
+REST parameter for each /generate call okToLeaveOutInvalidOptionalFields (default false)
+
+If the configuration parameter is set to false and the REST parameter is set to true REMReM /generate REST call return with an error code stating that it is not allowed to ask for lenient validation.
+
+If both parameters are true then REMReM will remove the optional event fields from the input event data that does not validate successfully, and add those removed field information added into customData.
+
+#### Example 1: Lenient Validation Enabled and Input invalid optional field (links.type.COMPOSITION)
 ```
 {
    "msgParams":{
@@ -183,7 +192,7 @@ The REMreM Generate service ignoreOptionalFieldValidationErrors is set through c
 }
 ```
 
-#### Example 2: ignoreOptionalFieldValidationErrors = true and Input invalid optional field (links.type.COMPOSITION)
+#### Example 2: Lenient Validation Disabled and Input invalid optional field (links.type.COMPOSITION)
 Input same as example1
 
 ##### output

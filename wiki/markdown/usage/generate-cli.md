@@ -20,9 +20,9 @@ usage: java -jar
 
  -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffelsemantics
 
- -iov,--ignoreOptionalFieldValidationErrors
+ -lv,--lenientValidationEnabledToUsers
 
-                             ignoreOptionalFieldValidationErrors will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
+                             lenientValidationEnabled will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
 
  -r,--response_file          file to store the response in, optional
 
@@ -100,11 +100,11 @@ $ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfin
 $ java -jar generate-cli.jar -t eiffelactivityfinished -json {"msgParams":{"meta":{"type":"EiffelActivityFinishedEvent","tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":"pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.0"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}}},"eventParams":{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}
 ```
 
-##### Ignore Optional Field Validation Errors example:
+##### Lenient Validation Enabled Errors example:
 
 #### Input
 ```
-$ java -jar generate-cli.jar -t EiffelArtifactCreatedEvent -iov true -json "{'msgParams':{'meta':{'type':'EiffelArtifactCreatedEvent','version':'3.0.0','tags':[123,'tag2'],'source':{'domainId':'domainID','host':'host','name':'name','uri':'http:\/\/java.sun.com\/j2se\/1.3\/','serializer':'pkg:maven'},'security':{'authorIdentity':'test','encryptedDigest':'sample'}}},'eventParams':{'data':{'gav':{'groupId':'G','artifactId':'A','version':'V'},'fileInformation':[{'name':'name'}],'buildCommand':'trigger','requiresImplementation':'NONE','name':'event','dependsOn':[],'implement':[],'identity':'pkg:abc','customData':[{'key':'firstLog','value':'http:\/\/myHost.com\/firstLog'},{'key':'otherLog','value':'http:\/\/myHost.com\/firstLog33'}]},'links':[{'type':'CAUSE','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1'},{'type':'PREVIOUS_VERSION','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee2'},{'type':'COMPOSITION','target':'aaaaaaaa'},{'type':'ENVIRONMENT','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee3'}]}}"
+$ java -jar generate-cli.jar -t EiffelArtifactCreatedEvent -lv true -json "{'msgParams':{'meta':{'type':'EiffelArtifactCreatedEvent','version':'3.0.0','tags':[123,'tag2'],'source':{'domainId':'domainID','host':'host','name':'name','uri':'http:\/\/java.sun.com\/j2se\/1.3\/','serializer':'pkg:maven'},'security':{'authorIdentity':'test','encryptedDigest':'sample'}}},'eventParams':{'data':{'gav':{'groupId':'G','artifactId':'A','version':'V'},'fileInformation':[{'name':'name'}],'buildCommand':'trigger','requiresImplementation':'NONE','name':'event','dependsOn':[],'implement':[],'identity':'pkg:abc','customData':[{'key':'firstLog','value':'http:\/\/myHost.com\/firstLog'},{'key':'otherLog','value':'http:\/\/myHost.com\/firstLog33'}]},'links':[{'type':'CAUSE','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1'},{'type':'PREVIOUS_VERSION','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee2'},{'type':'COMPOSITION','target':'aaaaaaaa'},{'type':'ENVIRONMENT','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee3'}]}}"
 ```
 #### Output
 

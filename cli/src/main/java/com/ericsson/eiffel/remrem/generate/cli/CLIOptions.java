@@ -72,8 +72,8 @@ public class CLIOptions {
         options.addOption("d", "debug", false, "enable debug traces");
         options.addOption("mp", "messaging_protocol", true,
                 "name of messaging protocol to be used, e.g. eiffelsemantics");
-        options.addOption("iov", "ignoreOptionalFieldValidationErrors", true,
-                "ignoreOptionalFieldValidationErrors will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)" + 
+        options.addOption("lv", "lenientValidationEnabled", true,
+                "lenientValidationEnabled  will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)" + 
                 "");
         contentGroup = new OptionGroup();
         contentGroup.addOption(new Option("f", "content_file", true, "message content file"));

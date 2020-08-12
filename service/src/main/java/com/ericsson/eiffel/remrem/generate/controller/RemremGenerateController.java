@@ -70,18 +70,14 @@ public class RemremGenerateController {
 
     private static ResponseEntity<String> response;
     
-    @Value("${ignoreOptionalFieldValidationErrors:false}")
-    private boolean ignoreOptionalFieldValidationErrors;
+    @Value("${lenientValidationEnabledToUsers:false}")
+    private boolean lenientValidationEnabledToUsers;
 
-    public void setIgnoreOptionalFieldValidationErrors(boolean ignoreOptionalFieldValidationErrors) {
-        this.ignoreOptionalFieldValidationErrors = ignoreOptionalFieldValidationErrors;
-    }
+    public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
+		this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
+	}
 
-    public boolean isIgnoreOptionalFieldValidationErrors() {
-        return ignoreOptionalFieldValidationErrors;
-    }
-
-    private static RestTemplate restTemplate = new RestTemplate();
+	private static RestTemplate restTemplate = new RestTemplate();
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -112,6 +108,7 @@ public class RemremGenerateController {
             @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+            @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
@@ -119,7 +116,7 @@ public class RemremGenerateController {
             MsgService msgService = getMessageService(msgProtocol);
             String response;
             if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson, isIgnoreOptionalFieldValidationErrors());
+                response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
                 JsonElement parsedResponse = parser.parse(response);
                 if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
                     return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
@@ -133,6 +130,9 @@ public class RemremGenerateController {
         } catch (REMGenerateException e1) {
             if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+            }
+            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
+                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
             }
             else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
@@ -340,5 +340,15 @@ public class RemremGenerateController {
         } else {
             return new ResponseEntity<>(message, status);
         }
+    }
+
+    public boolean isLenientEnabled(final boolean okToLeaveOutInvalidOptionalFields) throws REMGenerateException {
+        if(this.lenientValidationEnabledToUsers && okToLeaveOutInvalidOptionalFields) {
+            return true;
+        }
+        else if(!this.lenientValidationEnabledToUsers && okToLeaveOutInvalidOptionalFields) {
+            throw new REMGenerateException("Not Acceptable - Lenient validation is not enabled in configuration, your not alloed to use this option.");
+        }
+        return false;
     }
 }

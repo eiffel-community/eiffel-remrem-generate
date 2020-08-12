@@ -39,9 +39,12 @@ public final class RemremGenerateServiceConstants {
                 + "\"message\":\"Link specific lookup options could not be fulfilled\"}";
 
         public static final String LOOKUP_LIMIT = "The maximum number of events returned from a lookup. If more events "
-        		+ "are found they will be disregarded. The order of the events is undefined, which means that what events are "
-        		+ "disregarded is also undefined.";
+                + "are found they will be disregarded. The order of the events is undefined, which means that what events are "
+                + "disregarded is also undefined.";
 
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use true to use External ER's.";
+        
+        public static final String LenientValidation = "Lenient Validation true will perform the validation only on mandatory fields, "
+                + "non-mandatory validation failures add into eiffel message as property remremGenerateFailures";
 }

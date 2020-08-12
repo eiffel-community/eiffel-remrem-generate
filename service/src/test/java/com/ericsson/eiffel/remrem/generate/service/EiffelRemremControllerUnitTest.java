@@ -69,7 +69,6 @@ public class EiffelRemremControllerUnitTest {
         MockitoAnnotations.initMocks(this);
         msgServices.add(service);
         msgServices.add(service2);
-        Mockito.when(unit.isIgnoreOptionalFieldValidationErrors()).thenReturn(false);
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
         Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
 
@@ -111,38 +110,38 @@ public class EiffelRemremControllerUnitTest {
 
     @Test
     public void testSemanticsSuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void testSemanticsFailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testEiffel3SuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void testEiffel3FailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testMessageServiceUnavailableEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @Test
     public void testlenientValidation() throws Exception {
-        unit.setIgnoreOptionalFieldValidationErrors(true);
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, body.getAsJsonObject());
+        unit.setLenientValidationEnabledToUsers(true);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 }

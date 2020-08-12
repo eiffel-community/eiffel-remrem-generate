@@ -175,8 +175,8 @@ public class CLI implements CommandLineRunner {
             JsonParser parser = new JsonParser();
             JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
             MsgService msgService = getMessageService(commandLine);
-            Boolean iov = commandLine.hasOption("iov")? Boolean.parseBoolean(commandLine.getOptionValue("iov")) : false;
-            String returnJsonStr = msgService.generateMsg(msgType, jsonContent, iov);
+            Boolean lv = commandLine.hasOption("lv")? Boolean.parseBoolean(commandLine.getOptionValue("lv")) : false;
+            String returnJsonStr = msgService.generateMsg(msgType, jsonContent, lv);
             returnJsonStr = "[" + returnJsonStr + "]";
             if (responseFilePath != null) {
                 try (PrintWriter out = new PrintWriter(responseFilePath)) {

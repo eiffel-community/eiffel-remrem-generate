@@ -162,5 +162,5 @@ If _event-repository.enabled_ is true then Event Repository URL should be mandat
 
 More about [Lenient Validation](../usage/lenientValidation.md).
 ```
- ignoreOptionalFieldValidationErrors : <true | false>
+ lenientValidationEnabledToUsers : <true | false>
 ``` 

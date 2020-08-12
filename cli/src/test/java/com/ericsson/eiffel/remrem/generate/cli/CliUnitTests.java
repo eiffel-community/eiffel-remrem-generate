@@ -123,7 +123,7 @@ public class CliUnitTests {
         File file = new File(path);
         String filePath = file.getAbsolutePath();
 
-        String[] args = {"-t", "eiffelactivityfinished", "-f", filePath, "-iov" , "true"};
+        String[] args = {"-t", "eiffelactivityfinished", "-f", filePath, "-lv" , "true"};
         CLIOptions.parse(args);
         cli.run(args);		
         assertTrue(CLIOptions.getErrorCodes().isEmpty());		

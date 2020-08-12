@@ -96,7 +96,7 @@ public class CliOptionsUnitTests {
     
     @Test
     public void testIgnoreOptionalFieldValidationErrorsGiven() throws Exception {
-        String[] args = {"-f", "input_file", "-t", "artifactpublished", "-iov", "true"};
+        String[] args = {"-f", "input_file", "-t", "artifactpublished", "-lv", "true"};
         CLIOptions.parse(args);
         assertTrue(CLIOptions.getErrorCodes().isEmpty());
     }
