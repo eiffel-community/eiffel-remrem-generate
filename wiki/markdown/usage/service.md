@@ -120,7 +120,7 @@ Status codes are generated according to the below table.
 | 200         | OK                    |                                                   | Event generated successfully                                                                                            |
 | 400         | Bad Request           | Could not read document: Unrecognized token       | Malformed JSON (missing braces or wrong event type, etc..), client need to fix problem in event before submitting again |
 | 404         | Not Found             | Requested template is not available               | The endpoint is not found, or template for specified event type is not found                                            |
-| 406         | Not Acceptable        | No event id found with ERLookup properties, Lenient Validation disabled in configuration and user requested through REST call        | Is returned if no event id fetched from configured event repository in REMReM generate., Lenient validation is not enabled in configuration, your not alloed to use this option.                                 |
+| 406         | Not Acceptable        | No event id found with ERLookup properties, Lenient Validation disabled in configuration and user requested through REST call        | Is returned if no event id fetched from configured event repository in REMReM generate, Lenient validation is not enabled in configuration, your not alloed to use this option.                                 |
 | 417         | Expectation Failed    | Multiple event ids found with ERLookup properties | Is returned if multiple event ids fetched from configured event repository in REMReM generate.                          |
 | 422         | Unprocessable Entity  | Link specific lookup options could not be fulfilled   | Is returned if Link specific lookup options could not be matched with failIfMultipleFound and failIfNoneFound.      |
 | 500         | Internal Server Error | Internal server error                             | When REMReM Generate is down, possible to try again later when server is up                                             |
@@ -301,4 +301,4 @@ If the failIfNoneFound and failIfMultipleFound are available in lookup then it w
     ]
 ```
 ### Lenient Validation:
-[Lenient Validation](../usage/lenientValidation.md).
+[Lenient Validation](../usage/lenientvalidation.md).

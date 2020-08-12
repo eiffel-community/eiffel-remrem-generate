@@ -15,15 +15,14 @@ The Lenient validation will perform the only on mandatory field validation and o
 - format
 - type
 
-The lenientValidationEnabledToUsers is an optional parameter to CLI and service and possible inputs are true and false. The default lenientValidationEnabledToUsers is false.
-
 The REMReM Generate CLI the lenientValidationEnabled option user can pass through command line option -lv (true/false)
 
 The REMreM Generate service the lenient validation is enable with two options one is lenientValidationEnabledToUsers is set through configuration file 
 and second one is REST endpoint(/generate) option okToLeaveOutInvalidOptionalFields
 
-The Configuration parameter for the whole REMReM Generate instance lenientValidationEnabledToUsers (default false)
-REST parameter for each /generate call okToLeaveOutInvalidOptionalFields (default false)
+The Configuration parameter(lenientValidationEnabledToUsers) for the whole REMReM Generate instance, the default value is false
+
+The REST parameter(okToLeaveOutInvalidOptionalFields) for each /generate call  the default value is false
 
 If the configuration parameter is set to false and the REST parameter is set to true REMReM /generate REST call return with an error code stating that it is not allowed to ask for lenient validation.
 

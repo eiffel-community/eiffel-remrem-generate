@@ -20,7 +20,7 @@ usage: java -jar
 
  -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffelsemantics
 
- -lv,--lenientValidationEnabledToUsers
+ -lv,--lenientValidationEnabled
 
                              lenientValidationEnabled will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
 
