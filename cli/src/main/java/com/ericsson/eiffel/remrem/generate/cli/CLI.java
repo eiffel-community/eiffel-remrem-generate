@@ -56,7 +56,6 @@ public class CLI implements CommandLineRunner {
 	
     @Autowired
     private List<MsgService> msgServices;
-    //private MsgService[] msgServices;
     
     public CLI(List<MsgService> msgServices) {
         super();
@@ -176,7 +175,8 @@ public class CLI implements CommandLineRunner {
             JsonParser parser = new JsonParser();
             JsonObject jsonContent = parser.parse(jsonString).getAsJsonObject();
             MsgService msgService = getMessageService(commandLine);
-            String returnJsonStr = msgService.generateMsg(msgType, jsonContent);
+            Boolean lv = commandLine.hasOption("lv")? Boolean.parseBoolean(commandLine.getOptionValue("lv")) : false;
+            String returnJsonStr = msgService.generateMsg(msgType, jsonContent, lv);
             returnJsonStr = "[" + returnJsonStr + "]";
             if (responseFilePath != null) {
                 try (PrintWriter out = new PrintWriter(responseFilePath)) {

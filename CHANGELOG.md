@@ -1,3 +1,6 @@
+## 2.1.0
+- Updated REMReM Generate to support lenient validation for Eiffel Protocol.
+
 ## 2.0.18
 - ER lookup control parameter lookupLimit has been set to 1 or higher.
 

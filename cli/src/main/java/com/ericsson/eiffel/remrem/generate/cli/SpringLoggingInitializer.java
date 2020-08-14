@@ -26,20 +26,20 @@ import ch.qos.logback.classic.Logger;
 
 public class SpringLoggingInitializer implements ApplicationContextInitializer {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextInitializer#initialize(org.springframework.context.ConfigurableApplicationContext)
-	 * 
-	 * We need to turn off Spring logging since we want write the generated message to console. 
-	 */
-	@Override
-	public void initialize(ConfigurableApplicationContext applicationContext) {
-		Class[] loggers = {SpringApplication.class, /*App.class,*/ ConfigFileApplicationListener.class,
-				ConditionEvaluationReportLoggingListener.class};
-		Logger log = (Logger) LoggerFactory.getLogger("ROOT");
-		log.setLevel(Level.ERROR);
-		for (Class logger : loggers) {
-			log = (Logger) LoggerFactory.getLogger(logger);
-			log.setLevel(Level.ERROR);
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.springframework.context.ApplicationContextInitializer#initialize(org.springframework.context.ConfigurableApplicationContext)
+     * 
+     * We need to turn off Spring logging since we want write the generated message to console. 
+     */
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        Class[] loggers = {SpringApplication.class, /*App.class,*/ ConfigFileApplicationListener.class,
+                ConditionEvaluationReportLoggingListener.class};
+        Logger log = (Logger) LoggerFactory.getLogger("ROOT");
+        log.setLevel(Level.ERROR);
+        for (Class logger : loggers) {
+            log = (Logger) LoggerFactory.getLogger(logger);
+            log.setLevel(Level.ERROR);
+        }
+    }
 }

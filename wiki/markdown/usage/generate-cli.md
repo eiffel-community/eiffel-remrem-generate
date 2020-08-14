@@ -20,6 +20,10 @@ usage: java -jar
 
  -mp,--messaging_protocol    name of messaging protocol to be used, e.g. eiffelsemantics
 
+ -lv,--lenientValidationEnabled
+
+                             lenientValidationEnabled will perform the only mandatory field validation and non-mandatory validation failures will place in Eiffel message as a new property(remremGenerateFailures)
+
  -r,--response_file          file to store the response in, optional
 
  -t,--message_type           message type, mandatory if -f or -json is given
@@ -94,6 +98,19 @@ $ java -jar generate-cli.jar -f eiffelactivityfinished.json -t eiffelactivityfin
 
 ```
 $ java -jar generate-cli.jar -t eiffelactivityfinished -json {"msgParams":{"meta":{"type":"EiffelActivityFinishedEvent","tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","uri":"http://java.sun.com/j2se/1.3/","serializer":"pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.0"},"security":{"sdm":{"authorIdentity":"test","encryptedDigest":"sample"}}}},"eventParams":{"data":{"outcome":{"conclusion":"SUCCESSFUL"},"persistentLogs":[{"name":"firstLog","uri":"http://myHost.com/firstLog"},{"name":"otherLog","uri":"isbn:0-486-27557-4"}]},"links":[{"type":"ACTIVITY_EXECUTION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]}}
+```
+
+##### Lenient Validation Enabled Errors example:
+
+#### Input
+```
+$ java -jar generate-cli.jar -t EiffelArtifactCreatedEvent -lv true -json "{'msgParams':{'meta':{'type':'EiffelArtifactCreatedEvent','version':'3.0.0','tags':[123,'tag2'],'source':{'domainId':'domainID','host':'host','name':'name','uri':'http:\/\/java.sun.com\/j2se\/1.3\/','serializer':'pkg:maven'},'security':{'authorIdentity':'test','encryptedDigest':'sample'}}},'eventParams':{'data':{'gav':{'groupId':'G','artifactId':'A','version':'V'},'fileInformation':[{'name':'name'}],'buildCommand':'trigger','requiresImplementation':'NONE','name':'event','dependsOn':[],'implement':[],'identity':'pkg:abc','customData':[{'key':'firstLog','value':'http:\/\/myHost.com\/firstLog'},{'key':'otherLog','value':'http:\/\/myHost.com\/firstLog33'}]},'links':[{'type':'CAUSE','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1'},{'type':'PREVIOUS_VERSION','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee2'},{'type':'COMPOSITION','target':'aaaaaaaa'},{'type':'ENVIRONMENT','target':'aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee3'}]}}"
+```
+#### Output
+
+```
+[{"meta":{"id":"61c4f2d5-2d08-4d00-b881-314253061e83","type":"EiffelArtifactCreatedEvent","version":"3.0.0","time":1596712126955,"tags":["123","tag2"],"source":{"domainId":"domainID","host":"host","name":"name","serializer":"pkg:maven","uri":"http://java.sun.com/j2se/1.3/"},"security":{"authorIdentity":"test","sequenceProtection":[]}},"data":{"identity":"pkg:abc","fileInformation":[{"name":"name","tags":[]}],"buildCommand":"trigger","requiresImplementation":"NONE","dependsOn":[],"implements":[],"name":"event","customData":[{"key":"firstLog","value":"http://myHost.com/firstLog"},{"key":"otherLog","value":"http://myHost.com/firstLog33"},{"key":"remremGenerateFailures","value":[{"type":"pattern","message":"ECMA 262 regex \"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\" does not match input string \"aaaaaaaa\"","path":"/links/2/target"}]}]},"links":[{"type":"CAUSE","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"},{"type":"PREVIOUS_VERSION","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee2"},{"type":"ENVIRONMENT","target":"aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee3"}]}]
+
 ```
 
 ##### For loading protocol jars other than _eiffelsemantics_:
