@@ -1,3 +1,6 @@
+## 2.1.1
+- Fixed the test case for REMReM Generate to support lenient validation for Eiffel Protocol.
+
 ## 2.1.0
 - Updated REMReM Generate to support lenient validation for Eiffel Protocol.
 
