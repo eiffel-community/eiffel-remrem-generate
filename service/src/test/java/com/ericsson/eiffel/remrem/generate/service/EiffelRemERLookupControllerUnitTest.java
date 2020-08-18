@@ -329,7 +329,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 0, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 0, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 }
