@@ -302,3 +302,50 @@ If the failIfNoneFound and failIfMultipleFound are available in lookup then it w
 ```
 ### Lenient Validation:
 [Lenient Validation](../usage/lenientvalidation.md).
+
+### Jasypt configurations
+
+Jasypt Encryption support for property sources(passwords, secret info ..etc) is provided in the Application. To support this functionality in our application we need to add the following property in property file
+
+```
+jasypt.encryptor.jasyptKeyFilePath: The path of jasypt.key file containing the key value which was used while encrypting the original password
+```
+
+The key value in jasypt.key file must be same for both encryption and decryption of the original password(ldap,rabbitmq...etc)
+
+### How to encrypt the password:
+
+```
+1) Download the jasypt jar file from any of the below locations
+Link to [Jasypt](http://www.jasypt.org/download.html) (or) [Link to Maven](https://mvnrepository.com/artifact/org.jasypt/jasypt/1.9.2)
+
+2) Execute the below command to generate Jasypt encrypted password
+    java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="any password" password=any intermediate key
+
+input   : any password which we want to encrypt(Ex: rabbitmq password, ldap user password, etc...)
+password: A Jasypt key used to encrypt the above input( The Jasypt key can be anything, but make sure same key to be used for decryption)
+
+Example:
+    Run the below command in Command line
+
+    java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="dummyPassword" password=dummy
+
+output:
+    ----ENVIRONMENT-----------------
+
+    Runtime: Oracle Corporation Java HotSpot(TM) 64-Bit Server VM 25.144-b01
+
+    ----ARGUMENTS-------------------
+
+    algorithm: PBEWithMD5AndDES
+    input: dummyPassword
+    password: dummy
+
+    ----OUTPUT----------------------
+
+    euJcvto7NtCDiWT7BKFW0A==
+```
+
+Use the above encrypted password in your property file like this **{ENC(encrypted password)}**
+
+`Ex:activedirectory.managerPassword: {ENC(euJcvto7NtCDiWT7BKFW0A ==)}`

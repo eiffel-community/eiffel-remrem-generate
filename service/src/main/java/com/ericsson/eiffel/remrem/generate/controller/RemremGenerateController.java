@@ -29,6 +29,7 @@ import com.google.gson.JsonParser;
 import ch.qos.logback.classic.Logger;
 import io.swagger.annotations.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,9 @@ import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,7 +59,7 @@ import java.util.Map.Entry;
 @Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
-    Logger log = (Logger) LoggerFactory.getLogger(RemremGenerateController.class);
+    static Logger log = (Logger) LoggerFactory.getLogger(RemremGenerateController.class);
 
     // regular expression that exclude "swagger-ui.html" from request parameter
     private static final String REGEX = ":^(?!swagger-ui.html).*$";
@@ -362,5 +366,24 @@ public class RemremGenerateController {
             throw new REMGenerateException(RemremGenerateServiceConstants.NOT_ACCEPTABLE);
         }
         return false;
+    }
+
+    /**
+     * To read the jasypt key from jasypt.key file
+     *
+     * @param jasyptKeyFilePath
+     *            file path in which jasypt key is stored
+     * @return jasypt key fetched from the file
+     */
+    public static String readJasyptKeyFile(String jasyptKeyFilePath) {
+        String jasyptKey = "";
+        try {
+            if (StringUtils.isNotBlank(jasyptKeyFilePath)) {
+                jasyptKey = new String(Files.readAllBytes(Paths.get(jasyptKeyFilePath)));
+            }
+        } catch (IOException e) {
+            log.error("Could not read the jasypt key from the jasypt key file path: " + e.getMessage(), e);
+        }
+        return jasyptKey;
     }
 }

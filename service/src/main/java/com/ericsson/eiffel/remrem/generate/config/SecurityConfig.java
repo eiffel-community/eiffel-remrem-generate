@@ -26,6 +26,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
+
 /**
  * This class is used to enable the ldap authentication based on property
  * activedirectory.generate.enabled=true in property file.
@@ -42,6 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${activedirectory.ldapUrl}")
     private String ldapUrl;
 
+    @Value("${jasypt.encryptor.jasyptKeyFilePath:{null}}")
+    private String jasyptKeyFilePath;
+
     @Value("${activedirectory.managerPassword}")
     private String managerPassword;
 
@@ -56,6 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        final String jasyptKey = RemremGenerateController.readJasyptKeyFile(jasyptKeyFilePath);
+        if (managerPassword.startsWith("{ENC(") && managerPassword.endsWith("}")) {
+            managerPassword = DecryptionUtils.decryptString(managerPassword.substring(1, managerPassword.length() - 1), jasyptKey);
+        }
         LOGGER.debug("LDAP server url: "+ldapUrl);
         auth.ldapAuthentication().userSearchFilter(userSearchFilter).contextSource().managerDn(managerDn).root(rootDn)
                 .managerPassword(managerPassword).url(ldapUrl);

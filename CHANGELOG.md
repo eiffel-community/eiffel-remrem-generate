@@ -1,3 +1,6 @@
+## 2.1.2
+- Implemented the functionality to read the Jasypt encryption key from jasypt.key file
+
 ## 2.1.1
 - Fixed the test case for REMReM Generate to support lenient validation for Eiffel Protocol.
 
