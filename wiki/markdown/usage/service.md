@@ -348,4 +348,4 @@ output:
 
 Use the above encrypted password in your property file like this **{ENC(encrypted password)}**
 
-`Ex:activedirectory.managerPassword: {ENC(euJcvto7NtCDiWT7BKFW0A ==)}`
+`Ex:activedirectory.managerPassword: {ENC(euJcvto7NtCDiWT7BKFW0A==)}`
