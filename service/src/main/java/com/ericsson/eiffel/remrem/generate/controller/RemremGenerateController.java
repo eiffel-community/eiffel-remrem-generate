@@ -47,9 +47,10 @@ import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -375,11 +376,14 @@ public class RemremGenerateController {
      *            file path in which jasypt key is stored
      * @return jasypt key fetched from the file
      */
-    public static String readJasyptKeyFile(String jasyptKeyFilePath) {
+    public static String readJasyptKeyFile(final String jasyptKeyFilePath) {
         String jasyptKey = "";
+        final FileInputStream file;
         try {
             if (StringUtils.isNotBlank(jasyptKeyFilePath)) {
-                jasyptKey = new String(Files.readAllBytes(Paths.get(jasyptKeyFilePath)));
+                file = new FileInputStream(jasyptKeyFilePath);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+                jasyptKey = reader.readLine();
             }
         } catch (IOException e) {
             log.error("Could not read the jasypt key from the jasypt key file path: " + e.getMessage(), e);
