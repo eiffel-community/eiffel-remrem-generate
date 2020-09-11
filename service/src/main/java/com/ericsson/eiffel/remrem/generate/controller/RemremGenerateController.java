@@ -384,6 +384,9 @@ public class RemremGenerateController {
                 file = new FileInputStream(jasyptKeyFilePath);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(file));
                 jasyptKey = reader.readLine();
+                if(jasyptKey == null) {
+                    return "";
+                }
             }
         } catch (IOException e) {
             log.error("Could not read the jasypt key from the jasypt key file path: " + e.getMessage(), e);
