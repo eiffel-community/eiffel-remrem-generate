@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,5 +144,26 @@ public class EiffelRemremControllerUnitTest {
         unit.setLenientValidationEnabledToUsers(true);
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void testJasyptFileSuccess() throws IOException {
+        String jasyptPath = "src/test/resources/jasypt.key";
+        String jasyptKey = RemremGenerateController.readJasyptKeyFile(jasyptPath);
+        assertEquals("docker", jasyptKey);
+    }
+
+    @Test
+    public void testJasyptFileWithEmptyKey() {
+        String jasyptPath = "src/test/resources/emptyJasypt.key";
+        String jasyptKey = RemremGenerateController.readJasyptKeyFile(jasyptPath);
+        assertEquals("", jasyptKey);
+    }
+
+    @Test
+    public void testJasyptFileFailure() throws IOException {
+        String jasyptPath = "src/test/jasypt.key";
+        String jasyptKey = RemremGenerateController.readJasyptKeyFile(jasyptPath);
+        assertEquals("", jasyptKey);
     }
 }
