@@ -1,0 +1,1047 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Event Repository REST API for retrieving the event information,<a href=https://eiffel.lmera.ericsson.se/com.ericsson.duraci/eiffel-erri/index.html> For ER2.0 documentation</a>",
+    "version": "2.0.39",
+    "title": "Event Repository REST API",
+    "contact": {},
+    "license": {
+      "name": "List all events in ER (result will be paginated)",
+      "url": "/eventrepository/events"
+    }
+  },
+  "host": "er1s10-eiffel180.eiffel.gic.ericsson.se:8443",
+  "basePath": "/eventrepository",
+  "tags": [
+    {
+      "name": "event-resource",
+      "description": "The Event Resource API for getting single event information"
+    },
+    {
+      "name": "search-resource",
+      "description": "The search api provides methods for querying up/down stream given an event id."
+    },
+    {
+      "name": "change-history-resource",
+      "description": "The change history api provides methods for getting changes between two artifact versions."
+    },
+    {
+      "name": "events-resource",
+      "description": "The Events Resource API for getting all events information"
+    },
+    {
+      "name": "datastore-resource",
+      "description": "The DataStore Resource API for executing native queries"
+    },
+    {
+      "name": "artifacts-resource",
+      "description": "The Artifact Resource API to get the specific PURL data related artifact information "
+    },
+    {
+      "name": "index-statistics-resource",
+      "description": "The Index Statistics Resource API for getting index statistics"
+    }
+  ],
+  "paths": {
+    "/artifacts/{namespace}": {
+      "get": {
+        "tags": [
+          "artifacts-resource"
+        ],
+        "summary": "To get the artifact event of specific namespace.",
+        "operationId": "getArtifactsUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "\tNamespace to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "\tPage to display if results span\r\n\tacross multiple pages.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "\tThe number of events to be\r\n\tdisplayed per page.",
+            "required": false,
+            "type": "integer",
+            "default": 500,
+            "format": "int32"
+          },
+          {
+            "name": "pageStartItem",
+            "in": "query",
+            "description": "\tIntended to skip few items at\r\n\tthe start of result, Should be\r\n\tused only if pageNo=1 ie. first\r\n\tpage of results.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the artifact event for the requested Namespace from the events.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The PURL is not provided"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested PURL related event is not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/artifacts/{namespace}/{name}": {
+      "get": {
+        "tags": [
+          "artifacts-resource"
+        ],
+        "summary": "To get the artifact event of specific namespace and name.",
+        "operationId": "getArtifactsByNamespaceAndNameUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "\tNamespace to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "\tName to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "\tPage to display if results span\r\n\tacross multiple pages.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "\tThe number of events to be\r\n\tdisplayed per page.",
+            "required": false,
+            "type": "integer",
+            "default": 500,
+            "format": "int32"
+          },
+          {
+            "name": "pageStartItem",
+            "in": "query",
+            "description": "\tIntended to skip few items at\r\n\tthe start of result, Should be\r\n\tused only if pageNo=1 ie. first\r\n\tpage of results.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the artifact event for the requested Namespace and Name from the events.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The group and artifact details are not provided"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested namespace and name related events are not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/artifacts/{namespace}/{name}/{version}": {
+      "get": {
+        "tags": [
+          "artifacts-resource"
+        ],
+        "summary": "To get the artifact event related to specific PURL.",
+        "operationId": "getArtifactsVersionUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "\tNamespace to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "\tName to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "\tVersion to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "\tPage to display if results span\r\n\tacross multiple pages.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "\tThe number of events to be\r\n\tdisplayed per page.",
+            "required": false,
+            "type": "integer",
+            "default": 500,
+            "format": "int32"
+          },
+          {
+            "name": "pageStartItem",
+            "in": "query",
+            "description": "\tIntended to skip few items at\r\n\tthe start of result, Should be\r\n\tused only if pageNo=1 ie. first\r\n\tpage of results.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the artifact event for the requested Namespace, Name and Version from the events.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The PURL is not provided"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested PURL related artifact event is not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/change_history/{illegal}": {
+      "get": {
+        "tags": [
+          "change-history-resource"
+        ],
+        "summary": "This endpoint is to show error message when called with REST request without passing namespace and name.",
+        "operationId": "changeHistoryUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ChangeHistoryResult"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/change_history/{namespace}/{name}": {
+      "get": {
+        "tags": [
+          "change-history-resource"
+        ],
+        "summary": "To present the difference between two artifact versions.",
+        "operationId": "changeHistoryUsingGET_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "\tNamespace to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "\tName to look for in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "old",
+            "in": "query",
+            "description": "\tPrevious version of the\r\n\tartifact to look in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "new",
+            "in": "query",
+            "description": "\tLatest version of the\r\n\tartifact to look in\r\n\tEiffelArtifactCreatedEvent.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ChangeHistoryResult"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/datastore/query": {
+      "post": {
+        "tags": [
+          "datastore-resource"
+        ],
+        "summary": "To execute native queries",
+        "operationId": "getDatastoreInfoUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "query",
+            "description": "\tMongodb query. Mongodb supports \r\n\tboth find-, and aggregate-queries.\r\n\tExample: /datastore?query=db.allevents.\r\n\tfind({\"meta.source.domainId\":\r\n\t\"testDomain\"}).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "\tPage to display if results span\r\n\tacross multiple pages.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "\tThe number of events to be\r\n\tdisplayed per page.",
+            "required": false,
+            "type": "integer",
+            "default": 500,
+            "format": "int32"
+          },
+          {
+            "name": "pageStartItem",
+            "in": "query",
+            "description": "\tIntended to skip few items at\r\n\tthe start of result, Should be\r\n\tused only if pageNo=1 ie. first\r\n\tpage of results.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully executed the native query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "query(Mandatory parameter) is not provided"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "query is provided is not correct"
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "tags": [
+          "events-resource"
+        ],
+        "summary": "To get all events information",
+        "operationId": "getEventsUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "\tPage to display if results span\r\n\tacross multiple pages.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "\tThe number of events to be\r\n\tdisplayed per page.",
+            "required": false,
+            "type": "integer",
+            "default": 500,
+            "format": "int32"
+          },
+          {
+            "name": "pageStartItem",
+            "in": "query",
+            "description": "\tIntended to skip few items at\r\n\tthe start of result, Should be\r\n\tused only if pageNo=1 ie. first\r\n\tpage of results.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int32"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "lazy",
+            "in": "query",
+            "description": "\tIf lazy is true, it implies that\r\n\twhen the events limit is\r\n\treached according to pazesize\r\n\tno additional request is\r\n\tperformed and the search will\r\n\tstop.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the events",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested events are not found"
+          },
+          "500": {
+            "description": "Internal server issue"
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "tags": [
+          "event-resource"
+        ],
+        "summary": "To get single event information",
+        "operationId": "getEventUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "\tId of the event.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the Event",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The eventId is not provided"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested event is not found"
+          },
+          "500": {
+            "description": "Internal server issue"
+          }
+        }
+      }
+    },
+    "/indexStat": {
+      "get": {
+        "tags": [
+          "index-statistics-resource"
+        ],
+        "summary": "To get index statistics ",
+        "operationId": "getIndexStatsUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved index statistics",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Index statistics not found"
+          },
+          "500": {
+            "description": "Internal server issue"
+          }
+        }
+      }
+    },
+    "/search/{id}": {
+      "get": {
+        "tags": [
+          "search-resource"
+        ],
+        "summary": "To get an event based on eventId passed",
+        "operationId": "searchUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "\tId of the event.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "search-resource"
+        ],
+        "summary": "To get upstream/downstream events for an event based on the searchParameters passed",
+        "operationId": "searchUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "\tId of the event.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "searchParameters",
+            "description": "\tOption that is\r\n\tresponsible for\r\n\tthe choice of link\r\n\ttypes that should\r\n\tbe followed under\r\n\texecution of\r\n\tupstream/downstream\r\n\tsearch.\r\n\tLink Types:\r\n\t\r\n\tCAUSE, CONTEXT,\r\n\tFLOW_CONTEXT,\r\n\tACTIVITY_EXECUTION,\r\n\tPREVIOUS_ACTIVITY_\r\n\tEXECUTION,\r\n\tPREVIOUS_VERSION,\r\n\tCOMPOSITION,\r\n\tENVIRONMENT,\r\n\tARTIFACT,SUBJECT,\r\n\tELEMENT,BASE,\r\n\tTEST_SUITE_EXECUTION,\r\n\tTEST_CASE_EXECUTION,\r\n\tIUT,TERC,CHANGE,\r\n\tMODIFIED_ANNOUNCEMENT,\r\n\tSUB_CONFIDENCE_LEVEL,\r\n\tREUSED_ARTIFACT,\r\n\tVERIFICATION_BASIS,\r\n\tALL.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/SearchParameters"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "\tDetermines the maximum\r\n\tamount of events to\r\n\tbe fetched.",
+            "required": false,
+            "type": "integer",
+            "default": -1,
+            "format": "int32"
+          },
+          {
+            "name": "levels",
+            "in": "query",
+            "description": "\tDetermines the maximum\r\n\tamount of levels\r\n\tto search.",
+            "required": false,
+            "type": "integer",
+            "default": -1,
+            "format": "int32"
+          },
+          {
+            "name": "tree",
+            "in": "query",
+            "description": "\tDetermines whether\r\n\ttree structure\r\n\trepresentation of\r\n\tevents flow is \r\n\trequired or not.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "shallow",
+            "in": "query",
+            "description": "\tDetermines if external\r\n\tER's should be used\r\n\tto compile the\r\n\tresults of query.\r\n\tUse false to use\r\n\tExternal ER's.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "readable",
+            "in": "query",
+            "description": "\tDetermines if event\r\n\ttime should be in\r\n\tmilliseconds, or\r\n\tin Human readable\r\n\ttime format. Ex: \r\n\tfalse -1499076742\r\n\t982, true - 2018-10\r\n\t-31T13:36:00.824Z.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseEntity"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SearchParameters": {
+      "type": "object",
+      "properties": {
+        "dlt": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CAUSE",
+              "CONTEXT",
+              "FLOW_CONTEXT",
+              "ACTIVITY_EXECUTION",
+              "PREVIOUS_ACTIVITY_EXECUTION",
+              "PREVIOUS_VERSION",
+              "COMPOSITION",
+              "ENVIRONMENT",
+              "ARTIFACT",
+              "SUBJECT",
+              "ELEMENT",
+              "BASE",
+              "CHANGE",
+              "TEST_SUITE_EXECUTION",
+              "TEST_CASE_EXECUTION",
+              "IUT",
+              "TERC",
+              "MODIFIED_ANNOUNCEMENT",
+              "SUB_CONFIDENCE_LEVEL",
+              "REUSED_ARTIFACT",
+              "VERIFICATION_BASIS",
+              "ALL"
+            ]
+          }
+        },
+        "ult": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CAUSE",
+              "CONTEXT",
+              "FLOW_CONTEXT",
+              "ACTIVITY_EXECUTION",
+              "PREVIOUS_ACTIVITY_EXECUTION",
+              "PREVIOUS_VERSION",
+              "COMPOSITION",
+              "ENVIRONMENT",
+              "ARTIFACT",
+              "SUBJECT",
+              "ELEMENT",
+              "BASE",
+              "CHANGE",
+              "TEST_SUITE_EXECUTION",
+              "TEST_CASE_EXECUTION",
+              "IUT",
+              "TERC",
+              "MODIFIED_ANNOUNCEMENT",
+              "SUB_CONFIDENCE_LEVEL",
+              "REUSED_ARTIFACT",
+              "VERIFICATION_BASIS",
+              "ALL"
+            ]
+          }
+        }
+      }
+    },
+    "ResponseEntity": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "object"
+        },
+        "statusCode": {
+          "type": "string",
+          "enum": [
+            "100",
+            "101",
+            "102",
+            "103",
+            "200",
+            "201",
+            "202",
+            "203",
+            "204",
+            "205",
+            "206",
+            "207",
+            "208",
+            "226",
+            "300",
+            "301",
+            "302",
+            "303",
+            "304",
+            "305",
+            "307",
+            "308",
+            "400",
+            "401",
+            "402",
+            "403",
+            "404",
+            "405",
+            "406",
+            "407",
+            "408",
+            "409",
+            "410",
+            "411",
+            "412",
+            "413",
+            "414",
+            "415",
+            "416",
+            "417",
+            "418",
+            "419",
+            "420",
+            "421",
+            "422",
+            "423",
+            "424",
+            "426",
+            "428",
+            "429",
+            "431",
+            "451",
+            "500",
+            "501",
+            "502",
+            "503",
+            "504",
+            "505",
+            "506",
+            "507",
+            "508",
+            "509",
+            "510",
+            "511"
+          ]
+        },
+        "statusCodeValue": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Map": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "ChangeHistoryResult": {
+      "type": "object",
+      "properties": {
+        "diff": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Map"
+          }
+        },
+        "errorMsg": {
+          "type": "string"
+        },
+        "new": {
+          "type": "string"
+        },
+        "old": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
