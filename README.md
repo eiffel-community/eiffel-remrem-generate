@@ -19,6 +19,7 @@
 
 # Eiffel REMReM Generate
 
+[![Sandbox badge](https://img.shields.io/badge/Stage-Sandbox-yellow)](https://github.com/eiffel-community/community/blob/master/PROJECT_LIFECYCLE.md#stage-sandbox)
 [![Build Status](https://travis-ci.org/eiffel-community/eiffel-remrem-generate.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-remrem-generate)
 [![Coverage Status](https://coveralls.io/repos/github/eiffel-community/eiffel-remrem-generate/badge.svg?branch=master)](https://coveralls.io/github/eiffel-community/eiffel-remrem-generate?branch=master)
 [![](https://jitpack.io/v/eiffel-community/eiffel-remrem-generate.svg)](https://jitpack.io/#eiffel-community/eiffel-remrem-generate)
