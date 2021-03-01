@@ -1,3 +1,7 @@
+## 2.1.3
+- Uplifted eiffel-remrem-parent version from 2.0.4 to 2.0.5
+- Uplifted eiffel-remrem-shared version from 2.0.4 to 2.0.5
+
 ## 2.1.2
 - Implemented the functionality to read the Jasypt encryption key from jasypt.key file
 
