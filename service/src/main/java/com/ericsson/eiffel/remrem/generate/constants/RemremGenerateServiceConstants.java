@@ -30,10 +30,10 @@ public final class RemremGenerateServiceConstants {
         public static final String DOCUMENTATION_URL = "https://github.com/eiffel-community/eiffel-remrem-generate/blob/master/wiki/markdown/index.md";
 
         public static final String UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND = "{\"status_code\": 417, \"result\": \"FAIL\", "
-                + "\"message\":\"Muliple event ids found with ERLookup properties\"}";
+                + "\"message\":\"Multiple event IDs found with ERLookup properties\"}";
 
         public static final String UNAVAILABLE_FOR_FAILIFNONEFOUND = "{\"status_code\": 406, \"result\": \"FAIL\", "
-                + "\"message\":\"No event id found with ERLookup properties\"}";
+                + "\"message\":\"No event ID found with ERLookup properties\"}";
         
         public static final String NOT_ACCEPTABLE = "{\"status_code\": 406, \"result\": \"FAIL\", "
                 + "\"message\":\"Not Acceptable - Lenient validation is not enabled in the configuration, your not allowed to use this option\"}";
