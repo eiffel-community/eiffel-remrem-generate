@@ -148,6 +148,8 @@ public class RemremGenerateController {
             else {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
             }
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR), HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             log.error("Unexpected exception caught", e);
             return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
@@ -174,18 +176,14 @@ public class RemremGenerateController {
                                 + String.format("&shallow=%s&pageSize=%d", !lookupInExternalERs, lookupLimit);
 
                         // Execute ER Query
-                        int j = 0;
-                        while (j < 2) {
-                            try {
-                                response = restTemplate.getForEntity(url, String.class);
-                                if (response.getStatusCode() == HttpStatus.OK) {
-                                    log.info("The result from Event Repository is: " + response.getStatusCodeValue());
-                                    break;
-                                }
-                            } catch (Exception e) {
-                                if (++j >= 2)
-                                    log.error("unable to connect configured Event Repository URL" + e.getMessage());
+                        try {
+                            response = restTemplate.getForEntity(url, String.class);
+                            if (response.getStatusCode() == HttpStatus.OK) {
+                                log.info("The result from Event Repository is: " + response.getStatusCodeValue());
+                                break;
                             }
+                        } catch (Exception e) {
+                            log.error("unable to connect configured Event Repository URL" + e.getMessage());
                         }
                         String responseBody = response.getBody();
                         ids = ERLookupController.getIdsfromResponseBody(responseBody);
