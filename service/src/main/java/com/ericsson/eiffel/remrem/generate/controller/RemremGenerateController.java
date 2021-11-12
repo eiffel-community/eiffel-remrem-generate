@@ -120,6 +120,9 @@ public class RemremGenerateController {
             bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
             MsgService msgService = getMessageService(msgProtocol);
             String response;
+            if (bodyJson == null) {
+                return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_ER),HttpStatus.SERVICE_UNAVAILABLE);
+            }
             if (msgService != null) {
                 response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
                 JsonElement parsedResponse = parser.parse(response);
@@ -148,8 +151,6 @@ public class RemremGenerateController {
             else {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR), HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             log.error("Unexpected exception caught", e);
             return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
@@ -184,6 +185,7 @@ public class RemremGenerateController {
                             }
                         } catch (Exception e) {
                             log.error("unable to connect configured Event Repository URL" + e.getMessage());
+                            return null;
                         }
                         String responseBody = response.getBody();
                         ids = ERLookupController.getIdsfromResponseBody(responseBody);
