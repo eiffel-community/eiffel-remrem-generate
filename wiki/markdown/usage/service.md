@@ -109,6 +109,18 @@ Result:
 {"serviceVersion":{"version":"x.x.x"},"endpointVersions":{"semanticsVersion":"x.x.x"}}
 ```
 
+### Examples for `/message_protocols` endpoint
+
+```
+curl -H "Content-Type: application/json" -X GET http://localhost:8080/generate/message_protocols
+```
+
+Result:
+
+```
+{{"name":"eiffelsemantics","edition_name":"Paris"},{"name":"eiffel3","edition_name":"x.x.x"}}
+```
+
 ## Status Codes
 
 The response generated will have internal status codes for each and every event based on the input JSON provided.
