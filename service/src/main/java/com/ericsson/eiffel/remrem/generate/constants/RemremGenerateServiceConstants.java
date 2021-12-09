@@ -18,6 +18,9 @@ public final class RemremGenerateServiceConstants {
 
         public static final String NO_SERVICE_ERROR = "{\"status_code\": 503, \"result\": \"FAIL\", "
                 + "\"message\":\"No protocol service has been found registered\"}";
+        
+        public static final String NO_ER = "{\"status_code\": 503, \"result\": \"FAIL\", "
+                + "\"message\":\"ER is down\"}";
 
         public static final String NO_TEMPLATE_ERROR = "{\"status_code\": 404, \"result\": \"FAIL\", "
                 + "\"message\":\"Requested template is not available\"}";
