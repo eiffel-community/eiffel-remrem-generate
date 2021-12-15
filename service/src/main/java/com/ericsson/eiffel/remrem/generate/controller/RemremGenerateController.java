@@ -17,7 +17,9 @@ package com.ericsson.eiffel.remrem.generate.controller;
 import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
+import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,6 +74,12 @@ public class RemremGenerateController {
 
     @Autowired
     private ErLookUpConfig erlookupConfig;
+
+    @Autowired
+    private SemanticsService semanticsService;
+
+    @Autowired
+    private Eiffel3Service eiffel3Service;
 
     private static ResponseEntity<String> response;
     
@@ -250,6 +258,26 @@ public class RemremGenerateController {
     public JsonElement getVersions() {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
         return parser.parse(versions.toString());
+    }
+
+    /**
+     * Used to display the versions of generate and all loaded protocols.
+     *
+     * @return json with version details.
+     */
+    @ApiOperation(value = "To get the available message protocol list and edition names", response = String.class)
+    @RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
+    public JsonElement getMessageProtocols() {
+        JsonArray array = new JsonArray();
+        JsonObject semanticsObject = new JsonObject();
+        semanticsObject.addProperty("name", semanticsService.getServiceName());
+        semanticsObject.addProperty("edition_name", semanticsService.getProtocolEdition());
+        JsonObject eiffel3Object = new JsonObject();
+        eiffel3Object.addProperty("name", eiffel3Service.getServiceName());
+        eiffel3Object.addProperty("edition_name", eiffel3Service.getProtocolEdition());
+        array.add(semanticsObject);
+        array.add(eiffel3Object);
+        return array;
     }
 
     /**
