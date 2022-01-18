@@ -230,7 +230,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, false, json);
-        assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -260,7 +260,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, false, json);
-        assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, false, json);
-        assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     
     @Test
@@ -310,7 +310,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, false, json);
-        assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -320,7 +320,7 @@ public class EiffelRemERLookupControllerUnitTest {
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, false, json);
-        assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
