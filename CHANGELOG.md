@@ -1,3 +1,6 @@
+## 2.1.4
+- Implemented the new Rest End Point(/message_protocols) which returns the available message protocols list and edition names.
+
 ## 2.1.3
 - Updated the eiffel-remrem-parent version from 2.0.5 to 2.0.6
 - Updated the eiffel-remrem-semantics version from 2.1.0 to 2.2.1

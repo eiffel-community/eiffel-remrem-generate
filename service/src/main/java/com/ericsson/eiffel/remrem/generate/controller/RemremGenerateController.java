@@ -253,6 +253,31 @@ public class RemremGenerateController {
     }
 
     /**
+     * Used to display the available message protocol list and their edition names.
+     *
+     * @return json with service names and respective edition details.
+     */
+    @ApiOperation(value = "To get the available message protocol list and edition names", response = String.class)
+    @RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
+    public JsonElement getMessageProtocols() {
+        JsonArray array = new JsonArray();
+        JsonObject semanticsObject = new JsonObject();
+        JsonObject eiffel3Object = new JsonObject();
+        for(MsgService service : msgServices) {
+            if(service.getServiceName().equals("eiffelsemantics")) {
+                semanticsObject.addProperty("name", service.getServiceName());
+                semanticsObject.addProperty("edition", service.getProtocolEdition());
+            } else {
+                eiffel3Object.addProperty("name", service.getServiceName());
+                eiffel3Object.addProperty("edition", service.getProtocolEdition());
+            }
+        }
+        array.add(semanticsObject);
+        array.add(eiffel3Object);
+        return array;
+    }
+
+    /**
      * Returns available Eiffel event types as listed in EiffelEventType enum.
      *
      * @return string collection with event types.
