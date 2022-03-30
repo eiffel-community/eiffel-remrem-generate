@@ -10,7 +10,7 @@
     </parent>
 
     <properties>
-        <eiffel-remrem-generate.version>2.1.3</eiffel-remrem-generate.version>
+        <eiffel-remrem-generate.version>2.1.4</eiffel-remrem-generate.version>
         <eiffel-remrem-shared.version>2.0.5</eiffel-remrem-shared.version>
         <eiffel-remrem-semantics.version>2.2.1</eiffel-remrem-semantics.version>
     </properties>
