@@ -1,3 +1,6 @@
+## 2.1.5
+- Updated all curl commands in documentation
+
 ## 2.1.4
 - Fixed issue related to ER lookup strategy in REMReM-generate.
 
@@ -8,7 +11,6 @@
 - Uplifted eiffel-remrem-parent version from 2.0.4 to 2.0.5
 - Uplifted eiffel-remrem-shared version from 2.0.4 to 2.0.5
 - Removed ER retry mechanism
-- Updated all curl commands in documentation
 
 ## 2.1.2
 - Implemented the functionality to read the Jasypt encryption key from jasypt.key file
