@@ -1,5 +1,5 @@
 ## 2.1.4
-- Implemented the new Rest End Point(/message_protocols) which returns the available message protocols list and edition names.
+- Fixed issue related to ER lookup strategy in REMReM-generate.
 
 ## 2.1.3
 - Updated the eiffel-remrem-parent version from 2.0.5 to 2.0.6
