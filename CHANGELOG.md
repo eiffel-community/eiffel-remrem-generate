@@ -1,4 +1,10 @@
+## 2.1.4
+- Fixed issue related to ER lookup strategy in REMReM-generate.
+
 ## 2.1.3
+- Updated the eiffel-remrem-parent version from 2.0.5 to 2.0.6
+- Updated the eiffel-remrem-semantics version from 2.1.0 to 2.2.1
+- Excluded the log4j-to-slf4j dependency to resolve vulnerability issues.
 - Uplifted eiffel-remrem-parent version from 2.0.4 to 2.0.5
 - Uplifted eiffel-remrem-shared version from 2.0.4 to 2.0.5
 - Removed ER retry mechanism
