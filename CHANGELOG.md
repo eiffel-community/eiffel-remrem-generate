@@ -1,3 +1,6 @@
+## 2.1.5
+- Introduced new (/message_protocols) Endpoint which returns the available message protocols list and their respective edition names. 
+
 ## 2.1.4
 - Fixed issue related to ER lookup strategy in REMReM-generate.
 

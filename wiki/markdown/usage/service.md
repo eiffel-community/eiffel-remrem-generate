@@ -33,7 +33,7 @@ Available REST resources for REMReM Generate Service are described below:
 | /event_types/{mp}     | GET    | mp - message protocol, required                                                                                                             |                                                                                                                                                        | This endpoint is used to obtain Eiffel event types implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                             |
 | /template/{type}/{mp} | GET    | type - Eiffel event type mp - message protocol, required                                                                                    |                                                                                                                                                        | This endpoint is used to obtain Eiffel event templates implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                         |
 | /versions             | GET    |                                                                                                                                             |                                                                                                                                                        | This endpoint is used to get versions of generate service and all loaded protocols versions  in JSON format.                                                                           |
-
+| /message_protocols    | GET   |                                                                                                                                                        |This endpoint is used to obtain the message protocols list and  edition names in JSON format.                                                                                                                                                              |
 
 ## Examples
 
@@ -107,6 +107,18 @@ Result:
 
 ```
 {"serviceVersion":{"version":"x.x.x"},"endpointVersions":{"semanticsVersion":"x.x.x"}}
+```
+
+### Examples for `/message_protocols` endpoint
+
+```
+curl -H "Content-Type: application/json" -X GET http://localhost:8080/generate/message_protocols
+```
+
+Result:
+
+```
+{{"name":"eiffelsemantics", "edition":"xxxx"}, {"name":"eiffel3", "edition":"xxxx"}}
 ```
 
 ## Status Codes
