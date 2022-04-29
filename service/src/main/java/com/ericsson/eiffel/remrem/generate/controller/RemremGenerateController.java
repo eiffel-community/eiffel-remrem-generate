@@ -181,7 +181,6 @@ public class RemremGenerateController {
                             response = restTemplate.getForEntity(url, String.class);
                             if (response.getStatusCode() == HttpStatus.OK) {
                                 log.info("The result from Event Repository is: " + response.getStatusCodeValue());
-                                break;
                             }
                         } catch (Exception e) {
                             log.error("unable to connect configured Event Repository URL" + e.getMessage());
@@ -252,6 +251,24 @@ public class RemremGenerateController {
         return parser.parse(versions.toString());
     }
 
+    /**
+	 * Used to display the available message protocol list and their edition names.
+	 *
+	 * @return json with service names and respective edition details.
+	 */
+	@ApiOperation(value = "To get the available message protocol list and edition names", response = String.class)
+	@RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
+	public JsonElement getMessageProtocols() {
+		JsonArray array = new JsonArray();
+		for (MsgService service : msgServices) {
+			JsonObject protocolObject = new JsonObject();
+			protocolObject.addProperty("name", service.getServiceName());
+			protocolObject.addProperty("edition", service.getProtocolEdition());
+			array.add(protocolObject);
+		}
+		return array;
+	}
+	
     /**
      * Returns available Eiffel event types as listed in EiffelEventType enum.
      *
