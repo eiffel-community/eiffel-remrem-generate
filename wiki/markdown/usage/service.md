@@ -33,7 +33,7 @@ Available REST resources for REMReM Generate Service are described below:
 | /event_types/{mp}     | GET    | mp - message protocol, required                                                                                                             |                                                                                                                                                        | This endpoint is used to obtain Eiffel event types implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                             |
 | /template/{type}/{mp} | GET    | type - Eiffel event type mp - message protocol, required                                                                                    |                                                                                                                                                        | This endpoint is used to obtain Eiffel event templates implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                         |
 | /versions             | GET    |                                                                                                                                             |                                                                                                                                                        | This endpoint is used to get versions of generate service and all loaded protocols versions  in JSON format.                                                                           |
-
+| /message_protocols    | GET   |                                                                                                                                                        |This endpoint is used to obtain the message protocols list and  edition names in JSON format.                                                                                                                                                              |
 
 ## Examples
 
@@ -49,7 +49,7 @@ You can use command line tools like [curl](https://curl.haxx.se/) or some plugin
 #### Given one message in file _body-single.json_:
 
 ```
-curl -XPOST -H "Content-Type: application/json" --data @body-single.json http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished
+curl -XPOST -H "Content-Type: application/json" --data @body-single.json 'http://localhost:8080/generate-service/eiffelsemantics?msgType=EiffelActivityFinishedEvent&failIfMultipleFound=false&failIfNoneFound=false&lookupInExternalERs=false&lookupLimit=1&okToLeaveOutInvalidOptionalFields=false'
 ```
 
 Result:
@@ -61,12 +61,12 @@ Result:
 #### Example with event body passed to service:
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent", "tags": ["tag1","tag2"], "source": {"domainId": "example.domain", "host": "host", "name": "name", "uri":http://java.sun.com/j2se/1.3/"}}}, "eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL"}, "persistentLogs": [], "links": [{"type": "ACTIVITY_EXECUTION", "target": "69538470-4c3f-4c16-b84e-64ff0275f6fc"}]}}' http://localhost:8080/generate-service/eiffelsemantics?msgType=eiffelactivityfinished
+curl -H "Content-Type: application/json" -X POST -d '{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent","tags": ["tag1", "tag2"],"source": {"domainId": "example.domain","host": "host","name": "name","uri": "http://java.sun.com/j2se/1.3/"}}},"eventParams": {"data": {"outcome": {"conclusion": "SUCCESSFUL","description": ""},"persistentLogs": [],"customData": []},"links": [{"type": "ACTIVITY_EXECUTION","target": "8b360a88-ae8e-4aec-811f-3017119a4acc"}]}}' 'http://localhost:8080/generate-service/eiffelsemantics?msgType=EiffelActivityFinishedEvent&failIfMultipleFound=false&failIfNoneFound=false&lookupInExternalERs=false&lookupLimit=1&okToLeaveOutInvalidOptionalFields=false'
 ```
 Result:
 
 ```
-{"meta":{"id":"29f9b8b1-9d4b-41cf-9f42-4e6157850757","type":"EiffelActivityFinishedEvent","version":"3.0.0","time":1499076743638,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":"pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.0.4","uri":http://java.sun.com/j2se/1.3/"}}"data":{"outcome":{"conclusion":"SUCCESSFUL","description":"The Result was Successful"},"persistentLogs":[],"customData":[{"key":"translatedSourceID","value":"29f9b8b1-9d4b-41cf-9f42-4e6157850757"}]},"links":[{"type":"ACTIVITY_EXECUTION","target":"69538470-4c3f-4c16-b84e-64ff0275f6fc"},{"type":"FLOW_CONTEXT","target":"ea82a50c-53bb-4d0c-8f03-b50fb83feb16"}]}
+{"meta":{"id":"abae00be-352b-40ed-9b51-4fb01c610a81","type":"EiffelActivityFinishedEvent","version":"3.0.0","time":1638505573517,"tags":["tag1","tag2"],"source":{"domainId":"example.domain","host":"host","name":"name","serializer":"pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.1.0","uri":"http://java.sun.com/j2se/1.3/"}},"data":{"outcome":{"conclusion":"SUCCESSFUL","description":""},"persistentLogs":[],"customData":[]},"links":[{"type":"ACTIVITY_EXECUTION","target":"8b360a88-ae8e-4aec-811f-3017119a4acc"}]}
 ```
 
 ### Examples for `/event_types/{mp}` endpoint
@@ -80,7 +80,7 @@ curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-
 Result:
 
 ```
-["EiffelArtifactPublishedEvent","EiffelActivityFinishedEvent","EiffelActivityCanceledEvent","EiffelArtifactCreatedEvent","EiffelActivityTriggeredEvent","EiffelConfidenceLevelModifiedEvent","EiffelActivityStartedEvent","EiffelAnnouncementPublishedEvent","EiffelCompositionDefinedEvent","EiffelTestCaseCanceledEvent","EiffelTestCaseTriggeredEvent","EiffelTestExecutionRecipeCollectionCreatedEvent","EiffelEnvironmentDefinedEvent","EiffelFlowContextDefinedEvent","EiffelSourceChangeCreatedEvent","EiffelSourceChangeSubmittedEvent","EiffelTestCaseFinishedEvent","EiffelTestCaseStartedEvent","EiffelTestSuiteFinishedEvent","EiffelTestSuiteStartedEvent","EiffelIssueVerifiedEvent","EiffelArtifactReusedEvent","EiffelServiceStoppedEvent","EiffelServiceStartedEvent","EiffelServiceReturnedEvent","EiffelServiceDiscontinuedEvent","EiffelServiceDeployedEvent","EiffelServiceAllocatedEvent","EiffelArtifactDeployedEvent","EiffelAlertAcknowledgedEvent","EiffelAlertCeasedEvent","EiffelAlertRaisedEvent"]
+["EiffelArtifactPublishedEvent","EiffelActivityFinishedEvent","EiffelActivityCanceledEvent","EiffelArtifactCreatedEvent","EiffelActivityTriggeredEvent","EiffelConfidenceLevelModifiedEvent","EiffelActivityStartedEvent","EiffelAnnouncementPublishedEvent","EiffelCompositionDefinedEvent","EiffelTestCaseCanceledEvent","EiffelTestCaseTriggeredEvent","EiffelTestExecutionRecipeCollectionCreatedEvent","EiffelEnvironmentDefinedEvent","EiffelFlowContextDefinedEvent","EiffelSourceChangeCreatedEvent","EiffelSourceChangeSubmittedEvent","EiffelTestCaseFinishedEvent","EiffelTestCaseStartedEvent","EiffelTestSuiteFinishedEvent","EiffelTestSuiteStartedEvent","EiffelIssueVerifiedEvent","EiffelArtifactReusedEvent","EiffelServiceStoppedEvent","EiffelServiceStartedEvent","EiffelServiceReturnedEvent","EiffelServiceDiscontinuedEvent","EiffelServiceDeployedEvent","EiffelServiceAllocatedEvent","EiffelArtifactDeployedEvent","EiffelAlertAcknowledgedEvent","EiffelAlertCeasedEvent","EiffelAlertRaisedEvent","EiffelIssueDefinedEvent"]
 ```
 
 ### Examples for `/template/{type}/{mp}` endpoint
@@ -94,7 +94,7 @@ curl -X GET --header 'Accept: application/json' 'http://localhost:8080/generate-
 Result:
 
 ```
-{"msgParams": {"meta": {"type": "EiffelActivityFinishedEvent","version": "3.0.0","tags": [""],"source": {"domainId": "","host": "","name": "","uri": ""}}},"eventParams": {"data": {"outcome": {"conclusion": "required if outcome present, can be one of SUCCESSFUL,UNSUCCESSFUL,FAILED,ABORTED,TIMED_OUT,INCONCLUSIVE","description": ""},"persistentLogs": [{"name": "required if persistentLogs present","uri": "required if persistentLogs present"}],"customData": [{"key": "required if customData present","value": "required if customData present"}]},"links": [{"type": "ACTIVITY_EXECUTION","target": "required - UUID of EiffelActivityTriggeredEvent"},{"type": "CAUSE or CONTEXT or FLOW_CONTEXT - optional","target": "required - UUID if type is present"}]}}
+{"msgParams":{"meta":{"type":"EiffelArtifactPublishedEvent","version":"3.0.0","tags":[""],"source":{"domainId":"","host":"","name":"","uri":""}}},"eventParams":{"data":{"locations":[{"type":"required if locations present,can be anyone of ARTIFACTORY,NEXUS,PLAIN,OTHER","uri":"required"}],"customData":[{"key":"required if customData present","value":"required if customData present"}]},"links":[{"type":"ARTIFACT","target":"required - UUID of EiffelArtifactCreatedEvent"},{"type":"CAUSE or CONTEXT or FLOW_CONTEXT - optional","target":"required - UUID if type is present"}]}}
 ```
 
 ### Examples for `/versions` endpoint
@@ -118,7 +118,7 @@ curl -H "Content-Type: application/json" -X GET http://localhost:8080/generate/m
 Result:
 
 ```
-{{"name":"eiffelsemantics","edition_name":"Paris"},{"name":"eiffel3","edition_name":"x.x.x"}}
+{{"name":"eiffelsemantics", "edition":"xxxx"}, {"name":"eiffel3", "edition":"xxxx"}}
 ```
 
 ## Status Codes
