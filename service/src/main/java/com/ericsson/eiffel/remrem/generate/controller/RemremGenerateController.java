@@ -17,9 +17,7 @@ package com.ericsson.eiffel.remrem.generate.controller;
 import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
-import com.ericsson.eiffel.remrem.message.services.Eiffel3Service;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
-import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.ericsson.eiffel.remrem.shared.VersionService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -74,12 +72,6 @@ public class RemremGenerateController {
 
     @Autowired
     private ErLookUpConfig erlookupConfig;
-
-    @Autowired
-    private SemanticsService semanticsService;
-
-    @Autowired
-    private Eiffel3Service eiffel3Service;
 
     private static ResponseEntity<String> response;
     

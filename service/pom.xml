@@ -12,11 +12,6 @@
     <packaging>war</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.ericsson.duraci</groupId>
-            <artifactId>eiffel3messaging</artifactId>
-            <version>29.0.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.eiffel-community</groupId>
             <artifactId>eiffel-remrem-shared</artifactId>
         </dependency>
