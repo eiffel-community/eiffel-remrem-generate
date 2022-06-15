@@ -135,7 +135,7 @@ public class EiffelRemremControllerUnitTest {
 
     @Test
     public void testMessageServiceUnavailableEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("other", "eiffelactivityfinishedevent", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
