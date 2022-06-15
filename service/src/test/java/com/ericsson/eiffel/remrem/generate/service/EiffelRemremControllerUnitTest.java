@@ -111,7 +111,7 @@ public class EiffelRemremControllerUnitTest {
 
     @Test
     public void testSemanticsSuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinishedEvent", false, false, true, 1, false, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
