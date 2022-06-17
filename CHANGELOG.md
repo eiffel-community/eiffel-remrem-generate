@@ -1,4 +1,5 @@
 ## 2.1.5
+- Made changes to fix the test-failures
 - Updated eiffel-remrem-parent version from 2.0.6 to 2.0.7
 - updated eiffel-remrem-semantics version from 2.2.1 to 2.2.2
 - Introduced new (/message_protocols) Endpoint which returns the available message protocols list and their respective edition names. 
