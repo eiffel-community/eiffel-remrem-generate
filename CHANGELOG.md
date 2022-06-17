@@ -14,8 +14,6 @@
 - Uplifted eiffel-remrem-parent version from 2.0.4 to 2.0.5
 - Uplifted eiffel-remrem-shared version from 2.0.4 to 2.0.5
 - Removed ER retry mechanism
-- Uplifted eiffel-remrem-semantics version from 2.1.0 to 2.2.0.
-- Creatd a new Rest endpoint /message_protocols which returns the available message protocols list and edition names.
 
 ## 2.1.2
 - Implemented the functionality to read the Jasypt encryption key from jasypt.key file
