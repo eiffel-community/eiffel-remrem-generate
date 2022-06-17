@@ -141,7 +141,7 @@ public class EiffelRemremControllerIT {
                 .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("meta.type", Matchers.is("EiffelArtifactPublishedEvent"))
-                    .body("meta.version", Matchers.is(version));
+                    .body("meta.version", Matchers.is("3.1.0"));
     }
 
     @Test
