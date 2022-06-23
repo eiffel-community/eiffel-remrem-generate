@@ -3,6 +3,7 @@
 - updated eiffel-remrem-semantics version from 2.2.1 to 2.2.2
 - Introduced new (/message_protocols) Endpoint which returns the available message protocols list and their respective edition names. 
 - Updated all curl commands in documentation
+- Removed archived repo remrem-shared dependencies
 
 ## 2.1.4
 - Fixed issue related to ER lookup strategy in REMReM-generate.
