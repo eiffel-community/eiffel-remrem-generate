@@ -52,8 +52,8 @@ public class EiffelRemremControllerIT {
 
     @Value("${local.server.port}")
     private int port;
-    private String artifactPublishedFileName = "ArtifactPublished.json";
-    private String artifactPublishedBody;
+    private String artifactCreatedFileName = "ArtifactCreated.json";
+    private String artifactCreatedBody;
 
     private String activityFinishedFileName = "ActivityFinished.json";
     private String activityFinishedBody;
@@ -73,8 +73,8 @@ public class EiffelRemremControllerIT {
     @Before
     public void  setUp() throws IOException {
         RestAssured.port = port;
-        artifactPublishedBody = loadEventBody(artifactPublishedFileName);
         activityFinishedBody = loadEventBody(activityFinishedFileName);
+        artifactCreatedBody =  loadEventBody(artifactCreatedFileName);
 
         if (version == null) {
             version = getMessagingVersion();
@@ -123,7 +123,7 @@ public class EiffelRemremControllerIT {
     public void testUnauthenticatedNotAllowed() throws Exception {
         given()
                 .contentType("application/json")
-                .body(artifactPublishedBody)
+                .body(artifactCreatedBody)
                 .when()
                     .post("/eiffelsemantics?msgType=eiffelartifactpublished")
                 .then()
@@ -131,16 +131,16 @@ public class EiffelRemremControllerIT {
     }
 
     @Test
-    public void testSendArtifactPublished() throws Exception {
+    public void testSendArtifactCreated() throws Exception {
         given()
                 .header("Authorization", credentials)
                 .contentType("application/json")
-                .body(artifactPublishedBody)
+                .body(artifactCreatedBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=EiffelArtifactPublishedEvent")
+                    .post("/eiffelsemantics?msgType=EiffelArtifactCreatedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("meta.type", Matchers.is("EiffelArtifactPublishedEvent"))
+                    .body("meta.type", Matchers.is("EiffelArtifactCreatedEvent"))
                     .body("meta.version", Matchers.is(version));
     }
 
