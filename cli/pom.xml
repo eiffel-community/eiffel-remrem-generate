@@ -13,10 +13,6 @@
     <dependencies>
         <dependency>
             <groupId>com.github.eiffel-community</groupId>
-            <artifactId>eiffel-remrem-shared</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.eiffel-community</groupId>
             <artifactId>eiffel-remrem-semantics</artifactId>
             <exclusions>
                 <exclusion>

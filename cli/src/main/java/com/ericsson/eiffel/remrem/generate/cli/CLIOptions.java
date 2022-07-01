@@ -27,7 +27,6 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 
 import com.ericsson.eiffel.remrem.generate.config.PropertiesConfig;
-import com.ericsson.eiffel.remrem.shared.VersionService;
 
 
 public class CLIOptions {
