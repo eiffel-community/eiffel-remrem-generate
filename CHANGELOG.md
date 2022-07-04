@@ -1,7 +1,3 @@
-## 2.1.6
-- Uplifted eiffel-remrem-parent version from 2.0.7 to 2.0.8
-- Uplifted eiffel-remrem-semantics version from 2.2.2 to 2.2.3
-
 ## 2.1.5
 - Made changes to fix the test-failures
 - Updated eiffel-remrem-parent version from 2.0.6 to 2.0.7
@@ -9,6 +5,8 @@
 - Introduced new (/message_protocols) Endpoint which returns the available message protocols list and their respective edition names. 
 - Updated all curl commands in documentation
 - Removed archived repo remrem-shared dependencies
+- Uplifted eiffel-remrem-parent version from 2.0.7 to 2.0.8
+- Uplifted eiffel-remrem-semantics version from 2.2.2 to 2.2.3
 
 ## 2.1.4
 - Fixed issue related to ER lookup strategy in REMReM-generate.
