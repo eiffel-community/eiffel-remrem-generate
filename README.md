@@ -40,6 +40,8 @@ Eiffel REMReM Generate takes a partial message in JSON format, validates it and 
 
 6. [**Logging**](wiki/markdown/logging.md)
 
+7. [**Overriding Message Service Library**](wiki/markdown/overriding.md)
+
 # About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
 
