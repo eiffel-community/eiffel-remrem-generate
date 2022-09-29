@@ -1,7 +1,7 @@
 ## Overriding Message Service Library
 
-When building ``eiffel-remrem-generate`` and ``eiffel-remrem-publish`` services 
-from open-source, target packages include also ``eiffel-remrem-semantics`` library 
+When building ``eiffel-remrem-generate`` and ``eiffel-remrem-publish`` services,
+target packages include also ``eiffel-remrem-semantics`` library
 of a version given by services' ``POM`` file. This can be easily verified sending
 ``/versions`` request to the services. It produces something like that
 ~~~
@@ -15,7 +15,7 @@ of a version given by services' ``POM`` file. This can be easily verified sendin
 }
 ~~~
 
-If there is a need, for whatever reason, to use different version of semantics 
+If there is a need, for whatever reason, to use different version of semantics
 library, appropriate JAR file can be stored in a directory listed as value of Java
 property ``java.ext.dirs``. For example, when ``eiffel-remrem-semantics-2.1.3.jar``
 is stored in, say, ``/eiffel/protocols``, the directory must be included in ``java``
@@ -43,7 +43,7 @@ was preferred to the one build-in ``generate.war``  is described at
 
 This  feature can be utilized to load completely different implementation of Eiffel
 protocol, for example ``eiffel3``, by adding corresponding library into directory
-included in ``java.ext.dirs``, i.e. ``/eiffel/protocols``. The newly added library 
+included in ``java.ext.dirs``, i.e. ``/eiffel/protocols``. The newly added library
 causes that output of ``/versions`` request looks like this
 ~~~
 {
@@ -56,3 +56,6 @@ causes that output of ``/versions`` request looks like this
   }
 }
 ~~~
+
+Particular version of ``eiffel-remrem-semantics`` can be downloaded from
+(JitPack)[https://jitpack.io/#eiffel-community/eiffel-remrem-semantics].
