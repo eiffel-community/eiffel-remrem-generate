@@ -58,4 +58,4 @@ causes that output of ``/versions`` request looks like this
 ~~~
 
 Particular version of ``eiffel-remrem-semantics`` can be downloaded from
-(JitPack)[https://jitpack.io/#eiffel-community/eiffel-remrem-semantics].
+[JitPack](https://jitpack.io/#eiffel-community/eiffel-remrem-semantics).
