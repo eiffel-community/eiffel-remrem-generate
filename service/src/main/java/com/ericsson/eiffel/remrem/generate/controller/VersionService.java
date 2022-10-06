@@ -79,7 +79,6 @@ public class VersionService {
                             String version = mainAttribs.getValue(versionKey);
                             if (version != null) {
                                 if (mainAttribs.getValue(IS_ENDPOINT_VERSION) != null) {
-                                    System.out.println("Key: " + versionKey + " Value: " + version);
                                     if(endpointVersions.get(versionKey) == null) {
                                         endpointVersions.put(versionKey, version);
                                     }
