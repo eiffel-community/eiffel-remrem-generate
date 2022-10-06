@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -63,7 +64,7 @@ public class VersionService {
      */
     public Map<String, Map<String, String>> getMessagingVersions() {
         Enumeration<?> resEnum;
-        
+
         try {
             resEnum = Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);
             while (resEnum.hasMoreElements()) {
@@ -77,9 +78,11 @@ public class VersionService {
                         if (versionKey != null) {
                             String version = mainAttribs.getValue(versionKey);
                             if (version != null) {
-                                
                                 if (mainAttribs.getValue(IS_ENDPOINT_VERSION) != null) {
-                                    endpointVersions.put(versionKey, version);
+                                    System.out.println("Key: " + versionKey + " Value: " + version);
+                                    if(endpointVersions.get(versionKey) == null) {
+                                        endpointVersions.put(versionKey, version);
+                                    }
                                 } else {
                                     serviceVersion.put(versionKey, version);
                                 }
