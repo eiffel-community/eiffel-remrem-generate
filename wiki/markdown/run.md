@@ -35,7 +35,7 @@ or
 `java -jar service/target/generate-service-2.1.5.war`
 
 
-Provide customized RemRem-Generate application.properties configuration via the spring.config.location java flag that is appended to the java command line:
+Provide customized RemRem-Generate application.properties configuration via the spring.config.location java flag which need to be appended to the java command line:
 `-Dspring.config.location=/path/to/application.properties`
 
 
