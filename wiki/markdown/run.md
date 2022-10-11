@@ -56,7 +56,7 @@ Eiffel-RemRem-Generate is released with a built-in eiffel-semantic protocol vers
 Execute RemRem-Generate application with external eiffel-semantic version jar file to classpath:
 `java -classpath /path/to/protocol/eiffel-remrem-semantics-2.2.2.jar:service/target/generate-service-2.1.5.war org.springframework.boot.loader.WarLauncher`
 
-Another alternative (works only with some Java 8 versions):
+Another alternative (works only with Java 8):
 `java -Djava.ext.dirs=/home/etobiak/git3/dockerfiles/common/eiffel-remrem-generate/proto/eiffel-remrem-semantics-2.2.2.jar -jar service/target/generate-service-2.1.5.war`
 
 Go to http://localhost:8080/versions and "semanticsVersion" field should show the overridden eiffel-semantic version.
