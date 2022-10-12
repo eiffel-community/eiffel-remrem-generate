@@ -13,14 +13,13 @@ RemRem-Generate application can be executed with Maven command or with the maven
 1. Change to service directory: 
 `cd service`
 
-1. Execute maven command to build and run RemRem-Generate:
+2. Execute maven command to build and run RemRem-Generate:
 `mvn spring-boot:run`
 
 
 ## Run RemRem-Generate With Java Command
 
-1. Change to service directory: 
-`cd service`
+1. Go to remrem-generate git root directory
 
 2. Execute maven package command to build the RemRem-Generate war file:
 `mvn package -DskipTests`
@@ -28,7 +27,7 @@ RemRem-Generate application can be executed with Maven command or with the maven
 This will produce a war file in the "target" folder.
 The RemRem-Generate released war file can be downloaded from JitPack.
 
-1. Run RemRem-Generate application war file
+3. Run RemRem-Generate application war file
 There is some alternatives to execute the war file with java command.
 `java -classpath service/target/generate-service-2.1.5.war org.springframework.boot.loader.WarLauncher`
 or
