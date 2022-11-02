@@ -59,3 +59,5 @@ causes that output of ``/versions`` request looks like this
 
 Particular version of ``eiffel-remrem-semantics`` can be downloaded from
 [JitPack](https://jitpack.io/#eiffel-community/eiffel-remrem-semantics).
+
+A practial example can be found in chapter [Override RemRem-Publish Eiffel Protocol Version](https://github.com/eiffel-community/eiffel-remrem-publish/blob/master/wiki/markdown/run.md#override-remrem-publish-eiffel-protocol-version).
