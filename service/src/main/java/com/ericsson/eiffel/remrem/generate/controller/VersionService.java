@@ -63,7 +63,6 @@ public class VersionService {
      */
     public Map<String, Map<String, String>> getMessagingVersions() {
         Enumeration<?> resEnum;
-        
         try {
             resEnum = Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);
             while (resEnum.hasMoreElements()) {
@@ -77,9 +76,10 @@ public class VersionService {
                         if (versionKey != null) {
                             String version = mainAttribs.getValue(versionKey);
                             if (version != null) {
-                                
                                 if (mainAttribs.getValue(IS_ENDPOINT_VERSION) != null) {
-                                    endpointVersions.put(versionKey, version);
+                                    if(endpointVersions.get(versionKey) == null) {
+                                        endpointVersions.put(versionKey, version);
+                                    }
                                 } else {
                                     serviceVersion.put(versionKey, version);
                                 }

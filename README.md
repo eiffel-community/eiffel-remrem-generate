@@ -34,11 +34,13 @@ Eiffel REMReM Generate takes a partial message in JSON format, validates it and 
 
 3. [**Installation**](wiki/markdown/installation.md)
 
-4. [**Run in Docker**](wiki/markdown/docker.md)
+4. [**Run Application**](wiki/markdown/run.md)
 
-5. [**Usage**](wiki/markdown/usage.md)
+5. [**Run in Docker**](wiki/markdown/docker.md)
 
-6. [**Logging**](wiki/markdown/logging.md)
+6. [**Usage**](wiki/markdown/usage.md)
+
+7. [**Logging**](wiki/markdown/logging.md)
 
 7. [**Overriding Message Service Library**](wiki/markdown/overriding.md)
 

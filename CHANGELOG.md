@@ -1,3 +1,7 @@
+## 2.1.6
+- Fixed a override Eiffel-Semantic protocol version issue
+- Added documentation for overriding Eiffel-Semantic protocol version 
+
 ## 2.1.5
 - Made changes to fix the test-failures
 - Updated eiffel-remrem-parent version from 2.0.6 to 2.0.7
