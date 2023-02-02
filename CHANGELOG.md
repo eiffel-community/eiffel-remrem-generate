@@ -1,3 +1,8 @@
+## 2.1.7
+- Degraded the spring-boot-maven-plugin version to 2.7.5
+- Updated the eiffel-remrem-parent version to 2.0.9
+- Updated the eiffel-remem-semantics version to 2.2.4
+
 ## 2.1.6
 - Fixed a override Eiffel-Semantic protocol version issue
 - Added documentation for overriding Eiffel-Semantic protocol version 
