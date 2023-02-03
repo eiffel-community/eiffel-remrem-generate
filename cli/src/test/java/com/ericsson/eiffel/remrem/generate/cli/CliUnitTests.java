@@ -57,7 +57,7 @@ public class CliUnitTests {
         
         Mockito.when(msgService.generateMsg(
 	                Mockito.anyString(),
-	                Mockito.anyObject()
+	                Mockito.any()
 	        )).thenReturn("{ \"service\":\"msgService\" }");
     }
 	

@@ -15,8 +15,8 @@
 package com.ericsson.eiffel.remrem.generate.integrationtest;
 
 import com.google.gson.JsonParser;
-import com.jayway.restassured.RestAssured;
 
+import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -39,7 +39,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
