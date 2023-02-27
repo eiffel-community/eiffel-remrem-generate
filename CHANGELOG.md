@@ -1,5 +1,5 @@
 ## 2.1.8
-- Uplifted eiffel-remrem-parent version to 2.1.0 to inherit the latest spring-boot version.
+- Uplifted eiffel-remrem-parent version to 2.0.10 to inherit the latest spring-boot version.
 
 ## 2.1.7
 - Degraded the spring-boot-maven-plugin version to 2.7.5
