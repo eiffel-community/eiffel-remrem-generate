@@ -72,7 +72,7 @@ public class EiffelRemERLookupControllerUnitTest {
     @SuppressWarnings("resource")
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         unit.setRestTemplate(restTemplate);
 
         msgServices.add(service);
@@ -138,37 +138,37 @@ public class EiffelRemERLookupControllerUnitTest {
         String erlookupOptionsWithNoneFoundOutput = FileUtils
                 .readFileToString(new File(TEST_RESOURCES_PATH+"ErlookupOptionsWithNoneFoundOutput.json"), ENCODING);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelConfidenceLevelModified"), Mockito.any(), Mockito.anyBoolean()))
         .thenReturn(erlookupOptionsWithNoneFoundOutput);
         
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelconfidencelevel"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelconfidencelevel"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(confidenceLevelOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelartifactpublished"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelartifactpublished"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(artifactPublishedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelcompositiondefined"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelcompositiondefined"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefined"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefined"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedSCCreatedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEvent"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEvent"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(compositionDefinedSCSubmittedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelSCSubmitted"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelSCSubmitted"), Mockito.any(), Mockito.anyBoolean()))
                 .thenReturn(SCSubmittedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefined"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefined"), Mockito.any(), Mockito.anyBoolean()))
         .thenReturn(erLookupWithOptionsOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefinedEvent"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelEnvironmentDefinedEvent"), Mockito.any(), Mockito.anyBoolean()))
         .thenReturn(erlookupOptionsWithEmptyResponseOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEventt"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelCompositionDefinedEventt"), Mockito.any(), Mockito.anyBoolean()))
         .thenReturn(compositionDefinedOutput);
 
-        Mockito.when(service.generateMsg(Mockito.eq("eiffelTestCaseStarted"), Mockito.anyObject(), Mockito.anyBoolean()))
+        Mockito.when(service.generateMsg(Mockito.eq("eiffelTestCaseStarted"), Mockito.any(), Mockito.anyBoolean()))
         .thenReturn(ErlookupFailedWithOptionsOutput);
 
         ResponseEntity erresponse = new ResponseEntity(response, HttpStatus.OK);

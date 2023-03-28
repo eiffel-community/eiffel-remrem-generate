@@ -67,7 +67,7 @@ public class EiffelRemremControllerUnitTest {
     @SuppressWarnings("resource")
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         msgServices.add(service);
         msgServices.add(service2);
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
@@ -90,23 +90,23 @@ public class EiffelRemremControllerUnitTest {
 
         Mockito.when(service.generateMsg(
                 Mockito.eq("eiffelactivityfinished"),
-                Mockito.anyObject(), Mockito.anyBoolean())).thenReturn(successOutput);
+                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
 
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelActivityFinished"),
-                Mockito.anyObject(), Mockito.anyBoolean())).thenReturn(errorOutput);
+                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
 
         Mockito.when(service2.generateMsg(
                 Mockito.eq("eiffelartifactnew"),
-                Mockito.anyObject(), Mockito.anyBoolean())).thenReturn(successOutput);
+                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
 
         Mockito.when(service2.generateMsg(
                 Mockito.eq("eiffelartifactnewevent"),
-                Mockito.anyObject(), Mockito.anyBoolean())).thenReturn(errorOutput);
+                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
 
         Mockito.when(service.generateMsg(
                 Mockito.eq("EiffelArtifactCreatedEvent"),
-                Mockito.anyObject(), Mockito.anyBoolean())).thenReturn(lv_successOutput);
+                Mockito.any(), Mockito.anyBoolean())).thenReturn(lv_successOutput);
     }
 
     @Test
