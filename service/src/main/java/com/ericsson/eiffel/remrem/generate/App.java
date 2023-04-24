@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
-@SpringBootApplication(proxyBeanMethods = false)
+@SpringBootApplication
 @ComponentScan("com.ericsson.eiffel.remrem")
 @EnableAutoConfiguration(exclude = { JacksonAutoConfiguration.class })
 @PropertySource(value = "file:${catalina.home}/conf/config.properties", ignoreResourceNotFound = true)

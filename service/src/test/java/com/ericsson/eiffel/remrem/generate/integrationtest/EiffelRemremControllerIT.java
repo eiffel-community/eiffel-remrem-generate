@@ -14,8 +14,12 @@
 */
 package com.ericsson.eiffel.remrem.generate.integrationtest;
 
+import com.ericsson.eiffel.semantics.events.EiffelActivityFinishedEventMeta;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
+import com.google.gson.ReflectionAccessFilter;
 import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -23,10 +27,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +50,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integration-test")
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration
 public class EiffelRemremControllerIT {
     JsonParser parser = new JsonParser();
 
@@ -183,6 +189,12 @@ public class EiffelRemremControllerIT {
                     .body(Matchers.containsString("EiffelArtifactPublishedEvent"))
                     .body(Matchers.containsString("EiffelActivityFinishedEvent"))
                     .body(Matchers.containsString("EiffelActivityStartedEvent"));
+        Object r = given()
+                .header("Authorization", credentials)
+                .when()
+                .get("/event_types/eiffelsemantics")
+                .then();
+        r.toString();
     }
     
     @Test
