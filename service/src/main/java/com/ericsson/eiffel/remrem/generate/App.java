@@ -25,8 +25,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
-@SpringBootApplication
-@ComponentScan("com.ericsson.eiffel.remrem")
+@SpringBootApplication(scanBasePackages = {"com.ericsson.eiffel.remrem", "com.ericsson.eiffel.remrem.semantics"})
+@ComponentScan({"com.ericsson.eiffel.remrem", "com.ericsson.eiffel.remrem.semantics"})
 @EnableAutoConfiguration(exclude = { JacksonAutoConfiguration.class })
 @PropertySource(value = "file:${catalina.home}/conf/config.properties", ignoreResourceNotFound = true)
 public class App extends SpringBootServletInitializer {
