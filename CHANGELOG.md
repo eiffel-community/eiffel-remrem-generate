@@ -1,3 +1,6 @@
+## 2.1.9
+- Necessary changes to support OpenJDK 17
+
 ## 2.1.8
 - Uplifted eiffel-remrem-parent version to 2.0.10 to inherit the latest spring-boot version.
 
