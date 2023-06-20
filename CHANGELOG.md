@@ -1,3 +1,6 @@
+## 2.1.10
+- Mockito framework upgraded to 5.3.1
+
 ## 2.1.9
 - Necessary changes to support OpenJDK 17
 
