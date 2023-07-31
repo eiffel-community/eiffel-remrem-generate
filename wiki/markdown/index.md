@@ -18,4 +18,4 @@ For supporting latest features, Eiffel REMReM Generate should use the latest ver
 *   REMReM Generate Service
 
 ## Compatibility
-Both ``generate`` and [``publish``](https://github.com/eiffel-community/eiffel-remrem-publish) services use [``semantics``](https://github.com/eiffel-community/eiffel-remrem-semantics) library. Their mutual compatibility is available in [Compatibility](https://github.com/eiffel-community/eiffel-remrem-publish/blob/master/wiki/markdown/index.md#components) section of publish service.
+Both `generate` and [`publish`](https://github.com/eiffel-community/eiffel-remrem-publish) services use [`semantics`](https://github.com/eiffel-community/eiffel-remrem-semantics) library. Their mutual compatibility is available in [Compatibility](https://github.com/eiffel-community/eiffel-remrem-publish/blob/master/wiki/markdown/index.md#components) section of publish service.
