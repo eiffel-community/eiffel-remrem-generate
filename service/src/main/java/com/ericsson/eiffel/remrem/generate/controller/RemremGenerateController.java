@@ -267,7 +267,12 @@ public class RemremGenerateController {
         for (MsgService service : msgServices) {
             JsonObject protocolObject = new JsonObject();
             protocolObject.addProperty("name", service.getServiceName());
-            protocolObject.addProperty("edition", service.getProtocolEdition());
+            try {
+                protocolObject.addProperty("edition", service.getProtocolEdition());
+            } catch (NoSuchMethodError | AbstractMethodError e) {
+                // Ignored intentionally in order to ensure compatibility with
+                // eiffel-remrem-semantics:2.2.0 and older.
+            }
             array.add(protocolObject);
         }
         return array;
