@@ -272,7 +272,7 @@ public class RemremGenerateController {
             } catch (NoSuchMethodError | AbstractMethodError e) {
                 // Ignored intentionally in order to ensure compatibility with
                 // eiffel-remrem-semantics:2.2.0 and older.
-                log.warn("Failed due to older version of REMRem Semantics library, please use the library which is greater than 2.2.0 version.");
+                log.error("An old library, without implementation of MsgService.getProtocolEdition() is used. Please, upgrade to a newer library implementing eiffel-remrem-protocol-interface:2.1.2 or higher.");
             }
             array.add(protocolObject);
         }
