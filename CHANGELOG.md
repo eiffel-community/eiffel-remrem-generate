@@ -1,3 +1,6 @@
+## 2.1.11
+- Made changes to /message_protocols end-point to work for old REMRem-Semantics library.
+
 ## 2.1.10
 - Mockito framework upgraded to 5.3.1
 
