@@ -38,10 +38,8 @@ public class EiffelTemplateGenerateTest {
 
     @Test
     public void testEiffelSemanticsTemplate() throws IOException {
-        for (EiffelEventType enumValue:EiffelEventType.values()
-        ) {
+        for (EiffelEventType enumValue:EiffelEventType.values()) {
             testEventType(enumValue.getEventName());
-
         }
     }
 
@@ -67,7 +65,6 @@ public class EiffelTemplateGenerateTest {
             // resource name from validator. That's why Java reflection takes place. It's acceptable just because it's
             // a takes case, and it isn't part of production code.
             // Get access to EiffelValidator.schemaResourceName even it's declared as private.
-
             Field schemaResourceNameField = EiffelValidator.class.getDeclaredField("schemaResourceName");
             schemaResourceNameField.setAccessible(true);
             schemaResourceName = (String)schemaResourceNameField.get(validator);
@@ -91,14 +88,12 @@ public class EiffelTemplateGenerateTest {
                 getAsJsonObject("properties").getAsJsonObject("version").
                 get("default").getAsString();
 
-
-        // When using assert(...) if a logical test fails the unit test is aborted and the rest of the unit test isn't run.
-        // So for that here used logger, to get the logical test to fail but just provide a warning or something and
-        // still run the rest of the unit test.
         if (!templateVersion.equals(schemasVersion)){
+            // At the moment only semantics library 2.2.1 has been hot-fixed. The later versions still have the issue
+            // (it hasn't been decided how/when/if the issue will be resolved). If standard "assert" was used the test
+            // would fail for the other versions of the library, and this is unwanted as the test would fail as a whole.
             log.warn("Versions of event " + eventName + " must be the same; found: " + templateVersion +
                     ", expected: " + schemasVersion);
-
         }
     }
 }
