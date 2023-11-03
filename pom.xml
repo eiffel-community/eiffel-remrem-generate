@@ -11,7 +11,7 @@
 
     <properties>
         <eiffel-remrem-generate.version>2.1.11</eiffel-remrem-generate.version>
-        <eiffel-remrem-semantics.version>2.2.6</eiffel-remrem-semantics.version>
+        <eiffel-remrem-semantics.version>2.2.7</eiffel-remrem-semantics.version>
     </properties>
     <artifactId>eiffel-remrem-generate</artifactId>
     <version>${eiffel-remrem-generate.version}</version>
