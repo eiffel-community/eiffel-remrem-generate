@@ -111,38 +111,38 @@ public class EiffelRemremControllerUnitTest {
 
     @Test
     public void testSemanticsSuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void testSemanticsFailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testEiffel3SuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void testEiffel3FailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testMessageServiceUnavailableEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @Test
     public void testlenientValidation() throws Exception {
         unit.setLenientValidationEnabledToUsers(true);
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, null, body.getAsJsonObject());
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 

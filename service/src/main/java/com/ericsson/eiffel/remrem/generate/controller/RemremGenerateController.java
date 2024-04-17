@@ -18,6 +18,7 @@ import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.schemas.EiffelConstants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -77,6 +78,11 @@ public class RemremGenerateController {
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
+    public static final String PARAM_GENERATE_EIFFEL_DOMAIN_ID = "generate.eiffel.domainId";
+    @Value("${" + PARAM_GENERATE_EIFFEL_DOMAIN_ID + ":#{null}}")
+    private String defaultDomainId;
+    private boolean defaultDomainIdStripped = false;
+
     public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
 		this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
 	}
@@ -86,6 +92,115 @@ public class RemremGenerateController {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    // TODO Should be moved to semantics library
+    public static final String EiffelConstants_SOURCE = "source";
+    public static final String EiffelConstants_ID = "id";
+    public static final String EiffelConstants_DOMAIN_ID = "domainId";
+
+    private static final String DOMAIN_ID_FULL_PATH = EiffelConstants.META + "." +
+            EiffelConstants_SOURCE + "." + EiffelConstants_DOMAIN_ID;
+
+    private String getDefaultDomainId() {
+        if (defaultDomainId != null && !defaultDomainIdStripped) {
+            String strippedDefaultDomainId = defaultDomainId.strip();
+            defaultDomainIdStripped = true;
+            if (strippedDefaultDomainId.isBlank()) {
+                defaultDomainId = null;
+                log.error("Value of configuration parameter '" + PARAM_GENERATE_EIFFEL_DOMAIN_ID +
+                        "' is blank ('" + strippedDefaultDomainId + "'); ignoring...");
+            }
+        }
+
+        return defaultDomainId;
+    }
+
+    protected void addDomainId(JsonObject generated, String domainId) {
+        // Handle default domain ID.
+        JsonObject meta = generated.getAsJsonObject().getAsJsonObject(EiffelConstants.META);
+        if (meta == null) {
+            // Nothing to do.
+            log.warn("Generated event doesn't contain '" + EiffelConstants.META + "' section; strange...");
+            return;
+        }
+
+        JsonElement idElement = meta.get(EiffelConstants_ID);
+        String id = null;
+        if (idElement != null) {
+            id = idElement.getAsString();
+        }
+
+        JsonObject source = meta.getAsJsonObject(EiffelConstants_SOURCE);
+        if (source == null) {
+            // Nothing to do.
+            log.warn("[" + id + "] Generated event doesn't contain '" + EiffelConstants.META +
+                    "." + EiffelConstants_SOURCE + "' section; strange...");
+            return;
+        }
+
+        // Is domainId present in generated event?
+        JsonElement existingDomainIdElement = source.get(EiffelConstants_DOMAIN_ID);
+        String existingDomainId = null;
+        String strippedExistingDomainId = null;
+        boolean existingDomainIdIsValid = false;
+        if (existingDomainIdElement != null) {
+            existingDomainId = existingDomainIdElement.getAsString();
+            strippedExistingDomainId = existingDomainId.strip();
+            existingDomainIdIsValid = !strippedExistingDomainId.isBlank();
+        }
+
+        String defaultDomainId = getDefaultDomainId();
+        String domainIdToSet = null;
+        String domainIdInfoMessage = null;
+        if (domainId != null) {
+            // Use domain ID passed as REST API param. This is the highest-priority
+            // value and is used whenever available.
+            String strippedDomainId = domainId.strip();
+            if (!strippedDomainId.isBlank()) {
+                domainIdToSet = strippedDomainId;
+                domainIdInfoMessage = "[" + id + "] Setting '" + DOMAIN_ID_FULL_PATH + "' to '" + domainIdToSet +
+                        "', value of RESTAPI param '" + RESTAPI_PARAM_DOMAIN_ID + "'";
+            }
+            else {
+                log.warn("Value of REST API parameter '" + RESTAPI_PARAM_DOMAIN_ID + "' is blank; ignoring...");
+            }
+        }
+        else {
+            // Domain id not specified by REST API or its value is not valid.
+            // Try to use default value from configuration file.
+            if (defaultDomainId != null) {
+                // Default value is available.
+                if (existingDomainIdIsValid) {
+                    // Value of domainId in generated event exists and is valid, keep it.
+                }
+                else {
+                    domainIdToSet = defaultDomainId;
+
+                    domainIdInfoMessage = "[" + id + "] Setting '" + DOMAIN_ID_FULL_PATH + "' to '" + domainIdToSet +
+                            "', value of configuration param '" + PARAM_GENERATE_EIFFEL_DOMAIN_ID + "'";
+                }
+            }
+        }
+
+        if (domainIdToSet != null) {
+            if (existingDomainIdElement != null) {
+                if (domainIdToSet == defaultDomainId && !existingDomainIdIsValid) {
+                    // Value of domainId of generated event is not valid and will be replaced
+                    // by defaultDomainId.
+                    log.warn("[" + id + "] Element '" + DOMAIN_ID_FULL_PATH + "' of event exists," +
+                            "but is invalid ('" + existingDomainId + "') and will be replaced");
+                }
+
+                // Element domainId already exists, remove it first.
+                source.remove(EiffelConstants_DOMAIN_ID);
+            }
+
+            log.info(domainIdInfoMessage);
+            source.addProperty(EiffelConstants_DOMAIN_ID, domainIdToSet);
+        }
+    }
+
+    public static final String RESTAPI_PARAM_DOMAIN_ID = "domainId";
 
     /**
      * Returns event information as json element based on the message protocol,
@@ -113,6 +228,7 @@ public class RemremGenerateController {
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
             @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
+            @ApiParam(value = "Domain ID") @RequestParam(value = RESTAPI_PARAM_DOMAIN_ID, required = false, defaultValue = "")  final String domainId,
             @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
 
         try {
@@ -122,6 +238,8 @@ public class RemremGenerateController {
             if (msgService != null) {
                 response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
                 JsonElement parsedResponse = parser.parse(response);
+                addDomainId(parsedResponse.getAsJsonObject(), domainId);
+
                 if(lookupLimit <= 0) {
                     return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
                 }
