@@ -25,15 +25,75 @@ http://localhost:8080/generate/
 Configuration of REMReM Generate can be found [here](configuration.md)
 
 
+## Usage
 Available REST resources for REMReM Generate Service are described below:
 
-| Resource              | Method | Parameters                                                                                                                                  | Request body                                                                                                                                           | Description                                                                                                                                                                            |
-|-----------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| /mp                   | POST   | mp - message protocol, required msgType - Eiffel event type, required failIfMultipleFound - default: false failIfNoneFound - default: false, lookupInExternalERs - default: false, lookupLimit - default: 1 *lookupLimit must be greater than or equals to 1, okToLeaveOutInvalidOptionalFields - default: false| { "msgParams": {"meta": {# Matches the meta object }},"eventParams": {"data": {# Matches the data object},"links": { # Matches the links object } }}   | This endpoint is used to generate Eiffel events and then the obtained event could  be published by [Eiffel REMReM Publish](https://github.com/eiffel-community/eiffel-remrem-publish). |
-| /event_types/{mp}     | GET    | mp - message protocol, required                                                                                                             |                                                                                                                                                        | This endpoint is used to obtain Eiffel event types implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                             |
-| /template/{type}/{mp} | GET    | type - Eiffel event type mp - message protocol, required                                                                                    |                                                                                                                                                        | This endpoint is used to obtain Eiffel event templates implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).                         |
-| /versions             | GET    |                                                                                                                                             |                                                                                                                                                        | This endpoint is used to get versions of generate service and all loaded protocols versions  in JSON format.                                                                           |
-| /message_protocols    | GET   |                                                                                                                                                        |This endpoint is used to obtain the message protocols list and  edition names in JSON format.                                                                                                                                                              |
+### `/{mp}`
+This endpoint is used to generate Eiffel events and then the obtained event could  be published by [Eiffel REMReM Publish](https://github.com/eiffel-community/eiffel-remrem-publish).
+
+##### HTTP Method
+POST
+
+| Name                                | Description                                                                                                                                                                                                                                                                                                                       | Required | Default value       |
+|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------|
+| `mp`                                | Message protocol.                                                                                                                                                                                                                                                                                                                 | yes      ||
+| `msgType`                           | Eiffel event type.                                                                                                                                                                                                                                                                                                            | yes      ||
+| `domainId`                          | Eiffel domain identificator.                                                                                                                                                                                                                                                                                                      | no       |              |
+| `failIfMultipleFound`               | If value is set to `true` and multiple event ids are found through any of the provided lookup definitions, then no event will be generated.                                                                                                                                                                                       | no       | `false`             |
+| `failIfNoneFound`                   | If value is set to `true` and no event id is found through (at least one of) the provided lookup definitions, then no event will be generated.                                                                                                                                                                                    | no       | `false`             |
+| `lookupInExternalERs`               | If value is set to `true` then REMReM will query external ERs and not just the locally used ER. The reason for the default value to be `false` is to decrease the load on external ERs. Here local ER means single ER which is using REMReM generate. External ER means multiple ER's which are configured in local ER.           | no       | `false`             |
+| `lookupLimit`                       | The number of events returned, through any lookup definition given, is limited to this number.                                                                                                                                                                                                                                    | no       | `1`                 |
+| `okToLeaveOutInvalidOptionalFields` |                                                                                                                                                                                                                                                                                                                                   | no       | `false` |
+
+##### Request
+```
+{ 
+  "msgParams": {
+    "meta": {# Matches the meta object }
+  },
+  "eventParams": {
+    "data": {# Matches the data object},
+    "links": { # Matches the links object }
+  }
+}
+```
+
+### `/versions`
+This endpoint is used to get versions of publish service and all loaded protocols.
+
+##### HTTP Method
+GET
+
+
+### `/event_types/{mp}`
+#This endpoint is used to obtain Eiffel event types implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).
+
+##### HTTP Method
+GET
+
+| Name                                | Description       | Required               | Default value       |
+|-------------------------------------|-------------------|------------------------|---------------------|
+| `mp`                                | Message protocol. | yes                    ||
+
+
+### `/template/{type}/{mp}`
+This endpoint is used to obtain Eiffel event templates implemented in  [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).
+
+##### HTTP Method
+GET
+
+| Name                                | Description        | Required               | Default value       |
+|-------------------------------------|--------------------|------------------------|---------------------|
+| `type`                              | Eiffel event type. | yes |
+| `mp`                                | Message protocol.  | yes                    ||
+
+
+
+### `/message_protocols`
+This endpoint is used to obtain the message protocols list and  edition names in JSON format.
+
+##### HTTP Method
+GET 
 
 ## Examples
 

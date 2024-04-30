@@ -30,7 +30,7 @@ When using maven command, Spring properties can also be changed by editing servi
 
 Eiffel REMReM Service **generate-service.war** file should be deployed in Tomcat Server. For doing this, generate-service.war file should deployed in directory: _tomcat/webapps_.
 
-Configuration is done in Tomcat using a config.properties file: _tomcat/conf/config.properties_.
+Configuration is done in Tomcat using a config.properties file:ï¿½_tomcat/conf/config.properties_.
 
 **NOTE:** in each example assuming the generate-service.war is deployed in tomcat as **generate**.
 
@@ -164,3 +164,22 @@ More about [Lenient Validation](../usage/lenientvalidation.md).
 ```
  lenientValidationEnabledToUsers : <true | false>
 ``` 
+
+### Configuration of Default Domain Identifier
+Default domain identifier can be specified using property `generate.source.domainId`:
+```
+generate.source.domainId: <string>
+```
+The default domain ID is used by endpoint `/` and presents it as value of property
+`msgParams.meta.source.domainId` unless the property is specified by submitted
+template or REST API param `domainId` of request to endpoint `/`.
+
+Note, that domain identifier can be submitted in several ways:
+1. application property `generate.source.domainId`;
+2. REST API request parameter `domainId`, see section [Usage](../service.md#usage);
+3. property `msgParams.meta.source.domainId` sent as part of REST API parameter bodyJson.
+ 
+and they are prioritized like follows:
+* if case 3. is specified, cases 2. and 1. are ignored;
+* if case 2. is submitted, case 1. is ignored; 
+* domain id given by case 1. is used when neither case 3. nor case 2. is applied.

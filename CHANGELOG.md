@@ -1,3 +1,6 @@
+## 2.1.11
+- REST API parameter `domainId` added.
+ 
 ## 2.1.10
 - Mockito framework upgraded to 5.3.1
 
