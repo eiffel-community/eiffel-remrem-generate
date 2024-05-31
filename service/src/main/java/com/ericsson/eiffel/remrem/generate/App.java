@@ -20,13 +20,14 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = {"com.ericsson.eiffel.remrem", "com.ericsson.eiffel.remrem.semantics"})
-@EnableAutoConfiguration(exclude = { JacksonAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = { JacksonAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
 @PropertySource(value = "file:${catalina.home}/conf/config.properties", ignoreResourceNotFound = true)
 public class App extends SpringBootServletInitializer {
 
