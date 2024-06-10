@@ -50,6 +50,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -113,43 +114,63 @@ public class RemremGenerateController {
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
             @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
             @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
-            @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
+            @ApiParam(value = "JSON message", required = true) @RequestBody JsonElement bodyJson) {
 
         try {
-            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
             MsgService msgService = getMessageService(msgProtocol);
-            String response;
-            if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
-                JsonElement parsedResponse = parser.parse(response);
-                if(lookupLimit <= 0) {
-                    return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
-                }
-                if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.BAD_REQUEST);
-                }
-            } else {
+            if (msgService == null){
                 return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),
                         HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            if (lookupLimit <= 0) {
+                return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
+            }
+
+            if (bodyJson.isJsonArray()) {
+                JsonArray jsonArray = bodyJson.getAsJsonArray();
+                JsonArray response1 = new JsonArray();
+
+                for (JsonElement element: jsonArray) {
+
+                    JsonObject jsonObject = element.getAsJsonObject();
+
+                    jsonObject = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
+                    String response = msgService.generateMsg(msgType, jsonObject, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+                    JsonElement parsedResponse = parser.parse(response);
+
+                    if (parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                        return new ResponseEntity<>(parsedResponse, HttpStatus.BAD_REQUEST);
+                    }
+
+                    response1.add(parsedResponse);
+                }
+                return new ResponseEntity<>(response1, HttpStatus.OK);
+            } else if (bodyJson.isJsonObject()) {
+                JsonObject jsonObject1 = bodyJson.getAsJsonObject();
+                jsonObject1 = erLookup(jsonObject1, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
+                String response = msgService.generateMsg(msgType, jsonObject1, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+                JsonElement parsedResponse = parser.parse(response);
+
+                if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                    return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(parsedResponse,HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Invalid Json INPUT", HttpStatus.BAD_REQUEST);
             }
         } catch (REMGenerateException e1) {
             if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.NOT_ACCEPTABLE);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
+            } else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
+            } else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage()
-                       .contains(Integer.toString(HttpStatus.SERVICE_UNAVAILABLE.value()))) {
+            } else if (e1.getMessage()
+                    .contains(Integer.toString(HttpStatus.SERVICE_UNAVAILABLE.value()))) {
                 return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_ER),
                         HttpStatus.SERVICE_UNAVAILABLE);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } catch (Exception e) {
@@ -159,6 +180,58 @@ public class RemremGenerateController {
         }
     }
 
+     /*ResponseEntity<?> processJsonElement(JsonElement jsonElement, String msgProtocol, String msgType, Boolean failIfMultipleFound,
+                                                 Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit, Boolean okToLeaveOutInvalidOptionalFields) throws REMGenerateException {
+
+        if (jsonElement.isJsonArray()) {
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            ArrayList<? extends ResponseEntity<?>> arrayList = new ArrayList<>();
+            for (JsonElement element : jsonArray) {
+
+                JsonObject jsonObject = element.getAsJsonObject();
+                ResponseEntity<?> response2 = cin(jsonObject, msgProtocol,msgType, failIfMultipleFound, okToLeaveOutInvalidOptionalFields, failIfNoneFound,
+                        lookupInExternalERs, lookupLimit);
+
+                arrayList.add(response2);
+
+            }
+            return new ResponseEntity<>(arrayList, HttpStatus.OK);
+
+        } else if (jsonElement.isJsonObject()) {
+            JsonObject object = jsonElement.getAsJsonObject();
+            ResponseEntity<?> response1 = cin(object, msgProtocol,msgType, failIfMultipleFound, okToLeaveOutInvalidOptionalFields, failIfNoneFound,
+                    lookupInExternalERs, lookupLimit);
+            return new ResponseEntity<>(response1, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR), HttpStatus.BAD_REQUEST);
+        }
+
+    }*/
+
+    /*private ResponseEntity<?> cin(JsonObject jsonElement, String msgProtocol, String msgType, Boolean failIfMultipleFound, Boolean okToLeaveOutInvalidOptionalFields,
+                            Boolean failIfNoneFound, Boolean lookupInExternalERs,
+                            int lookupLimit) throws REMGenerateException {
+
+        jsonElement = erLookup(jsonElement, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
+        MsgService msgService = getMessageService(msgProtocol);
+        String response;
+        if (msgService != null) {
+            response = msgService.generateMsg(msgType, jsonElement, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+            JsonElement parsedResponse = parser.parse(response);
+            if (lookupLimit <= 0) {
+                return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
+            }
+            if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(parsedResponse, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),
+                    HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+    }*/
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
                final Boolean lookupInExternalERs, final int lookupLimit)
             throws REMGenerateException {
