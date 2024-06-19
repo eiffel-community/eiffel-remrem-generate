@@ -18,12 +18,7 @@ import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import ch.qos.logback.classic.Logger;
 import io.swagger.annotations.*;
@@ -36,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -99,64 +96,132 @@ public class RemremGenerateController {
      * <p>
      * Returns: The event information as a json element
      */
+
     @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Event sent successfully"),
             @ApiResponse(code = 400, message = "Malformed JSON"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid") })
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
-            @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
-            @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
-            @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
-            @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
-
+    public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
+                                      @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
+                                      @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
+                                      @ApiParam(value = "JSON message", required = true) @RequestBody String body){
         try {
-            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
-            MsgService msgService = getMessageService(msgProtocol);
-            String response;
-            if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
-                JsonElement parsedResponse = parser.parse(response);
-                if(lookupLimit <= 0) {
-                    return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
+            JsonElement bodyJson = JsonParser.parseString(body);
+
+            return generate(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound, lookupInExternalERs,
+                    lookupLimit, okToLeaveOutInvalidOptionalFields, bodyJson);
+
+        } catch (JsonSyntaxException e) {
+            JsonObject errorResponse = new JsonObject();
+            log.error("Unexpected exception caught due to parse json data", e.getMessage());
+            String exceptionMessage = e.getMessage();
+            errorResponse.addProperty("Status code", HttpStatus.BAD_REQUEST.value());
+            errorResponse.addProperty("result", "Fatal");
+            errorResponse.addProperty("message", "Invalid JSON parse data format due to: " + exceptionMessage);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> generate(final String msgProtocol, final String msgType, final Boolean failIfMultipleFound, final Boolean failIfNoneFound, final Boolean lookupInExternalERs, final int lookupLimit, final Boolean okToLeaveOutInvalidOptionalFields, JsonElement bodyJson) {
+
+        JsonArray results = new JsonArray();
+        JsonObject errorResponse = new JsonObject();
+        try {
+
+            if (bodyJson.isJsonArray()) {
+
+                JsonArray jsonArray = bodyJson.getAsJsonArray();
+                for (JsonElement element : jsonArray) {
+                    results.add(processEvent(element.getAsJsonObject(), msgProtocol, msgType,
+                            failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
+                            okToLeaveOutInvalidOptionalFields));
                 }
-                if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.BAD_REQUEST);
-                }
+                return new ResponseEntity<>(results, HttpStatus.OK);
+
+            } else if (bodyJson.isJsonObject()) {
+                JsonObject jsonObject = bodyJson.getAsJsonObject();
+                JsonObject jsonObject1 = processEvent(jsonObject, msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
+                        lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields);
+                return new ResponseEntity<>(jsonObject1, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),
-                        HttpStatus.SERVICE_UNAVAILABLE);
-            }
-        } catch (REMGenerateException e1) {
-            if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.NOT_ACCEPTABLE);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage()
-                       .contains(Integer.toString(HttpStatus.SERVICE_UNAVAILABLE.value()))) {
-                return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_ER),
-                        HttpStatus.SERVICE_UNAVAILABLE);
-            }
-            else {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+                errorResponse.addProperty("Status code", HttpStatus.BAD_REQUEST.value());
+                errorResponse.addProperty("result", "fail");
+                errorResponse.addProperty("message", "Invalid JSON format");
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             log.error("Unexpected exception caught", e);
-            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            errorResponse.addProperty("Status code", HttpStatus.BAD_REQUEST.value());
+            errorResponse.addProperty("Result", "Fail");
+            errorResponse.addProperty("Message", "Invalid JSON format");
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
+    }
+
+    /**
+     * This helper method basically generate or process one event
+     * @return JsonObject generated event
+     */
+
+    public JsonObject processEvent(JsonObject jsonElement, String msgProtocol, String msgType, Boolean failIfMultipleFound,
+                                   Boolean okToLeaveOutInvalidOptionalFields,
+                                   Boolean failIfNoneFound, int lookupLimit, Boolean lookupInExternalERs) {
+        JsonObject eventResponse = new JsonObject();
+        JsonElement parsedResponse = null;
+        try {
+            JsonObject event = jsonElement.getAsJsonObject();
+            event = erLookup(event, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
+            MsgService msgService = getMessageService(msgProtocol);
+
+            if (msgService != null) {
+                String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+                parsedResponse = parser.parse(response);
+
+                if (lookupLimit <= 0) {
+                    eventResponse.addProperty("status code", HttpStatus.BAD_REQUEST.value());
+                } else if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
+                    return parsedResponse.getAsJsonObject();
+                } else {
+                    eventResponse.addProperty("Status code", HttpStatus.BAD_REQUEST.value());
+                    eventResponse.addProperty("Result", "Fail");
+                    eventResponse.addProperty("Message", RemremGenerateServiceConstants.NOT_ACCEPTABLE);
+                    return eventResponse;
+                }
+
+            }
+        } catch (REMGenerateException e1) {
+            if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
+                eventResponse.addProperty("Status code", HttpStatus.NOT_ACCEPTABLE.value());
+            } else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
+                eventResponse.addProperty("Status code", HttpStatus.EXPECTATION_FAILED.value());
+            } else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
+                eventResponse.addProperty("Status code", HttpStatus.EXPECTATION_FAILED.value());
+
+            } else if (e1.getMessage()
+                    .contains(Integer.toString(HttpStatus.SERVICE_UNAVAILABLE.value()))) {
+                eventResponse.addProperty("Status code", HttpStatus.SERVICE_UNAVAILABLE.value());
+                eventResponse.addProperty("Message", RemremGenerateServiceConstants.NO_SERVICE_ERROR);
+            } else {
+                eventResponse.addProperty("Status code", HttpStatus.UNPROCESSABLE_ENTITY.value());
+            }
+            eventResponse.addProperty("Result", "Fail");
+            eventResponse.add("Message", parser.parse(e1.getMessage()));
+            return eventResponse;
+        } catch (Exception e) {
+            log.error("Unexpected error caught", e);
+            eventResponse.addProperty("Status code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            eventResponse.addProperty("Result", "Fail");
+            eventResponse.addProperty("Message", RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR);
+            return eventResponse;
+        }
+        return eventResponse;
     }
 
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
