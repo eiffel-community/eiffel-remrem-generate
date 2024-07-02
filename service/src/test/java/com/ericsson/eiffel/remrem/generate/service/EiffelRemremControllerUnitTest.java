@@ -25,6 +25,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -53,11 +57,9 @@ public class EiffelRemremControllerUnitTest {
     
     @Mock
     MsgService service2;
-    
 
     @Spy
     private List<MsgService> msgServices = new ArrayList<MsgService>();
-    
     @Mock
     JsonElement body;
 
@@ -111,41 +113,104 @@ public class EiffelRemremControllerUnitTest {
 
     @Test
     public void testSemanticsSuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, body.getAsJsonObject());
+        File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
+    public void testSemanticsSuccessArrayEvent() throws Exception {
+        File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+
+
+    @Test
     public void testSemanticsFailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, body.getAsJsonObject());
+        File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void testSemanticsFailureEventArray() throws Exception {
+        File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void testEiffel3SuccessEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, body.getAsJsonObject());
+        File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void testEiffel3SuccessEventArray() throws Exception {
+        File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void testEiffel3FailureEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, body.getAsJsonObject());
+        File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
+    public void testEiffel3FailureEventArray() throws Exception {
+        File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
+        JsonParser parser = new JsonParser();
+        JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+    @Test
     public void testMessageServiceUnavailableEvent() throws Exception {
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, body.getAsJsonObject());
+        File file = new File("src/test/resources/ArtifactCreated.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, json);
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @Test
     public void testlenientValidation() throws Exception {
+        File file = new File("src/test/resources/ArtifactCreated.json");
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
         unit.setLenientValidationEnabledToUsers(true);
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, body.getAsJsonObject());
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
+    @Test
+    public void testlenientValidationEventArray() throws Exception {
+        File file = new File("src/test/resources/ArtifactCreatedEventArray.json");
+        JsonParser parser = new JsonParser();
+        JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
+        unit.setLenientValidationEnabledToUsers(true);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, json);
+        assertEquals(elem.getStatusCode(), HttpStatus.OK);
+    }
     @Test
     public void testJasyptFileSuccess() throws IOException {
         String jasyptPath = "src/test/resources/jasypt.key";
