@@ -173,7 +173,7 @@ public class EiffelRemremControllerIT {
                 .contentType("application/json")
                 .body(activityFinishedDuplicateKeysBody)
                 .when()
-                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEven")
+                    .post("/eiffelsemantics?msgType=EiffelActivityFinishedEvent")
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
