@@ -57,4 +57,10 @@ public final class RemremGenerateServiceConstants {
         public static final String LenientValidation = "okToLeaveOutInvalidOptionalFields true will remove the optional "
                 + "event fields from the input event data that does not validate successfully, "
                 + "and add those removed field information into customData/remremGenerateFailures";
+
+        public static final String JSON_STATUS_CODE = "status code";
+
+        public static final String JSON_STATUS_RESULT = "result";
+
+        public static final String META = "meta";
 }
