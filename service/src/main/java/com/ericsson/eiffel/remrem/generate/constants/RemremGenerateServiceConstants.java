@@ -63,4 +63,6 @@ public final class RemremGenerateServiceConstants {
         public static final String JSON_STATUS_RESULT = "result";
 
         public static final String META = "meta";
+
+        public static final String JSON_ERROR_STATUS = "fail";
 }
