@@ -92,7 +92,6 @@ public class RemremGenerateController {
      * the string in to JsonElement not using JsonElement directly here.
      *
      * <p>
-     * <p>
      * Parameters: msgProtocol - The message protocol, which tells us which
      * service to invoke. msgType - The type of message that needs to be
      * generated. body - The content of the message which is used in
@@ -127,7 +126,7 @@ public class RemremGenerateController {
                     lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
-            log.error("Invalid JSON parse data format due to:", e.getMessage());
+            log.error("Invalid JSON parse data format due to", e.getMessage());
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: " + exceptionMessage, "fatal",
                     errorResponse);
         }
@@ -137,8 +136,6 @@ public class RemremGenerateController {
      * Returns event information as json element based on the message protocol,
      * taking message type and json body as input
      * Here we basically add this to handle if inputData is of jsonArray type as well
-     *
-     * <p>
      * <p>
      * Parameters: msgProtocol - The message protocol, which tells us which
      * service to invoke. msgType - The type of message that needs to be
@@ -158,7 +155,7 @@ public class RemremGenerateController {
                 return new ResponseEntity<>("Parameter 'lookupLimit' must be > 0", HttpStatus.BAD_REQUEST);
             }
             if (inputData == null) {
-                createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
+                return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
                         "Parameter 'inputData' must not be null", errorResponse);
             }
 
@@ -182,7 +179,7 @@ public class RemremGenerateController {
                 JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
 
-                HttpStatus status=null;
+                HttpStatus status = null;
                 if (processedJson.has(META)) {
                     status = HttpStatus.OK;
                     return new ResponseEntity<>(processedJson, status);
@@ -199,7 +196,7 @@ public class RemremGenerateController {
                         "Invalid JSON format,expected either single template or array of templates",
                         JSON_ERROR_STATUS, errorResponse);
             }
-        } catch (REMGenerateException | JsonSyntaxException e) {
+        } catch (REMGenerateException | JsonSyntaxException | NumberFormatException e) {
             return handleException(e);
         }
     }
@@ -231,7 +228,6 @@ public class RemremGenerateController {
      * @param e taken general exception here
      * @return ResponseEntity
      */
-
     private ResponseEntity<JsonObject> handleException(Exception e) {
         JsonObject errorResponse = new JsonObject();
         String exceptionMessage = e.getMessage();
@@ -245,10 +241,13 @@ public class RemremGenerateController {
                             status, e.getMessage(), JSON_ERROR_STATUS, errorResponse);
                 }
             }
-            return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, errorResponse);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
         } else if (e instanceof JsonSyntaxException) {
-            log.error("Failed to parse JSON: ", exceptionMessage);
-            return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, errorResponse);
+            log.error("Failed to parse JSON", exceptionMessage);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
+        } else if (e instanceof NumberFormatException) {
+            log.error("Invalid number format", exceptionMessage);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
         } else {
             log.error("Unexpected exception caught", exceptionMessage);
             return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
