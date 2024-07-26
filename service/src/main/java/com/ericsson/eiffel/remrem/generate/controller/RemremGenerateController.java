@@ -77,10 +77,10 @@ public class RemremGenerateController {
     private boolean lenientValidationEnabledToUsers;
 
     public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
-		this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
-	}
+        this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
+    }
 
-	private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = new RestTemplate();
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -114,9 +114,7 @@ public class RemremGenerateController {
                                       @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
                                       @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
                                       @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
-        JsonObject errorResponse = null;
         try {
-            errorResponse = new JsonObject();
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
             ObjectMapper mapper = new ObjectMapper(jsonFactory);
             JsonNode node = mapper.readTree(body);
@@ -127,8 +125,8 @@ public class RemremGenerateController {
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
             log.error("Invalid JSON parse data format due to", e.getMessage());
-            return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: " + exceptionMessage, "fatal",
-                    errorResponse);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: "
+                    + exceptionMessage, "fatal");
         }
     }
 
@@ -149,14 +147,13 @@ public class RemremGenerateController {
                                       final Boolean okToLeaveOutInvalidOptionalFields, JsonElement inputData) {
 
         JsonArray generatedEventResults = new JsonArray();
-        JsonObject errorResponse = new JsonObject();
         try {
             if (lookupLimit <= 0) {
                 return new ResponseEntity<>("Parameter 'lookupLimit' must be > 0", HttpStatus.BAD_REQUEST);
             }
             if (inputData == null) {
                 return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
-                        "Parameter 'inputData' must not be null", errorResponse);
+                        "Parameter 'inputData' must not be null");
             }
 
             if (inputData.isJsonArray()) {
@@ -178,15 +175,15 @@ public class RemremGenerateController {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
                 JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
-
                 HttpStatus status = null;
                 if (processedJson.has(META)) {
                     status = HttpStatus.OK;
                     return new ResponseEntity<>(processedJson, status);
                 } else if (processedJson.has(JSON_STATUS_CODE)) {
                     String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
-                    status = HttpStatus.resolve(Integer.parseInt(statusValue));
-                    return new ResponseEntity<>(processedJson, status);
+                        status = HttpStatus.resolve(Integer.parseInt(statusValue));
+                        return new ResponseEntity<>(processedJson, status);
+
                 } else {
                     return new ResponseEntity<>(processedJson, HttpStatus.SERVICE_UNAVAILABLE);
                 }
@@ -194,9 +191,13 @@ public class RemremGenerateController {
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
                         "Invalid JSON format,expected either single template or array of templates",
-                        JSON_ERROR_STATUS, errorResponse);
+                        JSON_ERROR_STATUS);
             }
-        } catch (REMGenerateException | JsonSyntaxException | NumberFormatException e) {
+        } catch (NumberFormatException e){
+            String exceptionMessage = e.getMessage();
+            log.error("Invalid number format", exceptionMessage);
+            return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
+        } catch (REMGenerateException | JsonSyntaxException e) {
             return handleException(e);
         }
     }
@@ -215,6 +216,9 @@ public class RemremGenerateController {
         initializeResponse(status, responseMessage, resultMessage, errorResponse);
         return new ResponseEntity<>(errorResponse, status);
     }
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage) {
+        return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
+    }
 
     public void initializeResponse(HttpStatus status, String errorMessage, String resultMessage,
                                    JsonObject errorResponse) {
@@ -229,7 +233,6 @@ public class RemremGenerateController {
      * @return ResponseEntity
      */
     private ResponseEntity<JsonObject> handleException(Exception e) {
-        JsonObject errorResponse = new JsonObject();
         String exceptionMessage = e.getMessage();
         if (e instanceof REMGenerateException) {
             List<HttpStatus> statuses = List.of(
@@ -238,19 +241,19 @@ public class RemremGenerateController {
             for (HttpStatus status : statuses) {
                 if (exceptionMessage.contains(Integer.toString(status.value()))) {
                     return createResponseEntity(
-                            status, e.getMessage(), JSON_ERROR_STATUS, errorResponse);
+                            status, e.getMessage(), JSON_ERROR_STATUS);
                 }
             }
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
         } else if (e instanceof JsonSyntaxException) {
             log.error("Failed to parse JSON", exceptionMessage);
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
-        } else if (e instanceof NumberFormatException) {
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+        } /*else if (e instanceof NumberFormatException) {
             log.error("Invalid number format", exceptionMessage);
             return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
-        } else {
+        }*/ else {
             log.error("Unexpected exception caught", exceptionMessage);
-            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS, errorResponse);
+            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS);
         }
     }
 
@@ -270,7 +273,6 @@ public class RemremGenerateController {
     public JsonObject processEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
                                    Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
-        JsonObject eventResponse = new JsonObject();
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
@@ -278,13 +280,14 @@ public class RemremGenerateController {
 
         if (msgService == null) {
             return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, JSON_ERROR_STATUS,
-                    "No protocol service has been found registered", eventResponse).getBody();
+                    "No protocol service has been found registered").getBody();
         }
         String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
         parsedResponse = JsonParser.parseString(response);
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
+            JsonObject eventResponse = new JsonObject();
             createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS, TEMPLATE_ERROR, eventResponse);
             return eventResponse;
         } else {
