@@ -125,7 +125,7 @@ public class RemremGenerateController {
                     lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
-            log.error("Invalid JSON parse data format due to", e.getMessage());
+            log.error("Invalid JSON parse data format due to", exceptionMessage);
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: "
                     + exceptionMessage, JSON_FATAL_STATUS);
         }
@@ -177,24 +177,23 @@ public class RemremGenerateController {
                 JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
                 HttpStatus status;
-                String statusValue = null;
                 if (processedJson.has(META)) {
                     status = HttpStatus.OK;
                     return new ResponseEntity<>(processedJson, status);
                 } else if (processedJson.has(JSON_STATUS_CODE)) {
-                    statusValue = processedJson.get(JSON_STATUS_CODE).toString();
+                    String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
                     try {
                         status = HttpStatus.resolve(Integer.parseInt(statusValue));
                         return new ResponseEntity<>(processedJson, status);
                     } catch (NumberFormatException e) {
-                        log.error("Invalid status value: '" + statusValue + "' of response " + processedJson);
-                        return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid status value: '"
-                                + statusValue + "' of response " + processedJson, JSON_ERROR_STATUS);
+                        String errorMessage = "Invalid status value: '" + statusValue + "' of response " + processedJson;
+                        log.error(errorMessage);
+                        return createResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, JSON_ERROR_STATUS);
                     }
                 } else {
-                    log.error("There is no status value: '" + statusValue + "' in the response" + processedJson);
-                    return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "There is no status value: '"
-                            + statusValue + "' in the response " + processedJson, JSON_ERROR_STATUS);
+                    String errorMessage = "There is no status value in the response " + processedJson;
+                    log.error(errorMessage);
+                    return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, JSON_ERROR_STATUS);
                 }
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
@@ -238,11 +237,11 @@ public class RemremGenerateController {
     private ResponseEntity<JsonObject> handleException(Exception e) {
         String exceptionMessage = e.getMessage();
         if (e instanceof REMGenerateException) {
-            List<HttpStatus> statuseList = List.of(
+            List<HttpStatus> statusList = List.of(
                     HttpStatus.NOT_ACCEPTABLE, HttpStatus.EXPECTATION_FAILED, HttpStatus.SERVICE_UNAVAILABLE,
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
-            for (HttpStatus status : statuseList) {
+            for (HttpStatus status : statusList) {
                 if (exceptionMessage.contains(Integer.toString(status.value()))) {
                     return createResponseEntity(status, exceptionMessage, JSON_ERROR_STATUS);
                 }
