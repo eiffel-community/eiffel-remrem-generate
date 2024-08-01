@@ -205,13 +205,12 @@ public class RemremGenerateController {
         }
     }
 
-
     /**
      * To display response in browser or application
-     * @param status          response code for the HTTP request
+     * @param status response code for the HTTP request
      * @param responseMessage the message according to response
-     * @param resultMessage   whatever the result this message gives you idea about that
-     * @param errorResponse   is to collect all the responses here.
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @param errorResponse is to collect all the responses here.
      * @return ResponseEntity
      */
     public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage,
@@ -219,10 +218,24 @@ public class RemremGenerateController {
         initializeResponse(status, responseMessage, resultMessage, errorResponse);
         return new ResponseEntity<>(errorResponse, status);
     }
+
+    /**
+     * To display response in browser or application
+     * @param status response code for the HTTP request
+     * @param responseMessage the message according to response
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @return ResponseEntity
+     */
     public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage) {
         return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
     }
 
+    /**
+     * To initialize in the @{createResponseEntity} method
+     * @param status response code for the HTTP request
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @param errorResponse is to collect all the responses here.
+     */
     public void initializeResponse(HttpStatus status, String errorMessage, String resultMessage, JsonObject errorResponse) {
         errorResponse.addProperty(JSON_STATUS_CODE, status.value());
         errorResponse.addProperty(JSON_STATUS_RESULT, resultMessage);
@@ -268,7 +281,6 @@ public class RemremGenerateController {
      * @param jsonObject The content of the message which is used in creating the event details.
      * @return JsonObject generated event
      */
-
     public JsonObject processEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
                                    Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {

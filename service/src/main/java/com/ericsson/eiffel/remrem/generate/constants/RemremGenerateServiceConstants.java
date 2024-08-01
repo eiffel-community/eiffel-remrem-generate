@@ -25,7 +25,7 @@ public final class RemremGenerateServiceConstants {
         public static final String NO_TEMPLATE_ERROR = "{\"status_code\": 404, \"result\": \"FAIL\", "
                 + "\"message\":\"Requested template is not available\"}";
 
-        public static final String TEMPLATE_ERROR = "{\"status_code\": 400, \"result\": \"FAIL\", "
+        public static final String TEMPLATE_ERROR = "{\"status_code\": 400, \"result\": \"fail\", "
                 + "\"message\":\"Template is not correct format or something is missing in the template, please check\"}";
 
         public static final String INTERNAL_SERVER_ERROR = "{\"status_code\": 500, \"result\": \"FAIL\", "
