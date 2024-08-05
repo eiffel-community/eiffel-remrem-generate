@@ -215,7 +215,7 @@ public class RemremGenerateController {
      */
     public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage,
                                                            JsonObject errorResponse) {
-        initializeResponse(status, responseMessage, resultMessage, errorResponse);
+        initializeResponse(status, resultMessage, responseMessage, errorResponse);
         return new ResponseEntity<>(errorResponse, status);
     }
 
@@ -226,7 +226,7 @@ public class RemremGenerateController {
      * @param resultMessage whatever the result this message gives you idea about that
      * @return ResponseEntity
      */
-    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage) {
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String resultMessage, String responseMessage) {
         return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
     }
 
@@ -236,7 +236,7 @@ public class RemremGenerateController {
      * @param resultMessage whatever the result this message gives you idea about that
      * @param errorResponse is to collect all the responses here.
      */
-    public void initializeResponse(HttpStatus status, String errorMessage, String resultMessage, JsonObject errorResponse) {
+    public void initializeResponse(HttpStatus status, String resultMessage, String errorMessage, JsonObject errorResponse) {
         errorResponse.addProperty(JSON_STATUS_CODE, status.value());
         errorResponse.addProperty(JSON_STATUS_RESULT, resultMessage);
         errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
@@ -299,7 +299,7 @@ public class RemremGenerateController {
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
             JsonObject eventResponse = new JsonObject();
-            createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS, TEMPLATE_ERROR, eventResponse);
+            createResponseEntity(HttpStatus.BAD_REQUEST, parsedJson.toString(), JSON_ERROR_STATUS, eventResponse);
             return eventResponse;
         } else {
             return parsedJson;
