@@ -165,12 +165,21 @@ public class RemremGenerateController {
                             okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
                     generatedEventResults.add(generatedEvent);
                 }
-                boolean success = true;
+                boolean allSuccess = true;
+                boolean partialSuccess = false;
                 for (JsonElement result : generatedEventResults) {
                     JsonObject jsonObject = result.getAsJsonObject();
-                    success &= jsonObject.has(META);
+                    allSuccess &= jsonObject.has(META);
+                    partialSuccess |= jsonObject.has(META);
                 }
-                return new ResponseEntity<>(generatedEventResults, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+                HttpStatus eventStatus = HttpStatus.BAD_REQUEST;
+                if (allSuccess){
+                    eventStatus = HttpStatus.OK;
+                }
+                else if (partialSuccess){
+                   eventStatus = HttpStatus.MULTI_STATUS;
+                }
+                return new ResponseEntity<>(generatedEventResults, eventStatus);
 
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
