@@ -139,7 +139,133 @@ Status codes are generated according to the below table.
 | 503         | Service Unavailable   | "No protocol service has been found registered"                                                                               | When specified message protocol is not loaded                                                                                                                                   |
 | 207         | Multi Status          | Multi-Status                                                                                                                  | Is returned when there's a partial success, i.e. some events failed, some successfully generated/published, return status should be 207.                                        |
 
+### Examples:
 
+There is some examples of passing an array of events and what their responses can be
+
+#### Templates for successful array of events :
+
+```
+[{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "ACTIVITY_EXECUTION",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]}},
+{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "ACTIVITY_EXECUTION",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]
+  }}]
+
+```
+
+#### Response:
+
+200
+
+In the above array of event both the event template is correct, so that's why response code is appeared as  200
+
+#### Template for partial successful or unsuccessful array of events :
+
+```
+[{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]}},
+{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "ACTIVITY_EXECUTION",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]
+  }}]
+
+```
+
+#### Response:
+
+207
+
+In the above array of event, in the first template links type is missing and for second one links type is there, so first one is correct and second one is incorrect.
+So that's why in response we have multi status and it appeared as 207.
+
+#### Template for all unsuccessful array of events :
+
+```
+[{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]}},
+{
+  "msgParams": {
+    "meta": {........
+      "source": {......}
+    }
+  },
+  "eventParams": {
+    "data": {......},
+    "links": [
+      {
+        "type": "",
+        "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
+      }
+    ]
+  }}]
+
+```
+
+#### Response:
+
+400
+
+In the above array of event both the event template have not links type that's make him an incorrect event, So that's why the response is appeared as 400.
 
 ## Lookups
 
