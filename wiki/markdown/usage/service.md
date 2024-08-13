@@ -130,6 +130,7 @@ Status codes are generated according to the below table.
 | Status code | Result                | Message                                                                                                                       | Comment                                                                                                                                                                         |
 |-------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 200         | OK                    |                                                                                                                               | Event generated successfully                                                                                                                                                    |
+| 207         | Multi Status          | Multi-Status                                                                                                                  | Is returned when there's a partial success, i.e. some events failed, some successfully generated, return status should be 207.                                                  |
 | 400         | Bad Request           | Could not read document: Unrecognized token                                                                                   | Malformed JSON (missing braces or wrong event type, etc..), client need to fix problem in event before submitting again                                                         |
 | 404         | Not Found             | Requested template is not available                                                                                           | The endpoint is not found, or template for specified event type is not found                                                                                                    |
 | 406         | Not Acceptable        | No event id found with ERLookup properties, Lenient Validation disabled in configuration and user requested through REST call | Is returned if no event id fetched from configured event repository in REMReM generate, Lenient validation is not enabled in configuration, your not alloed to use this option. |
@@ -137,10 +138,9 @@ Status codes are generated according to the below table.
 | 422         | Unprocessable Entity  | Link specific lookup options could not be fulfilled                                                                           | Is returned if Link specific lookup options could not be matched with failIfMultipleFound and failIfNoneFound.                                                                  |
 | 500         | Internal Server Error | Internal server error                                                                                                         | When REMReM Generate is down, possible to try again later when server is up                                                                                                     |
 | 503         | Service Unavailable   | "No protocol service has been found registered"                                                                               | When specified message protocol is not loaded                                                                                                                                   |
-| 207         | Multi Status          | Multi-Status                                                                                                                  | Is returned when there's a partial success, i.e. some events failed, some successfully generated/published, return status should be 207.                                        |
 
 
-NOTE: In the array of event if any of the event have not correct or valid JSON format,
+NOTE: In the array of event if any of the event have not valid JSON format,
 then in response body we have only one response for that invalid JSON event, it is because the parser can't parse the invalid JSON format here.
 
 ### Examples:
@@ -307,7 +307,7 @@ In the above array of event both the event template is correct, so that's why re
       }
     ]
   },
-{
+  {
     "status code": 400,
     "result": "FAIL",
     "message": "{\"message\":\"Cannot validate given JSON string\",\"cause\":\"com.ericsson.eiffel.remrem.semantics.validator.EiffelValidationException: Mandatory link type ACTIVITY_EXECUTION is missing\"}"
@@ -341,7 +341,7 @@ So that's why in response we have multi status and it appeared as 207.
         "target": "2d4849ec-53b9-4c3f-8b15-390d0ff33cfc"
       }
     ]}},
-{
+  {
   "msgParams": {
     "meta": {........
       "source": {......}
