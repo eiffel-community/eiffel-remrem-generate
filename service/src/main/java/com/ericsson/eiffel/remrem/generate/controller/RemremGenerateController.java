@@ -18,12 +18,12 @@ import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
 
 import ch.qos.logback.classic.Logger;
 import io.swagger.annotations.*;
@@ -46,13 +46,12 @@ import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
 
 @RestController
 @RequestMapping("/*")
@@ -78,10 +77,10 @@ public class RemremGenerateController {
     private boolean lenientValidationEnabledToUsers;
 
     public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
-		this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
-	}
+        this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
+    }
 
-	private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = new RestTemplate();
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -89,73 +88,230 @@ public class RemremGenerateController {
 
     /**
      * Returns event information as json element based on the message protocol,
-     * taking message type and json body as input.
-     * <p>
+     * taking message type and json body of string type as input because just to parse
+     * the string in to JsonElement not using JsonElement directly here.
+     *
      * <p>
      * Parameters: msgProtocol - The message protocol, which tells us which
      * service to invoke. msgType - The type of message that needs to be
-     * generated. bodyJson - The content of the message which is used in
+     * generated. body - The content of the message which is used in
      * creating the event details.
      * <p>
      * Returns: The event information as a json element
      */
+
     @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event sent successfully"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Event sent successfully"),
             @ApiResponse(code = 400, message = "Malformed JSON"),
             @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+            @ApiResponse(code = 503, message = "Message protocol is invalid")})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
-            @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
-            @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
-            @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
-            @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false")  final Boolean okToLeaveOutInvalidOptionalFields,
-            @ApiParam(value = "JSON message", required = true) @RequestBody JsonObject bodyJson) {
-
+    public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
+                                      @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
+                                      @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+                                      @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
+                                      @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
         try {
-            bodyJson = erLookup(bodyJson, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
-            MsgService msgService = getMessageService(msgProtocol);
-            String response;
-            if (msgService != null) {
-                response = msgService.generateMsg(msgType, bodyJson, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
-                JsonElement parsedResponse = parser.parse(response);
-                if(lookupLimit <= 0) {
-                    return new ResponseEntity<>("LookupLimit must be greater than or equals to 1", HttpStatus.BAD_REQUEST);
+            JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
+                    .Feature.STRICT_DUPLICATE_DETECTION);
+            ObjectMapper mapper = new ObjectMapper(jsonFactory);
+            JsonNode node = mapper.readTree(body);
+            Gson gson = new Gson();
+            JsonElement inputJson = gson.fromJson(node.toString(), JsonElement.class);
+            return generate(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound, lookupInExternalERs,
+                    lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
+        } catch (JsonSyntaxException | JsonProcessingException e) {
+            String exceptionMessage = e.getMessage();
+            log.error("Invalid JSON parse data format due to", exceptionMessage);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: "
+                    + exceptionMessage, JSON_FATAL_STATUS);
+        }
+    }
+
+    /**
+     * Returns event information as json element based on the message protocol,
+     * taking message type and json body as input
+     * Here we basically add this to handle if inputData is of jsonArray type as well
+     * <p>
+     * Parameters: msgProtocol - The message protocol, which tells us which
+     * service to invoke. msgType - The type of message that needs to be
+     * generated. inputData - The content of the message which is used in
+     * creating the event details.
+     * <p>
+     * Returns: The event information as a json element
+     */
+    public ResponseEntity<?> generate(final String msgProtocol, final String msgType, final Boolean failIfMultipleFound,
+                                      final Boolean failIfNoneFound, final Boolean lookupInExternalERs, final int lookupLimit,
+                                      final Boolean okToLeaveOutInvalidOptionalFields, JsonElement inputData) {
+
+        JsonArray generatedEventResults = new JsonArray();
+        try {
+            if (lookupLimit <= 0) {
+                return new ResponseEntity<>("Parameter 'lookupLimit' must be > 0", HttpStatus.BAD_REQUEST);
+            }
+            if (inputData == null) {
+                return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'inputData' must not be null",
+                        JSON_ERROR_STATUS);
+            }
+
+            if (inputData.isJsonArray()) {
+                JsonArray inputEventJsonArray = inputData.getAsJsonArray();
+                for (JsonElement element : inputEventJsonArray) {
+                    JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
+                            failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
+                            okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
+                    generatedEventResults.add(generatedEvent);
                 }
-                if (!parsedResponse.getAsJsonObject().has(RemremGenerateServiceConstants.JSON_ERROR_MESSAGE_FIELD)) {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.OK);
+                boolean allSuccess = true;
+                boolean partialSuccess = false;
+                for (JsonElement result : generatedEventResults) {
+                    JsonObject jsonObject = result.getAsJsonObject();
+                    allSuccess &= jsonObject.has(META);
+                    partialSuccess |= jsonObject.has(META);
+                }
+                HttpStatus eventStatus = HttpStatus.BAD_REQUEST;
+                if (allSuccess){
+                    eventStatus = HttpStatus.OK;
+                }
+                else if (partialSuccess){
+                   eventStatus = HttpStatus.MULTI_STATUS;
+                }
+                return new ResponseEntity<>(generatedEventResults, eventStatus);
+
+            } else if (inputData.isJsonObject()) {
+                JsonObject inputJsonObject = inputData.getAsJsonObject();
+                JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
+                        lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
+                HttpStatus status;
+                if (processedJson.has(META)) {
+                    status = HttpStatus.OK;
+                    return new ResponseEntity<>(processedJson, status);
+                } else if (processedJson.has(JSON_STATUS_CODE)) {
+                    String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
+                    try {
+                        status = HttpStatus.resolve(Integer.parseInt(statusValue));
+                        return new ResponseEntity<>(processedJson, status);
+                    } catch (NumberFormatException e) {
+                        String errorMessage = "Invalid status value: '" + statusValue + "' of response " + processedJson;
+                        log.error(errorMessage);
+                        return createResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, JSON_ERROR_STATUS);
+                    }
                 } else {
-                    return new ResponseEntity<>(parsedResponse, HttpStatus.BAD_REQUEST);
+                    String errorMessage = "There is no status value in the response " + processedJson;
+                    log.error(errorMessage);
+                    return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, JSON_ERROR_STATUS);
                 }
             } else {
-                return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_SERVICE_ERROR),
-                        HttpStatus.SERVICE_UNAVAILABLE);
+                return createResponseEntity(HttpStatus.BAD_REQUEST,
+                        "Invalid JSON format,expected either single template or array of templates",
+                        JSON_ERROR_STATUS);
             }
-        } catch (REMGenerateException e1) {
-            if (e1.getMessage().contains(Integer.toString(HttpStatus.NOT_ACCEPTABLE.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+        } catch (REMGenerateException | JsonSyntaxException e) {
+            return handleException(e);
+        }
+    }
+
+    /**
+     * To display response in browser or application
+     * @param status response code for the HTTP request
+     * @param responseMessage the message according to response
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @param errorResponse is to collect all the responses here.
+     * @return ResponseEntity
+     */
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage,
+                                                           JsonObject errorResponse) {
+        initializeResponse(status, resultMessage, responseMessage, errorResponse);
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    /**
+     * To display response in browser or application
+     * @param status response code for the HTTP request
+     * @param responseMessage the message according to response
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @return ResponseEntity
+     */
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String resultMessage, String responseMessage) {
+        return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
+    }
+
+    /**
+     * To initialize in the @{createResponseEntity} method
+     * @param status response code for the HTTP request
+     * @param resultMessage whatever the result this message gives you idea about that
+     * @param errorResponse is to collect all the responses here.
+     */
+    public void initializeResponse(HttpStatus status, String resultMessage, String errorMessage, JsonObject errorResponse) {
+        errorResponse.addProperty(JSON_STATUS_CODE, status.value());
+        errorResponse.addProperty(JSON_STATUS_RESULT, resultMessage);
+        errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
+    }
+
+    /**
+     * To handle the exception in one method
+     * @param e taken general exception here
+     * @return ResponseEntity
+     */
+    private ResponseEntity<JsonObject> handleException(Exception e) {
+        String exceptionMessage = e.getMessage();
+        if (e instanceof REMGenerateException) {
+            List<HttpStatus> statusList = List.of(
+                    HttpStatus.NOT_ACCEPTABLE, HttpStatus.EXPECTATION_FAILED, HttpStatus.SERVICE_UNAVAILABLE,
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+            for (HttpStatus status : statusList) {
+                if (exceptionMessage.contains(Integer.toString(status.value()))) {
+                    return createResponseEntity(status, exceptionMessage, JSON_ERROR_STATUS);
+                }
             }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage().contains(Integer.toString(HttpStatus.EXPECTATION_FAILED.value()))) {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.EXPECTATION_FAILED);
-            }
-            else if (e1.getMessage()
-                       .contains(Integer.toString(HttpStatus.SERVICE_UNAVAILABLE.value()))) {
-                return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.NO_ER),
-                        HttpStatus.SERVICE_UNAVAILABLE);
-            }
-            else {
-                return new ResponseEntity<>(parser.parse(e1.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-        } catch (Exception e) {
-            log.error("Unexpected exception caught", e);
-            return new ResponseEntity<>(parser.parse(RemremGenerateServiceConstants.INTERNAL_SERVER_ERROR),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+        } else if (e instanceof JsonSyntaxException) {
+            log.error("Failed to parse JSON", exceptionMessage);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+        } else {
+            log.error("Unexpected exception caught", exceptionMessage);
+            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS);
+        }
+    }
+
+    /**
+     * This helper method basically generate or process single event
+     * @param msgProtocol The message protocol, which tells us which service to invoke
+     * @param msgType The type of message that needs to be generated. inputData
+     * @param failIfMultipleFound
+     * @param failIfNoneFound
+     * @param lookupInExternalERs
+     * @param lookupLimit
+     * @param okToLeaveOutInvalidOptionalFields
+     * @param jsonObject The content of the message which is used in creating the event details.
+     * @return JsonObject generated event
+     */
+    public JsonObject processEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
+                                   Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
+                                   Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+        JsonElement parsedResponse;
+
+        JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
+        MsgService msgService = getMessageService(msgProtocol);
+
+        if (msgService == null) {
+            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE,
+                    "No protocol service has been found registered", JSON_ERROR_STATUS).getBody();
+        }
+        String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+        parsedResponse = JsonParser.parseString(response);
+        JsonObject parsedJson = parsedResponse.getAsJsonObject();
+
+        if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
+            JsonObject eventResponse = new JsonObject();
+            createResponseEntity(HttpStatus.BAD_REQUEST, parsedJson.toString(), JSON_ERROR_STATUS, eventResponse);
+            return eventResponse;
+        } else {
+            return parsedJson;
         }
     }
 

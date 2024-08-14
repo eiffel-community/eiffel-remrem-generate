@@ -25,6 +25,9 @@ public final class RemremGenerateServiceConstants {
         public static final String NO_TEMPLATE_ERROR = "{\"status_code\": 404, \"result\": \"FAIL\", "
                 + "\"message\":\"Requested template is not available\"}";
 
+        public static final String TEMPLATE_ERROR = "{\"status_code\": 400, \"result\": \"FAIL\", "
+                + "\"message\":\"Template is not correct format or something is missing in the template, please check\"}";
+
         public static final String INTERNAL_SERVER_ERROR = "{\"status_code\": 500, \"result\": \"FAIL\", "
                 + "\"message\":\"Internal server error\"}";
 
@@ -54,4 +57,14 @@ public final class RemremGenerateServiceConstants {
         public static final String LenientValidation = "okToLeaveOutInvalidOptionalFields true will remove the optional "
                 + "event fields from the input event data that does not validate successfully, "
                 + "and add those removed field information into customData/remremGenerateFailures";
+
+        public static final String JSON_STATUS_CODE = "status code";
+
+        public static final String JSON_STATUS_RESULT = "result";
+
+        public static final String META = "meta";
+
+        public static final String JSON_ERROR_STATUS = "FAIL";
+
+        public static final String JSON_FATAL_STATUS = "FATAL";
 }
