@@ -76,6 +76,13 @@ public class RemremGenerateController {
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
+    @Value("${maxEventsOfInputArray:250}")
+    private int maxSize;
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
     public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
         this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
     }
@@ -159,6 +166,14 @@ public class RemremGenerateController {
 
             if (inputData.isJsonArray()) {
                 JsonArray inputEventJsonArray = inputData.getAsJsonArray();
+
+                if (inputEventJsonArray.size() > maxSize) {
+                    return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
+                            "The number of events in the input array is exceeded the allowed limit of 250 events. " +
+                                    "This issue occurred because the input array contains more than 250 events, which is not supported by the system. "
+                                    + "To resolve this, please divide the events in to smaller arrays, ensuring each array contains no more than 250 events,"
+                                    + "and try to generate them again. This limitation helps to maintain system performance and stability.");
+                }
                 for (JsonElement element : inputEventJsonArray) {
                     JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
                             failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
