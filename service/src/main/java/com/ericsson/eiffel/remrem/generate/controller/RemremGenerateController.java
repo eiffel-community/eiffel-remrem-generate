@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -52,7 +53,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
-
 @RestController
 @RequestMapping("/*")
 @Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
@@ -76,12 +76,8 @@ public class RemremGenerateController {
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
-    @Value("${maxEventsOfInputArray:250}")
-    private int maxSize;
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
+    @Value("${maxSizeOfInputArray:250}")
+    private int maxSizeOfInputArray = 250;
 
     public void setLenientValidationEnabledToUsers(boolean lenientValidationEnabledToUsers) {
         this.lenientValidationEnabledToUsers = lenientValidationEnabledToUsers;
@@ -167,12 +163,10 @@ public class RemremGenerateController {
             if (inputData.isJsonArray()) {
                 JsonArray inputEventJsonArray = inputData.getAsJsonArray();
 
-                if (inputEventJsonArray.size() > maxSize) {
+                if (inputEventJsonArray.size() > maxSizeOfInputArray) {
                     return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
-                            "The number of events in the input array is exceeded the allowed limit of 250 events. " +
-                                    "This issue occurred because the input array contains more than 250 events, which is not supported by the system. "
-                                    + "To resolve this, please divide the events in to smaller arrays, ensuring each array contains no more than 250 events,"
-                                    + "and try to generate them again. This limitation helps to maintain system performance and stability.");
+                            "The number of events in the input array is to high: " + inputEventJsonArray.size() + " > " + maxSizeOfInputArray + ", " +
+                                    "You can modify the property 'maxSizeOfInputArray' to increase it ");
                 }
                 for (JsonElement element : inputEventJsonArray) {
                     JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
