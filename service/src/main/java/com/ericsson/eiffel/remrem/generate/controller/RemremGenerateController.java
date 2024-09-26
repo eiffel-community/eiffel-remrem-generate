@@ -165,8 +165,8 @@ public class RemremGenerateController {
 
                 if (inputEventJsonArray.size() > maxSizeOfInputArray) {
                     return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
-                            "The number of events in the input array is to high: " + inputEventJsonArray.size() + " > " + maxSizeOfInputArray + ", " +
-                                    "You can modify the property 'maxSizeOfInputArray' to increase it ");
+                            "The number of events in the input array is too high: " + inputEventJsonArray.size() + " > "
+                                    + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.");
                 }
                 for (JsonElement element : inputEventJsonArray) {
                     JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
