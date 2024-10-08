@@ -147,8 +147,7 @@ then in response body we have only one response for that invalid JSON event, it 
 
 There is some examples of passing an array of events and what their responses can be
 
-NOTE: Here, introduction of new REMReM property for the size of number of templates in the array passed to generate endpoint. 
-Here, Maximum size of events in array is fetched from REMReM property and checked during generating.
+NOTE: Here, introduction of new REMReM property 'maxSizeOfInputArray' for the size of number of templates in the array passed to generate endpoint.
 
 #### Templates for successful array of events :
 
