@@ -1,3 +1,6 @@
+## 2.1.12
+- Endpoint /versions made more robust.
+
 ## 2.1.11
 - Made changes to /message_protocols end-point to work for old REMRem-Semantics library.
 
