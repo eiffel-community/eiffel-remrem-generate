@@ -184,8 +184,6 @@ public class RemremGenerateController {
                         throw e;
                     } catch (REMGenerateException e) {
                         // Something went wrong. Add failure description to array of results.
-                      /*  partialSuccess = true;
-                        allSuccess=false;*/
                         failedCount++;
                         JsonObject response = new JsonObject();
                         createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, response);
@@ -227,7 +225,6 @@ public class RemremGenerateController {
             return handleException(e);
         }
     }
-
 
     /**
      * To display response in browser or application
@@ -322,13 +319,8 @@ public class RemremGenerateController {
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
-//            JsonObject eventResponse = new JsonObject();
-//            createResponseEntity(HttpStatus.BAD_REQUEST, parsedJson.toString(), JSON_ERROR_STATUS, eventResponse);
-//            return eventResponse;
             throw new REMGenerateException(response);
         } else {
-           /* JsonObject eventResponse = new JsonObject();
-            createResponseEntity(HttpStatus.OK, parsedJson.toString(), "SUCCESS", eventResponse);*/
             return parsedJson;
         }
     }
