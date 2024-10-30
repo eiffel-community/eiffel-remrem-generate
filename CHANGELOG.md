@@ -1,3 +1,6 @@
+## 2.1.13
+- Made changes to /generate end-point to work for Gen1 templates
+
 ## 2.1.11
 - Made changes to /message_protocols end-point to work for old REMRem-Semantics library.
 

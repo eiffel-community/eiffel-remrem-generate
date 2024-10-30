@@ -16,6 +16,7 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
+import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundException;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -168,25 +169,34 @@ public class RemremGenerateController {
                             "The number of events in the input array is too high: " + inputEventJsonArray.size() + " > "
                                     + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.");
                 }
+                int successCount = 0;
+                int failedCount = 0;
                 for (JsonElement element : inputEventJsonArray) {
-                    JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
-                            failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                            okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
-                    generatedEventResults.add(generatedEvent);
+                    try {
+                        JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
+                                failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
+                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
+                        generatedEventResults.add(generatedEvent);
+                        successCount++;
+                    } catch (ProtocolHandlerNotFoundException e) {
+                        // Rethrow the exception. All events in array use the same protocol. If it's handler
+                        // cannot be found for one event, the others will fail, too.
+                        throw e;
+                    } catch (REMGenerateException e) {
+                        // Something went wrong. Add failure description to array of results.
+                        failedCount++;
+                        JsonObject response = new JsonObject();
+                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, response);
+                        generatedEventResults.add(response);
+                    }
                 }
-                boolean allSuccess = true;
-                boolean partialSuccess = false;
-                for (JsonElement result : generatedEventResults) {
-                    JsonObject jsonObject = result.getAsJsonObject();
-                    allSuccess &= jsonObject.has(META);
-                    partialSuccess |= jsonObject.has(META);
-                }
-                HttpStatus eventStatus = HttpStatus.BAD_REQUEST;
-                if (allSuccess){
+                HttpStatus eventStatus;
+                if (failedCount == 0) {
                     eventStatus = HttpStatus.OK;
-                }
-                else if (partialSuccess){
-                   eventStatus = HttpStatus.MULTI_STATUS;
+                } else if (successCount > 0 && failedCount > 0) {
+                    eventStatus = HttpStatus.MULTI_STATUS;
+                } else {
+                    eventStatus = HttpStatus.BAD_REQUEST;
                 }
                 return new ResponseEntity<>(generatedEventResults, eventStatus);
 
@@ -194,20 +204,13 @@ public class RemremGenerateController {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
                 JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
-                HttpStatus status;
-                if (processedJson.has(META)) {
-                    status = HttpStatus.OK;
+                if (!processedJson.has(JSON_STATUS_CODE)) {
+                    HttpStatus status = HttpStatus.OK;
                     return new ResponseEntity<>(processedJson, status);
                 } else if (processedJson.has(JSON_STATUS_CODE)) {
                     String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
-                    try {
-                        status = HttpStatus.resolve(Integer.parseInt(statusValue));
-                        return new ResponseEntity<>(processedJson, status);
-                    } catch (NumberFormatException e) {
-                        String errorMessage = "Invalid status value: '" + statusValue + "' of response " + processedJson;
-                        log.error(errorMessage);
-                        return createResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, JSON_ERROR_STATUS);
-                    }
+                    HttpStatus status = HttpStatus.resolve(Integer.parseInt(statusValue));
+                    return new ResponseEntity<>(processedJson, status);
                 } else {
                     String errorMessage = "There is no status value in the response " + processedJson;
                     log.error(errorMessage);
@@ -316,9 +319,7 @@ public class RemremGenerateController {
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
-            JsonObject eventResponse = new JsonObject();
-            createResponseEntity(HttpStatus.BAD_REQUEST, parsedJson.toString(), JSON_ERROR_STATUS, eventResponse);
-            return eventResponse;
+            throw new REMGenerateException(response);
         } else {
             return parsedJson;
         }
