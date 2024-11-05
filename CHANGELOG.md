@@ -1,3 +1,6 @@
+## 2.1.14
+- Made changes to /generate end-point to improve efficiency how result of event generation is handled
+
 ## 2.1.13
 - Made changes to /generate end-point to work for Gen1 templates
 

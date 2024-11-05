@@ -21,7 +21,6 @@ import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
@@ -33,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -173,9 +171,9 @@ public class RemremGenerateController {
                 int failedCount = 0;
                 for (JsonElement element : inputEventJsonArray) {
                     try {
-                        JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
+                        JsonObject generatedEvent = generateEvent(msgProtocol, msgType,
                                 failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
+                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject());
                         generatedEventResults.add(generatedEvent);
                         successCount++;
                     } catch (ProtocolHandlerNotFoundException e) {
@@ -202,20 +200,9 @@ public class RemremGenerateController {
 
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
-                JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
+                JsonObject processedJson = generateEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
-                if (!processedJson.has(JSON_STATUS_CODE)) {
-                    HttpStatus status = HttpStatus.OK;
-                    return new ResponseEntity<>(processedJson, status);
-                } else if (processedJson.has(JSON_STATUS_CODE)) {
-                    String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
-                    HttpStatus status = HttpStatus.resolve(Integer.parseInt(statusValue));
-                    return new ResponseEntity<>(processedJson, status);
-                } else {
-                    String errorMessage = "There is no status value in the response " + processedJson;
-                    log.error(errorMessage);
-                    return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, JSON_ERROR_STATUS);
-                }
+                return new ResponseEntity<>(processedJson, HttpStatus.OK);
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
                         "Invalid JSON format,expected either single template or array of templates",
@@ -270,6 +257,10 @@ public class RemremGenerateController {
      */
     private ResponseEntity<JsonObject> handleException(Exception e) {
         String exceptionMessage = e.getMessage();
+        if (e instanceof ProtocolHandlerNotFoundException) {
+            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, JSON_ERROR_STATUS);
+        }
+
         if (e instanceof REMGenerateException) {
             List<HttpStatus> statusList = List.of(
                     HttpStatus.NOT_ACCEPTABLE, HttpStatus.EXPECTATION_FAILED, HttpStatus.SERVICE_UNAVAILABLE,
@@ -302,17 +293,16 @@ public class RemremGenerateController {
      * @param jsonObject The content of the message which is used in creating the event details.
      * @return JsonObject generated event
      */
-    public JsonObject processEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
-                                   Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
-                                   Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+    public JsonObject generateEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
+                                    Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
+                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
         MsgService msgService = getMessageService(msgProtocol);
 
         if (msgService == null) {
-            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE,
-                    "No protocol service has been found registered", JSON_ERROR_STATUS).getBody();
+            throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
         String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
         parsedResponse = JsonParser.parseString(response);
@@ -320,9 +310,8 @@ public class RemremGenerateController {
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
             throw new REMGenerateException(response);
-        } else {
-            return parsedJson;
         }
+        return parsedJson;
     }
 
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
