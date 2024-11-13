@@ -1,4 +1,4 @@
-## 2.1.13
+## 2.1.15
 - Endpoint /versions made more robust.
 
 ## 2.1.11
