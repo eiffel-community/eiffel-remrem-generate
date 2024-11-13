@@ -114,7 +114,9 @@ public class VersionService {
         if (indexWebInf == -1) {
             // "WEB-INF" was not found in the path, strange...
             log.error("Cannot find '" + WEB_INF + "' in the path '" + resourcesPath +
-                    "'. Not loaded from a WAR file?");
+                "'. Not loaded from a WAR file?");
+            serviceVersion.put(VERSION, "\"ERROR: " + META_INF_MANIFEST_MF +
+                " not found; was the service run from a WAR file?\"");
             return serviceVersion;
         }
 
