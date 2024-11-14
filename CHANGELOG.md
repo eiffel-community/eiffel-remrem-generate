@@ -1,3 +1,6 @@
+## 2.1.15
+- Endpoint /versions made more robust.
+
 ## 2.1.14
 - Made changes to /generate end-point to improve efficiency how result of event generation is handled
 
