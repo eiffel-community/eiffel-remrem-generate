@@ -110,7 +110,17 @@ public class VersionService {
      */
     public Map<String, String> getServiceVersion() {
         String resourcesPath = this.getClass().getClassLoader().getResource("").getPath();
-        String manifestPath = resourcesPath.substring(0, resourcesPath.lastIndexOf(WEB_INF)).concat(META_INF_MANIFEST_MF);
+        int indexWebInf = resourcesPath.lastIndexOf(WEB_INF);
+        if (indexWebInf == -1) {
+            // "WEB-INF" was not found in the path, strange...
+            log.error("Cannot find '" + WEB_INF + "' in the path '" + resourcesPath +
+                "'. Not loaded from a WAR file?");
+            serviceVersion.put(VERSION, "\"ERROR: " + META_INF_MANIFEST_MF +
+                " not found; was the service run from a WAR file?\"");
+            return serviceVersion;
+        }
+
+        String manifestPath = resourcesPath.substring(0, indexWebInf).concat(META_INF_MANIFEST_MF);
         try {
             Manifest manifest = new Manifest(new FileInputStream(manifestPath));
             Attributes mainAttribs = manifest.getMainAttributes();
