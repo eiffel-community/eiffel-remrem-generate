@@ -16,11 +16,11 @@ package com.ericsson.eiffel.remrem.generate.controller;
 
 import com.ericsson.eiffel.remrem.generate.config.ErLookUpConfig;
 import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants;
+import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundException;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
@@ -32,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -168,51 +167,42 @@ public class RemremGenerateController {
                             "The number of events in the input array is too high: " + inputEventJsonArray.size() + " > "
                                     + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.");
                 }
+                int successCount = 0;
+                int failedCount = 0;
                 for (JsonElement element : inputEventJsonArray) {
-                    JsonObject generatedEvent = (processEvent(msgProtocol, msgType,
-                            failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                            okToLeaveOutInvalidOptionalFields, element.getAsJsonObject()));
-                    generatedEventResults.add(generatedEvent);
+                    try {
+                        JsonObject generatedEvent = generateEvent(msgProtocol, msgType,
+                                failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
+                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject());
+                        generatedEventResults.add(generatedEvent);
+                        successCount++;
+                    } catch (ProtocolHandlerNotFoundException e) {
+                        // Rethrow the exception. All events in array use the same protocol. If it's handler
+                        // cannot be found for one event, the others will fail, too.
+                        throw e;
+                    } catch (REMGenerateException e) {
+                        // Something went wrong. Add failure description to array of results.
+                        failedCount++;
+                        JsonObject response = new JsonObject();
+                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, response);
+                        generatedEventResults.add(response);
+                    }
                 }
-                boolean allSuccess = true;
-                boolean partialSuccess = false;
-                for (JsonElement result : generatedEventResults) {
-                    JsonObject jsonObject = result.getAsJsonObject();
-                    allSuccess &= jsonObject.has(META);
-                    partialSuccess |= jsonObject.has(META);
-                }
-                HttpStatus eventStatus = HttpStatus.BAD_REQUEST;
-                if (allSuccess){
+                HttpStatus eventStatus;
+                if (failedCount == 0) {
                     eventStatus = HttpStatus.OK;
-                }
-                else if (partialSuccess){
-                   eventStatus = HttpStatus.MULTI_STATUS;
+                } else if (successCount > 0 && failedCount > 0) {
+                    eventStatus = HttpStatus.MULTI_STATUS;
+                } else {
+                    eventStatus = HttpStatus.BAD_REQUEST;
                 }
                 return new ResponseEntity<>(generatedEventResults, eventStatus);
 
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
-                JsonObject processedJson = processEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
+                JsonObject processedJson = generateEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
                         lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
-                HttpStatus status;
-                if (processedJson.has(META)) {
-                    status = HttpStatus.OK;
-                    return new ResponseEntity<>(processedJson, status);
-                } else if (processedJson.has(JSON_STATUS_CODE)) {
-                    String statusValue = processedJson.get(JSON_STATUS_CODE).toString();
-                    try {
-                        status = HttpStatus.resolve(Integer.parseInt(statusValue));
-                        return new ResponseEntity<>(processedJson, status);
-                    } catch (NumberFormatException e) {
-                        String errorMessage = "Invalid status value: '" + statusValue + "' of response " + processedJson;
-                        log.error(errorMessage);
-                        return createResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, JSON_ERROR_STATUS);
-                    }
-                } else {
-                    String errorMessage = "There is no status value in the response " + processedJson;
-                    log.error(errorMessage);
-                    return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, JSON_ERROR_STATUS);
-                }
+                return new ResponseEntity<>(processedJson, HttpStatus.OK);
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
                         "Invalid JSON format,expected either single template or array of templates",
@@ -267,6 +257,10 @@ public class RemremGenerateController {
      */
     private ResponseEntity<JsonObject> handleException(Exception e) {
         String exceptionMessage = e.getMessage();
+        if (e instanceof ProtocolHandlerNotFoundException) {
+            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, JSON_ERROR_STATUS);
+        }
+
         if (e instanceof REMGenerateException) {
             List<HttpStatus> statusList = List.of(
                     HttpStatus.NOT_ACCEPTABLE, HttpStatus.EXPECTATION_FAILED, HttpStatus.SERVICE_UNAVAILABLE,
@@ -299,29 +293,25 @@ public class RemremGenerateController {
      * @param jsonObject The content of the message which is used in creating the event details.
      * @return JsonObject generated event
      */
-    public JsonObject processEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
-                                   Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
-                                   Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+    public JsonObject generateEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
+                                    Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
+                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
         MsgService msgService = getMessageService(msgProtocol);
 
         if (msgService == null) {
-            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE,
-                    "No protocol service has been found registered", JSON_ERROR_STATUS).getBody();
+            throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
         String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
         parsedResponse = JsonParser.parseString(response);
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
         if (parsedJson.has(JSON_ERROR_MESSAGE_FIELD)) {
-            JsonObject eventResponse = new JsonObject();
-            createResponseEntity(HttpStatus.BAD_REQUEST, parsedJson.toString(), JSON_ERROR_STATUS, eventResponse);
-            return eventResponse;
-        } else {
-            return parsedJson;
+            throw new REMGenerateException(response);
         }
+        return parsedJson;
     }
 
     private JsonObject erLookup(final JsonObject bodyJson, Boolean failIfMultipleFound, Boolean failIfNoneFound,
