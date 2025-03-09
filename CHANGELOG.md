@@ -1,5 +1,5 @@
 ## 2.1.15
-- Ensure Eclipse Temurin is used to build the library
+- Ensure Eclipse Temurin is used to build the service
 
 ## 2.1.14
 - Made changes to /generate end-point to improve efficiency how result of event generation is handled
