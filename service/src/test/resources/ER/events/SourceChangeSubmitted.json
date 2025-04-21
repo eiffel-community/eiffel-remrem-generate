@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "id": "b80d73d6-e9b3-4e96-92dd-78030eeaf8b1",
+    "type": "EiffelSourceChangeSubmittedEvent",
+    "version": "3.0.0",
+    "time": 1744558318813,
+    "tags": [
+      ""
+    ],
+    "source": {
+      "domainId": "",
+      "host": "",
+      "name": "",
+      "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.1.7",
+      "uri": ""
+    }
+  },
+  "data": {
+    "submitter": {
+      "name": "Jane Doe",
+      "email": "jane.doe@company.com",
+      "id": "j_doe",
+      "group": "Team Wombats"
+    },
+    "gitIdentifier": {
+      "commitId": "fd090b60a4aedc5161da9c035a49b14a319829b4",
+      "branch": "",
+      "repoName": "",
+      "repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+    },
+    "svnIdentifier": {
+      "revision": 42,
+      "directory": "trunk",
+      "repoName": "Mainline",
+      "repoUri": "svn://repohost/mainline"
+    },
+    "customData": []
+  },
+  "links": []
+}

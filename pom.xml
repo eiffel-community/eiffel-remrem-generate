@@ -28,6 +28,7 @@
     <modules>
         <module>cli</module>
         <module>service</module>
+        <module>openapi</module>
     </modules>
     <repositories>
         <repository>

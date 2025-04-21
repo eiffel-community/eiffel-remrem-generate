@@ -44,7 +44,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringRunner.class)
-public class EiffelRemERLookupControllerUnitTest {
+public class EiffelRemERLookupControllerUnitTestWithMock {
     @Mock
     RestTemplate restTemplate;
 

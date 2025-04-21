@@ -1,0 +1,408 @@
+openapi: 3.0.1
+info:
+  title: Event Repository REST API
+  description: Event Repository REST API for retrieving the event information
+  contact: {}
+  version: 0.0.1
+tags:
+- name: API
+  description: Event Repository API
+
+servers:
+  - url: http://localhost:8080/api
+    description: "Tests server"
+
+paths:
+  /hohoho:
+    get:
+      tags:
+        - API
+      summary: To get all events information
+      operationId: getHohohoUsingGET
+      parameters:
+        - name: pageSize
+          in: query
+          required: false
+          description: "The number of events to be displayed per page."
+          schema:
+            type: integer
+            format: int32
+            default: 500
+        - name: params
+          in: query
+          required: false
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+      responses:
+        200:
+          description: Successfully retrieved the events
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - pageSize
+                  - totalNumberItems
+                properties:
+                  pageNo:
+                    type: integer
+                    example: 1
+                  pageSize:
+                    type: integer
+                    example: 500
+                  totalNumberItems:
+                    type: integer
+                    example: 1
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EiffelEvent"
+  /events:
+    get:
+      tags:
+      - API
+      summary: To get all events information
+      operationId: getEventsUsingGET
+      parameters:
+      - name: pageSize
+        in: query
+        required: false
+        description: "The number of events to be displayed per page."
+        schema:
+          type: integer
+          format: int32
+          default: 500
+      - name: params
+        in: query
+        required: false
+        description: |
+          To search for specific events or artifacts, filtering with parameters is supported.
+
+          **Syntax:**
+
+          `<resource>?key[.key ...]=value[&key[.key ...]=value ...]`
+
+          To traverse into nested structures and filter on their keys, namespacing with
+          `.` (dot) is used.
+
+          **Examples, single key:**
+
+          `/events?meta.type=EiffelActivityStartedEvent`
+
+          **Examples multiple keys:**
+
+          ```
+          /events?key1=value1&key2=value2
+          /events?key1=value1&key2=value2&key3=value3
+          ```
+
+          **Examples nested structures:**
+          ```
+          /events?data.identity=pkg:maven/my.namespace/my-name@1.0.0
+          /events?meta.source.domainId=my.domain&data.identity=pkg:maven/my.namespace/my-name@1.0.0    #Multiple keys and nested structures
+          ```
+
+          Note that multiple keys only is allowed with logical AND (via `&`). There are no support for logical OR.
+
+          **No comparator:**
+
+          To search for data that contains a field, use a query parameter
+          without comparator and value. For example `/events?key`fetches  all
+          events who has `key` as a field in the JSON documents. Here are some
+          examples:
+
+          ```
+          /events?data.identity                                   #Get all the events containing field 'identity' in the 'data'
+          /events?meta.source.domainId=my.domain&data.identity    #DomainId is 'my.domain' and has field 'identity' in 'data'
+          ```
+
+          **Example**
+
+          The example provided in the `example` property of the `params` object adds two search parameters as two query keys (see https://swagger.io/docs/specification/serialization/ for more information).
+          The result of the object will result in adding `meta.type=EiffelArtifactCreatedEvent&data.identity=pkg%3Amaven%2Fmy.namespace%2Fmy-name%401.0.0` to the search.
+
+
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+        style: form
+        explode: true
+        example: |
+          {
+            "meta.type":"EiffelArtifactCreatedEvent",
+            "data.identity":"pkg:maven/my.namespace/my-name@1.0.0"
+          }
+      responses:
+        200:
+          description: Successfully retrieved the events
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                    - pageSize
+                    - totalNumberItems
+                properties:
+                  pageNo:
+                    type: integer
+                    example: 1
+                  pageSize:
+                    type: integer
+                    example: 500
+                  totalNumberItems:
+                    type: integer
+                    example: 1
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EiffelEvent"
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: No events matching the given query were found
+          content: {}
+        500:
+          description: Internal server issue
+          content: {}
+  /events/{id}:
+    get:
+      tags:
+      - API
+      summary: To get single event information
+      operationId: getEventUsingGET
+      parameters:
+      - name: id
+        in: path
+        description: "Id of the event."
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved the Event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EiffelEvent"
+        400:
+          description: Wrong type given for parameter
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: The requested event is not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMsg:
+                    type: string
+                    example: "The requested event is not found"
+        500:
+          description: Internal server issue
+          content: {}
+  /search/{id}:
+    post:
+      tags:
+      - API
+      summary: To get upstream/downstream events for an event based on the searchParameters
+        passed
+      operationId: searchUsingPOST
+      parameters:
+      - name: id
+        in: path
+        description: "Id of the event."
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: >
+          Determines the maximum amount of events to be fetched.
+          Use `-1` for maximum amount of the events the server can provide.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: -1
+      - name: levels
+        in: query
+        description: >
+          Determines the maximum amount of levels to search.
+          Use `-1` for maximum amount of levels the server can search
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: -1
+      requestBody:
+        description: |
+          Select what types of links you want upstream/downstream search to follow.
+
+          Examples:
+
+            * Select `CAUSE` if you only want the search to follow `CAUSE` links
+              disregarding other links.
+            * Select `CONTEXT` and `ACTIVITY_EXECUTION` if you want to follow both `CONTEXT`
+              and `ACTIVITY_EXECUTION` links.
+
+          Link Types:
+
+            - CAUSE
+            - CONTEXT
+            - FLOW_CONTEXT
+            - ACTIVITY_EXECUTION
+            - PREVIOUS_ACTIVITY_EXECUTION
+            - PREVIOUS_VERSION
+            - COMPOSITION
+            - ENVIRONMENT
+            - ARTIFACT
+            - SUBJECT
+            - ELEMENT
+            - BASE
+            - CHANGE
+            - TEST_SUITE_EXECUTION
+            - TEST_CASE_EXECUTION
+            - IUT
+            - TERC
+            - MODIFIED_ANNOUNCEMENT
+            - SUB_CONFIDENCE_LEVEL
+            - REUSED_ARTIFACT
+            - VERIFICATION_BASIS
+            - PRECURSOR
+            - ORIGINAL_TRIGGER
+            - CONFIGURATION
+            - ALL
+
+            **Example**
+
+            In the following example `dlt` stands for downlink and `ult` stands for uplink
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchParameters'
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  upstreamLinkObjects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EiffelEvent"
+                  downstreamLinkObjects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EiffelEvent"
+              example:
+                  upstreamLinkObjects:
+                    - meta:
+                        id: 1a4bc724-95f7-43c9-b5de-6348ddddbafe
+                        type: EiffelCompositionDefinedEvent
+                        version: 4.0.0
+                        time: 657718729693
+                      data:
+                        name: My Composition
+                      links:
+                        - target: a77fc96e-847c-4828-9a16-2c2edd3c9580
+                          type: ELEMENT
+                    - meta:
+                        id: a77fc96e-847c-4828-9a16-2c2edd3c9580
+                        type: EiffelCompositionDefinedEvent
+                        version: 4.0.0
+                        time: 657718729600
+                      data:
+                        name: My Sub Composition
+                      links: []
+                  downstreamLinkObjects:
+                    - meta:
+                        id: 1a4bc724-95f7-43c9-b5de-6348ddddbafe
+                        type: EiffelCompositionDefinedEvent
+                        version: 4.0.0
+                        time: 657718729693
+                      data:
+                        name: My Composition
+                      links:
+                        - target: a77fc96e-847c-4828-9a16-2c2edd3c9580
+                          type: ELEMENT
+                    - meta:
+                        id: a55dc69d-662c-489f-af35-097b8b97ef02
+                        type: EiffelCompositionDefinedEvent
+                        version: 4.0.0
+                        time: 657718729700
+                      data:
+                        name: My Top Composition
+                      links:
+                        - target: 1a4bc724-95f7-43c9-b5de-6348ddddbafe
+                          type: ELEMENT
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        422:
+          description: Content Too Large - use the limit flag to limit the amount of events
+          content: {}
+      x-codegen-request-body-name: searchParameters
+components:
+  schemas:
+    SearchParameters:
+      type: object
+      properties:
+        dlt:
+          type: array
+          items:
+            type: string
+            pattern: '^[A-Z_]+$'
+            default: ALL
+        ult:
+          type: array
+          items:
+            type: string
+            pattern: '^[A-Z_]+$'
+            default: ALL
+    EiffelEvent:
+      type: object
+      properties:
+        meta:
+          type: object
+        data:
+          type: object
+        links:
+          type: array
+          items:
+            type: object
+      example:
+        meta:
+          id: 1a4bc724-95f7-43c9-b5de-6348ddddbafe
+          type: EiffelCompositionDefinedEvent
+          version: 4.0.0
+          time: 657718729693
+        data:
+          name: "My Composition"
+        links:
+          - target: a77fc96e-847c-4828-9a16-2c2edd3c9580
+            type: ELEMENT
