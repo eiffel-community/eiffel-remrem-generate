@@ -48,8 +48,14 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration.Constants;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import springfox.documentation.swagger.web.DocExpansion;
+import springfox.documentation.swagger.web.ModelRendering;
+import springfox.documentation.swagger.web.OperationsSorter;
+import springfox.documentation.swagger.web.TagsSorter;
+import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger.web.UiConfigurationBuilder;
+
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
 
     @Bean
@@ -62,11 +68,27 @@ public class SwaggerConfig {
                 .apiInfo(metaData());
     }
 
-	@Bean
-	public UiConfiguration uiConfig() {
-		return new UiConfiguration(null, "list", "alpha", "schema", Constants.DEFAULT_SUBMIT_METHODS, false, true,
-				null);
-	}
+        @Bean
+        public UiConfiguration uiConfig() {
+
+            return UiConfigurationBuilder.builder()
+                .deepLinking(true)
+                .displayOperationId(false)
+                .defaultModelsExpandDepth(-1)
+                .defaultModelExpandDepth(1)
+                .defaultModelRendering(ModelRendering.EXAMPLE)
+                .displayRequestDuration(false)
+                .docExpansion(DocExpansion.NONE)
+                .filter(false)
+                .maxDisplayedTags(null)
+                .operationsSorter(OperationsSorter.ALPHA)
+                .showExtensions(false)
+                .tagsSorter(TagsSorter.ALPHA)
+                .supportedSubmitMethods(UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS)
+                .validatorUrl(null)
+                .build();
+        }
+
 
 	@Bean
         public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier,
