@@ -1,52 +1,53 @@
 {
-  "meta": {
-    "id": "54afb9be-45b0-44fb-9230-54be6e71da79",
-    "type": "EiffelActivityFinishedEvent",
-    "version": "3.0.0",
-    "time": 1743684441445,
-    "tags": [
-      "tag1",
-      "tag2"
-    ],
-    "source": {
-      "domainId": "domainID",
-      "host": "host",
-      "name": "name",
-      "serializer": "pkg:maven/com.github.eiffel-community/eiffel-remrem-semantics@2.1.7",
-      "uri": "http://java.sun.com/j2se/1.3/"
+  "msgParams": {
+    "meta": {
+      "type": "EiffelActivityFinishedEvent",
+      "version": "3.3.0",
+      "schemaUri": "https://eiffel/schemas/EiffelActivityFinishedEvent/3.3.0.json",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "source": {
+        "domainId": "domainID",
+        "host": "host",
+        "name": "name",
+        "uri": "http:\/\/java.sun.com\/j2se\/1.3\/",
+        "serializer":"pkg:maven"
+      },
+      "security": {
+        "authorIdentity": "abc"
+      }
     }
   },
-  "data": {
-    "outcome": {
-      "conclusion": "TIMED_OUT",
-      "description": "Compilation timed out."
-    },
-    "persistentLogs": [
-      {
-        "name": "firstLog",
-        "uri": "http://myHost.com/firstLog"
-      },
-      {
-        "name": "otherLog",
-        "uri": "http://myHost.com/firstLog33"
-      }
-    ],
-    "customData": [
-      {
+  "eventParams": {
+    "data": {
+      "customData": [{
         "key": "firstLog",
-        "value": "http://myHost.com/firstLog"
+        "value": "http:\/\/myHost.com\/firstLog"
       },
-      {
-        "key": "otherLog",
-        "value": "http://myHost.com/firstLog33"
-      }
-    ]
-  },
-  "links": [
-    {
+        {
+          "key": "otherLog",
+          "value": "http:\/\/myHost.com\/firstLog33"
+        }
+      ],
+      "outcome": {
+        "conclusion": "TIMED_OUT",
+        "description": "Compilation timed out."
+      },
+      "persistentLogs": [{
+        "name": "firstLog",
+        "uri": "http:\/\/myHost.com\/firstLog"
+      },
+        {
+          "name": "otherLog",
+          "uri": "http:\/\/myHost.com\/firstLog33"
+        }
+      ]
+    },
+    "links": [{
       "type": "ACTIVITY_EXECUTION",
       "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"
-    }
-  ]
+    }]
+  }
 }
-
