@@ -2,7 +2,8 @@
   "msgParams": {
     "meta": {
       "type": "EiffelArtifactCreatedEvent",
-      "version": "3.0.0",
+      "version": "3.3.0",
+      "schemaUri": "https://eiffel/schemas/EiffelArtifactCreatedEvent/3.3.0.json",
       "tags": [
         "tag1",
         "tag2"
@@ -35,7 +36,8 @@
       "name": "event",
       "dependsOn": [
       ],
-      "implement": [ 
+      "implement": [
+        
       ],
       "identity":"pkg:abc",
       "customData": [{

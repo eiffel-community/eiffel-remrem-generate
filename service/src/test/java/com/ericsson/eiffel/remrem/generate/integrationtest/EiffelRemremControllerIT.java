@@ -67,7 +67,7 @@ public class EiffelRemremControllerIT {
     private String activityFinishedDuplicateKeysFileName = "ActivityFinishedEventDuplicatedKeys.json";
     private String activityFinishedDuplicateKeysBody;
 
-    private String version = "3.0.0";
+    private String version = "3.3.0";
     @Value("${event-repository.enabled}")
     private String eventRepositoryEnabled;
     @Value("${event-repository.url}")
