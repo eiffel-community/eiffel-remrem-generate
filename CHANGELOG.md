@@ -1,6 +1,9 @@
 ## 2.1.16
 - OpenAPI used to generate simple ER service used by lookup test.
 
+## 2.1.15
+- Ensure Eclipse Temurin is used to build the service
+
 ## 2.1.14
 - Made changes to /generate end-point to improve efficiency how result of event generation is handled
 
