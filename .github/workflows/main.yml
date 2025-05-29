@@ -33,3 +33,9 @@ jobs:
       - name: Run test
         shell: bash
         run : mvn -V -B -U clean test jacoco:report
+
+      - name: Coveralls
+        if: github.event_name == 'push'
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ github.token }}
