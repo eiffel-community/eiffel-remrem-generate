@@ -128,7 +128,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
      * @throws IOException
      */
     private JsonObject inputAsJsonObject(String fileName) throws IOException {
-        File file = new File(RESOURCES_DIR + "/" + "ER/inputs/" + fileName + JSON_SUFFIX);
+        File file = new File(RESOURCES_DIR + "/" + "event-repository/inputs/" + fileName + JSON_SUFFIX);
         JsonObject json = JsonParser.parseReader(new FileReader(file)).getAsJsonObject();
 
         return json;
