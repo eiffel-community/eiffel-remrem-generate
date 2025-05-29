@@ -39,7 +39,7 @@ public class EventsApiService implements EventsApiDelegate {
     }
 
     public static void loadEventsFromFiles() {
-        String dir = "src/test/resources/event-repository/events";
+        String dir = "src/test/resources/eventrepository/events";
         File directory = new File(dir);
         File[] files = directory.listFiles();
 
