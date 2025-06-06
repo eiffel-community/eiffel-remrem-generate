@@ -1,0 +1,46 @@
+{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelConfidenceLevelModifiedEvent",
+      "version": "3.0.0",
+      "tags": [
+        ""
+      ],
+      "source": {
+        "domainId": "",
+        "host": "",
+        "name": "",
+        "uri": ""
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+      "name": "0",
+      "value": "SUCCESS",
+      "issuer": {
+        "name": "",
+        "email": "",
+        "id": "",
+        "group": ""
+      },
+      "customData": [
+
+      ]
+    },
+    "links": [{
+      "type": "SUBJECT",
+      "target": "b5a2c3e0-3515-49d8-baa8-9b0f6cec025c"
+    },
+      {
+        "type": "SUBJECT",
+        "%lookup%": {
+          "eventType": "EiffelArtifactCreatedEvent",
+          "properties": [{
+            "data.identity": "swdi.up/CXP102051_22@R21EK"
+          }]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+Events defined in the files must adhere to eiffel-remrem-semantics version
+specified in pom.xml. Otherwise some tests may fail during validation process
+done by generate service.
