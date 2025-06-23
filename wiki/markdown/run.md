@@ -16,6 +16,15 @@ RemRem-Generate application can be executed with Maven command or with the maven
 2. Execute maven command to build and run RemRem-Generate:
 `mvn spring-boot:run`
 
+- NOTE: If getting issue with above command like it seems maven tries to download a package instead 
+  of referencing existing module of the project, So than try to execute this below maven command from root directory(eiffel-remrem-generate).
+`mvn -pl service -am spring-boot:run`
+  
+- Details about the changed command:
+  
+  pl service: Tells maven only consider the service module for goal spring-boot:run.
+
+  am: Tells maven also build any modules that the service module depends on.
 
 ## Run RemRem-Generate With Java Command
 
