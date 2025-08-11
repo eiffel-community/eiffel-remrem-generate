@@ -1,0 +1,66 @@
+{
+  "msgParams": {
+    "meta": {
+      "type": "EiffelSourceChangeSubmittedEvent",
+      "version": "3.0.0",
+      "tags": [
+        ""
+      ],
+      "source": {
+        "domainId": "",
+        "host": "",
+        "name": "",
+        "uri": ""
+      }
+    }
+  },
+  "eventParams": {
+    "data": {
+
+      "gitIdentifier": {
+        "commitId": "fd090b60a4aedc5161da9c035a49b14a319829b4",
+        "repoUri": "https://github.com/johndoe/myPrivateRepo.git",
+        "branch": "",
+        "repoName": ""
+      },
+      "svnIdentifier": {
+        "revision": 42,
+        "directory": "trunk",
+        "repoName": "Mainline",
+        "repoUri": "svn://repohost/mainline"
+      },
+      "submitter": {
+        "name": "Jane Doe",
+        "email": "jane.doe@company.com",
+        "id": "j_doe",
+        "group": "Team Wombats"
+      },
+      "customData": [
+
+      ]
+    },
+    "links": [{
+      "type": "CHANGE",
+      "%lookup%": {
+        "eventType": "EiffelSourceChangeCreatedEvent",
+        "properties": [{
+          "data.gitIdentifier.branch": "myBranch",
+          "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+        }]
+      }
+    },
+    {
+      "type": "PREVIOUS_VERSION",
+      "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee6"
+    },
+    {
+      "type": "FLOW_CONTEXT",
+      "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee5"
+    },
+    {
+      "type": "FLOW_CONTEXT",
+      "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee6"
+    }
+    ]
+  }
+}

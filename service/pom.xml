@@ -85,11 +85,7 @@
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
+            <artifactId>springfox-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -104,6 +100,12 @@
            <artifactId>javax.servlet-api</artifactId>
            <version>3.0.1</version>
            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.eiffel-community</groupId>
+            <artifactId>openapi</artifactId>
+            <version>${eiffel-remrem-generate.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

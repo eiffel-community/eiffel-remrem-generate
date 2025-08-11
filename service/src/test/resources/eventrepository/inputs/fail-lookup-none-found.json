@@ -1,0 +1,36 @@
+{
+    "msgParams": {
+        "meta": {
+            "type": "EiffelCompositionDefinedEvent",
+            "version": "3.1.0",
+            "tags": [
+                ""
+            ],
+            "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+            }
+        }
+    },
+    "eventParams": {
+        "data": {
+            "name": "required",
+            "version": "",
+            "customData": [
+
+            ]
+        },
+        "links": [{
+            "type": "ELEMENT",
+            "%lookup%": {
+                "eventType": "EiffelSourceChangeSubmittedEvent",
+                "properties": [{
+                    "data.gitIdentifier.commitId": "fd090b60aedc535a49b14a",
+                    "data.gitIdentifier.repoUri": "https://github.com/johndoe/myPrivateRepo.git"
+                }]
+            }
+        }]
+    }
+}

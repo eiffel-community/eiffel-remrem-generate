@@ -6,3 +6,6 @@ activedirectory:
   enabled: true
   domain:
   url:
+event-repository:
+  url: http://localhost:8080
+  enabled: true
