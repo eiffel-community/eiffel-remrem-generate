@@ -20,8 +20,10 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -211,6 +213,12 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
                 Mockito.eq(String.class))).thenReturn(erLookupOptionsWithEmptyResponse);
     }
 
+    private HashMap<String, Object> newHashMap(String key, Object value) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(key, value);
+        return properties;
+    }
+
     @Test
     public void testErlookupSuccesswithMultipleIds() throws Exception {
 
@@ -218,7 +226,16 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelconfidencelevel", false, false, true, 1, false, json);
+        String msgProtocol = "eiffelsemantics";
+        String msgType = "eiffelconfidencelevel";
+        boolean okToLeaveOutInvalidOptionalFields = false;
+        boolean markAsNonStandard = false;
+        boolean lookupInExternalERs = true;
+        int lookupLimit = 1;
+        boolean lenientValidation = false;
+        
+        ResponseEntity<?> elem = unit.generate(msgProtocol, msgType, okToLeaveOutInvalidOptionalFields, 
+                markAsNonStandard, lookupInExternalERs, lookupLimit, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -229,7 +246,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelcompositiondefined", true, false, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
     }
 
@@ -239,7 +256,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelartifactpublished", false, true, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -249,7 +266,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefined", true, true, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -259,7 +276,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEvent", true, true, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -269,7 +286,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelSCSubmitted", false, true, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -279,7 +296,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefined", false, false, true, 2, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefined", false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     
@@ -289,7 +306,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefinedEvent", true, true, true, 2, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelEnvironmentDefinedEvent", true, true, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -299,7 +316,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelCompositionDefinedEventt", false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
     }
     
@@ -309,7 +326,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelConfidenceLevelModified", false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -319,7 +336,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
@@ -329,7 +346,7 @@ public class EiffelRemERLookupControllerUnitTestWithMock {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
 
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 0, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelTestCaseStarted", false, false, true, 0, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 }

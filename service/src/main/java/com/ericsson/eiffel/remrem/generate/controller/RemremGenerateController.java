@@ -19,6 +19,8 @@ import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConsta
 import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundException;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
+import com.ericsson.eiffel.remrem.semantics.util.PropertiesUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -47,6 +49,8 @@ import org.springframework.web.client.RestTemplate;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.*;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -75,6 +79,9 @@ public class RemremGenerateController {
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
+    @Value("${ignorePurlValidation:true}")
+    private boolean ignorePurlValidation;
+
     @Value("${maxSizeOfInputArray:250}")
     private int maxSizeOfInputArray = 250;
 
@@ -87,6 +94,8 @@ public class RemremGenerateController {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    //private final String ignorePurlValidationDefaultValue = ignorePurlValidation ? "true" : "false";
 
     /**
      * Returns event information as json element based on the message protocol,
@@ -115,6 +124,7 @@ public class RemremGenerateController {
                                       @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
                                       @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
                                       @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
+                                      @ApiParam(value = "Ignore PURL validation") @RequestParam(value = "ignorePurlValidation", required = false, defaultValue = "${ignorePurlValidation}") final Boolean ignorePurlValidation,
                                       @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
         try {
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
@@ -123,8 +133,11 @@ public class RemremGenerateController {
             JsonNode node = mapper.readTree(body);
             Gson gson = new Gson();
             JsonElement inputJson = gson.fromJson(node.toString(), JsonElement.class);
+            HashMap<String, Object> generateProperties = new HashMap<>();
+            generateProperties.put(SemanticsService.LENIENT_VALIDATION, okToLeaveOutInvalidOptionalFields);
+            generateProperties.put(SemanticsService.VALIDATE_PURL_FOR_ART_C, !ignorePurlValidation);
             return generate(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound, lookupInExternalERs,
-                    lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
+                    lookupLimit, generateProperties, inputJson);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
             log.error("Invalid JSON parse data format due to", exceptionMessage);
@@ -147,7 +160,7 @@ public class RemremGenerateController {
      */
     public ResponseEntity<?> generate(final String msgProtocol, final String msgType, final Boolean failIfMultipleFound,
                                       final Boolean failIfNoneFound, final Boolean lookupInExternalERs, final int lookupLimit,
-                                      final Boolean okToLeaveOutInvalidOptionalFields, JsonElement inputData) {
+                                      final HashMap<String, Object> generateProperties, JsonElement inputData) {
 
         JsonArray generatedEventResults = new JsonArray();
         try {
@@ -173,7 +186,7 @@ public class RemremGenerateController {
                     try {
                         JsonObject generatedEvent = generateEvent(msgProtocol, msgType,
                                 failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject());
+                                generateProperties, element.getAsJsonObject());
                         generatedEventResults.add(generatedEvent);
                         successCount++;
                     } catch (ProtocolHandlerNotFoundException e) {
@@ -201,7 +214,7 @@ public class RemremGenerateController {
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
                 JsonObject processedJson = generateEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
-                        lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
+                        lookupInExternalERs, lookupLimit, generateProperties, inputJsonObject);
                 return new ResponseEntity<>(processedJson, HttpStatus.OK);
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
@@ -295,7 +308,7 @@ public class RemremGenerateController {
      */
     public JsonObject generateEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
                                     Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
-                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+                                    HashMap<String, Object> generateProperties, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
@@ -304,7 +317,16 @@ public class RemremGenerateController {
         if (msgService == null) {
             throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
-        String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+
+        String response;
+        try {
+            // Try new API, i.e. with list of properties.
+            response = msgService.generateMsg(msgType, event, generateProperties);
+        } catch (AbstractMethodError e) {
+            // Use old API, i.e. with one boolean only, without properties list.
+            boolean lenientValidation = PropertiesUtil.getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
+            response = msgService.generateMsg(msgType, event, lenientValidation);
+        }
         parsedResponse = JsonParser.parseString(response);
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
@@ -575,4 +597,22 @@ public class RemremGenerateController {
         }
         return jasyptKey;
     }
+
+//    public static String readJasyptKeyFile(final String jasyptKeyFilePath) {
+//        String jasyptKey = "";
+//        final FileInputStream file;
+//        try {
+//            if (StringUtils.isNotBlank(jasyptKeyFilePath)) {
+//                file = new FileInputStream(jasyptKeyFilePath);
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+//                jasyptKey = reader.readLine();
+//                if(jasyptKey == null) {
+//                    return "";
+//                }
+//            }
+//        } catch (IOException e) {
+//            log.error("Could not read the jasypt key from the jasypt key file path: " + e.getMessage(), e);
+//        }
+//        return jasyptKey;
+//    }
 }
