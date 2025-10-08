@@ -34,6 +34,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class DisabledSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
+        http.authorizeRequests()
+            .anyRequest()
+            .permitAll()
+            .and()
+            .csrf()
+            // The application uses non-browser clients. Yes, there is swagger interface,
+            // but is's used only for testing/tuning.
+            //
+            // From https://docs.spring.io/spring-security/reference/features/exploits/csrf.html
+            // "If you are creating a service that is used only by non-browser clients,
+            //  you likely want to disable CSRF protection."
+            .disable();
     }
 }
