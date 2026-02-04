@@ -79,7 +79,7 @@ public class RemremGenerateController {
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
-    @Value("${ignorePurlValidation:true}")
+    @Value("${ignorePURLValidation:true}")
     private boolean ignorePurlValidation;
 
     @Value("${maxSizeOfInputArray:250}")
@@ -94,8 +94,6 @@ public class RemremGenerateController {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
-    //private final String ignorePurlValidationDefaultValue = ignorePurlValidation ? "true" : "false";
 
     /**
      * Returns event information as json element based on the message protocol,
@@ -124,7 +122,7 @@ public class RemremGenerateController {
                                       @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
                                       @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
                                       @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
-                                      @ApiParam(value = "Ignore PURL validation") @RequestParam(value = "ignorePurlValidation", required = false, defaultValue = "${ignorePurlValidation}") final Boolean ignorePurlValidation,
+                                      @ApiParam(value = "Ignore PURL validation") @RequestParam(value = "ignorePURLValidation", required = false, defaultValue = "${ignorePURLValidation:true}") final Boolean ignorePurlValidation,
                                       @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
         try {
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
@@ -323,6 +321,8 @@ public class RemremGenerateController {
             // Try new API, i.e. with list of properties.
             response = msgService.generateMsg(msgType, event, generateProperties);
         } catch (AbstractMethodError e) {
+            // This is a fallback for old API, i.e. with one boolean only, without properties list.
+            log.warn("Using old API for generating message.", e);
             // Use old API, i.e. with one boolean only, without properties list.
             boolean lenientValidation = PropertiesUtil.getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
             response = msgService.generateMsg(msgType, event, lenientValidation);
