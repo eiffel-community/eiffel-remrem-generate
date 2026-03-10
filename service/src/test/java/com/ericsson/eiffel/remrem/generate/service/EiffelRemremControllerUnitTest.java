@@ -69,13 +69,6 @@ class Eiffel3MsgService implements MsgService {
             return errorOutput;
         }
 
-//        Mockito.when(service2.generateMsg(
-//                eq("eiffelartifactnew"),
-//                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
-//
-//        Mockito.when(service2.generateMsg(
-//                eq("eiffelartifactnewevent"),
-//                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
         return "";
     }
 
@@ -165,25 +158,9 @@ public class EiffelRemremControllerUnitTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-//        try (MockedStatic<Class> mockedClassStatic = mockStatic(Class.class)) {
-//            Method fakeMethod = MsgService.class.getMethod("generateMsg", String.class, JsonObject.class, HashMap.class);
-//            String s = "com.ericsson.eiffel.remrem.generate.service.Eiffel3MsgService";
-//            Class<?> mockClass = mock(Class.class);
-//            Mockito.when(service2.getClass().getMethod("generateMsg", String.class, JsonObject.class, HashMap.class))
-//                    .thenThrow(new NoSuchMethodError("Mocked NoSuchMethodException"));
-//            mockedClassStatic.when(() -> Class.forName(s)).thenReturn(mockClass);
-//            mockedClassStatic.when(mockClass
-//                    .getMethod("generateMsg", String.class, JsonObject.class, HashMap.class)
-//                    .thenThrow(new NoSuchMethodError("Mocked NoSuchMethodException"));
-////                            .getMethod(eq("generateMsg"), eq(String.class), eq(JsonObject.class), eq(HashMap.class)))
-
-//            Method m = Class.forName("com.ericsson.eiffel.remrem.generate.service").getMethod("newMethod");
-//            System.out.println("Mock returned method: " + m);
-//        }
         msgServices.add(service);
         msgServices.add(service2);
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
-//        Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
 
         URL jsonInputURL = getClass().getClassLoader().getResource("successInput.json");
         String inputFilePath = jsonInputURL.getPath().replace("%20"," ");
@@ -210,14 +187,6 @@ public class EiffelRemremControllerUnitTest {
 
         service2.successOutput = successOutput;
         service2.errorOutput = errorOutput;
-
-//        Mockito.when(service2.generateMsg(
-//                eq("eiffelartifactnew"),
-//                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
-//
-//        Mockito.when(service2.generateMsg(
-//                eq("eiffelartifactnewevent"),
-//                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
 
         Mockito.when(service.generateMsg(
                 eq("EiffelArtifactCreatedEvent"),

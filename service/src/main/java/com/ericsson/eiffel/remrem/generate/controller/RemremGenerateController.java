@@ -316,6 +316,8 @@ public class RemremGenerateController {
             throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
 
+        log.debug("Event template: \n{}", event.toString());
+
         String response;
         try {
             // Try new API, i.e. with list of properties.
@@ -597,22 +599,4 @@ public class RemremGenerateController {
         }
         return jasyptKey;
     }
-
-//    public static String readJasyptKeyFile(final String jasyptKeyFilePath) {
-//        String jasyptKey = "";
-//        final FileInputStream file;
-//        try {
-//            if (StringUtils.isNotBlank(jasyptKeyFilePath)) {
-//                file = new FileInputStream(jasyptKeyFilePath);
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(file));
-//                jasyptKey = reader.readLine();
-//                if(jasyptKey == null) {
-//                    return "";
-//                }
-//            }
-//        } catch (IOException e) {
-//            log.error("Could not read the jasypt key from the jasypt key file path: " + e.getMessage(), e);
-//        }
-//        return jasyptKey;
-//    }
 }
