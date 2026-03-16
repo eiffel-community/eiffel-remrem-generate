@@ -14,7 +14,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        // TODO get the application somehow both from spring-boot:run goal and when executed from jar/war artifact.
+        // TODO get the application version somehow both from when spring-boot:run goal is executed and when executed from jar/war artifact.
         String appVersion = "x.x.x";
 
         final StringBuilder remremDescription = new StringBuilder();
