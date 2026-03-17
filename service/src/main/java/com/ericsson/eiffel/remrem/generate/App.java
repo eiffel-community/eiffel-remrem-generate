@@ -36,10 +36,18 @@ public class App extends SpringBootServletInitializer {
 	}
 
 	private static void startService(String[] args) {
+		String appVersion = App.class.getPackage().getImplementationVersion();
+		if (appVersion == null) {
+			appVersion = "Unknown";
+		}
 		SpringApplication application = new SpringApplication(App.class);
 		application.setBannerMode(Banner.Mode.OFF);
 		application.setLogStartupInfo(false);
 		application.setWebApplicationType(WebApplicationType.SERVLET);
+		application.setDefaultProperties(java.util.Map.of(
+			"springdoc.swagger-ui.enabled", "false",
+			"app.version", appVersion
+		));
 		ApplicationContext ctx = application.run(args);
 	}
 }
