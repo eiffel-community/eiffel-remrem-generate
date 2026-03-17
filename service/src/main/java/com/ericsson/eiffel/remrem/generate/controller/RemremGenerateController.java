@@ -104,7 +104,7 @@ public class RemremGenerateController {
      * Returns: The event information as a json element
      */
 
-    @Operation(summary = "To generate eiffel event based on the message protocol")
+    @Operation(summary = "To generate Eiffel event based on the message protocol")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Event sent successfully"),
             @ApiResponse(responseCode = "400", description = "Malformed JSON"),
             @ApiResponse(responseCode = "500", description = "Internal server error"),
