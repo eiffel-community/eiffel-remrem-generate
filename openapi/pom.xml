@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.github.eiffel-community</groupId>
             <artifactId>eiffel-remrem-semantics</artifactId>
-            <version>2.2.7</version>
+            <version>${eiffel-remrem-semantics.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

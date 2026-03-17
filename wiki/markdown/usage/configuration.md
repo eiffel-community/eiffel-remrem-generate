@@ -30,7 +30,7 @@ When using maven command, Spring properties can also be changed by editing servi
 
 Eiffel REMReM Service **generate-service.war** file should be deployed in Tomcat Server. For doing this, generate-service.war file should deployed in directory: _tomcat/webapps_.
 
-Configuration is done in Tomcat using a config.properties file: _tomcat/conf/config.properties_.
+Configuration is done in Tomcat using a config.properties file:ï¿½_tomcat/conf/config.properties_.
 
 **NOTE:** in each example assuming the generate-service.war is deployed in tomcat as **generate**.
 
@@ -163,4 +163,12 @@ If _event-repository.enabled_ is true then Event Repository URL should be mandat
 More about [Lenient Validation](../usage/lenientvalidation.md).
 ```
  lenientValidationEnabledToUsers : <true | false>
+``` 
+
+### Validation of PURL
+PURL validation has been introduced to REMReM Generate since version 2.1.16.
+The validation is done for ``EiffelArtifactCreatedEvent`` using library [Package URL (purl) for Java](https://github.com/package-url/packageurl-java)
+depending on value of property ``ignorePURLValidation`` of application configuration file:
+```
+ ignorePURLValidation : <true | false>
 ``` 

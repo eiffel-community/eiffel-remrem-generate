@@ -19,6 +19,8 @@ import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConsta
 import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundException;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
+import com.ericsson.eiffel.remrem.semantics.util.PropertiesUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -49,6 +51,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,6 +80,9 @@ public class RemremGenerateController {
     
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
+
+    @Value("${ignorePURLValidation:true}")
+    private boolean ignorePurlValidation;
 
     @Value("${maxSizeOfInputArray:250}")
     private int maxSizeOfInputArray = 250;
@@ -125,8 +132,11 @@ public class RemremGenerateController {
             JsonNode node = mapper.readTree(body);
             Gson gson = new Gson();
             JsonElement inputJson = gson.fromJson(node.toString(), JsonElement.class);
+            HashMap<String, Object> generateProperties = new HashMap<>();
+            generateProperties.put(SemanticsService.LENIENT_VALIDATION, okToLeaveOutInvalidOptionalFields);
+            generateProperties.put(SemanticsService.VALIDATE_PURL_FOR_ART_C, !ignorePurlValidation);
             return generate(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound, lookupInExternalERs,
-                    lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
+                    lookupLimit, generateProperties, inputJson);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
             log.error("Invalid JSON parse data format due to", exceptionMessage);
@@ -149,7 +159,7 @@ public class RemremGenerateController {
      */
     public ResponseEntity<?> generate(final String msgProtocol, final String msgType, final Boolean failIfMultipleFound,
                                       final Boolean failIfNoneFound, final Boolean lookupInExternalERs, final int lookupLimit,
-                                      final Boolean okToLeaveOutInvalidOptionalFields, JsonElement inputData) {
+                                      final HashMap<String, Object> generateProperties, JsonElement inputData) {
 
         JsonArray generatedEventResults = new JsonArray();
         try {
@@ -175,7 +185,7 @@ public class RemremGenerateController {
                     try {
                         JsonObject generatedEvent = generateEvent(msgProtocol, msgType,
                                 failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject());
+                                generateProperties, element.getAsJsonObject());
                         generatedEventResults.add(generatedEvent);
                         successCount++;
                     } catch (ProtocolHandlerNotFoundException e) {
@@ -203,7 +213,7 @@ public class RemremGenerateController {
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
                 JsonObject processedJson = generateEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
-                        lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
+                        lookupInExternalERs, lookupLimit, generateProperties, inputJsonObject);
                 return new ResponseEntity<>(processedJson, HttpStatus.OK);
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
@@ -297,7 +307,7 @@ public class RemremGenerateController {
      */
     public JsonObject generateEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
                                     Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
-                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+                                    HashMap<String, Object> generateProperties, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
@@ -306,7 +316,20 @@ public class RemremGenerateController {
         if (msgService == null) {
             throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
-        String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+
+        log.debug("Event template: \n{}", event.toString());
+
+        String response;
+        try {
+            // Try new API, i.e. with list of properties.
+            response = msgService.generateMsg(msgType, event, generateProperties);
+        } catch (AbstractMethodError e) {
+            // This is a fallback for old API, i.e. with one boolean only, without properties list.
+            log.warn("Using old API for generating message.", e);
+            // Use old API, i.e. with one boolean only, without properties list.
+            boolean lenientValidation = PropertiesUtil.getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
+            response = msgService.generateMsg(msgType, event, lenientValidation);
+        }
         parsedResponse = JsonParser.parseString(response);
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 

@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -134,12 +135,18 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         return json;
     }
 
+    private HashMap<String, Object> newHashMap(String key, Object value) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(key, value);
+        return properties;
+    }
+
     @Test
     public void testErLookupSuccessWithMultipleIds() throws Exception {
         JsonObject json = inputAsJsonObject("success-lookup-confidence-level");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.CONFIDENCELEVEL_MODIFIED.getEventName(),
-            false, false, true, 1, false, json);
+            false, false, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -148,7 +155,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-composition-defined");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.COMPOSITION_DEFINED.getEventName(),
-            true, false, true, 1, false, json);
+            true, false, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
     }
 
@@ -157,7 +164,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-artifact-published");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.ARTIFACT_PUBLISHED.getEventName(),
-            false, true, true, 1, false, json);
+            false, true, true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -166,7 +173,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("success-lookup-with-one-id");
         ResponseEntity<?> result = unit.generate(EIFFEL_SEMANTICS,
                 EiffelEventType.COMPOSITION_DEFINED.getEventName(), true, true,
-                true, 1, false, json);
+                true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -175,7 +182,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-none-found");
         ResponseEntity<?> result = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.COMPOSITION_DEFINED.getEventName(), true, true,
-            true, 1, false, json);
+            true, 1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
     }
 
@@ -185,7 +192,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.SOURCECHANGE_SUBMITTED.getEventName(),
             false, true, true,
-            1, false, json);
+            1, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -194,7 +201,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("success-lookup-multiple-with-options");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.ENVIRONMENT_DEFINED.getEventName(),
-            false, false, true, 2, false, json);
+            false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
     
@@ -202,7 +209,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
     public void testErLookupOptionsWithEmptyResponse() throws Exception {
         JsonObject json = inputAsJsonObject("success-lookup-options-with-empty-response");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
-                EiffelEventType.ENVIRONMENT_DEFINED.getEventName(), true, true, true, 2, false, json);
+                EiffelEventType.ENVIRONMENT_DEFINED.getEventName(), true, true, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -211,7 +218,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-options-with-multiple-found");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.ENVIRONMENT_DEFINED.getEventName(),
-            false, false, true, 2, false, json);
+            false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
     }
     
@@ -220,7 +227,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-options-with-none-found");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.ENVIRONMENT_DEFINED.getEventName(),
-            false, false, true, 2, false, json);
+            false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
     }
 
@@ -229,7 +236,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-with-options");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.TESTCASE_STARTED.getEventName(),
-            false, false, true, 2, false, json);
+            false, false, true, 2, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
     }
 
@@ -238,7 +245,7 @@ public class EiffelRemERLookupControllerUnitTestWithOpenAPI {
         JsonObject json = inputAsJsonObject("fail-lookup-with-options");
         ResponseEntity<?> response = unit.generate(EIFFEL_SEMANTICS,
             EiffelEventType.TESTCASE_STARTED.getEventName(),
-            false, false, true, 0, false, json);
+            false, false, true, 0, newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }
