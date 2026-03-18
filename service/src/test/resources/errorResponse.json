@@ -1,0 +1,1 @@
+{"message":"Missing fields found in body JSON","cause":"eventParams or msgParams or msgParams.meta are missed"}

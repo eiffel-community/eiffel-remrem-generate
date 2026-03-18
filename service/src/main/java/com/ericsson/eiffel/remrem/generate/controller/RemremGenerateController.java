@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Ericsson AB.
+    Copyright 2018-2026 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -49,7 +49,6 @@ import org.springframework.web.client.RestTemplate;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +74,7 @@ public class RemremGenerateController {
     private ErLookUpConfig erlookupConfig;
 
     private static ResponseEntity<String> response;
-    
+
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
 
@@ -112,6 +111,7 @@ public class RemremGenerateController {
     @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Event sent successfully"),
             @ApiResponse(code = 400, message = "Malformed JSON"),
+            @ApiResponse(code = 207, message = "Partial success/failure in response"),
             @ApiResponse(code = 500, message = "Internal server error"),
             @ApiResponse(code = 503, message = "Message protocol is invalid")})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
@@ -140,7 +140,7 @@ public class RemremGenerateController {
             String exceptionMessage = e.getMessage();
             log.error("Invalid JSON parse data format due to", exceptionMessage);
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: "
-                    + exceptionMessage, JSON_FATAL_STATUS);
+                    + exceptionMessage, ResultStatus.FATAL);
         }
     }
 
@@ -167,16 +167,17 @@ public class RemremGenerateController {
             }
             if (inputData == null) {
                 return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'inputData' must not be null",
-                        JSON_ERROR_STATUS);
+                        ResultStatus.FAIL);
             }
 
             if (inputData.isJsonArray()) {
                 JsonArray inputEventJsonArray = inputData.getAsJsonArray();
 
                 if (inputEventJsonArray.size() > maxSizeOfInputArray) {
-                    return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
+                    return createResponseEntity(HttpStatus.BAD_REQUEST,
                             "The number of events in the input array is too high: " + inputEventJsonArray.size() + " > "
-                                    + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.");
+                                    + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.",
+                            ResultStatus.FAIL);
                 }
                 int successCount = 0;
                 int failedCount = 0;
@@ -195,7 +196,7 @@ public class RemremGenerateController {
                         // Something went wrong. Add failure description to array of results.
                         failedCount++;
                         JsonObject response = new JsonObject();
-                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, response);
+                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), ResultStatus.FAIL, response);
                         generatedEventResults.add(response);
                     }
                 }
@@ -217,7 +218,7 @@ public class RemremGenerateController {
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
                         "Invalid JSON format,expected either single template or array of templates",
-                        JSON_ERROR_STATUS);
+                        ResultStatus.FAIL);
             }
         } catch (REMGenerateException | JsonSyntaxException e) {
             return handleException(e);
@@ -225,40 +226,60 @@ public class RemremGenerateController {
     }
 
     /**
-     * To display response in browser or application
-     * @param status response code for the HTTP request
-     * @param responseMessage the message according to response
-     * @param resultMessage whatever the result this message gives you idea about that
-     * @param errorResponse is to collect all the responses here.
+     * Creates a ResponseEntity containing an error response with the given status, message, and result.
+     *
+     * @param status status code for the HTTP request
+     * @param responseMessage the message with more details about the response
+     * @param result the result for the HTTP request
+     * @param errorResponse the existing response object to update
      * @return ResponseEntity
      */
-    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage,
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, ResultStatus result,
                                                            JsonObject errorResponse) {
-        initializeResponse(status, resultMessage, responseMessage, errorResponse);
+        initializeResponse(status, result, responseMessage, errorResponse);
         return new ResponseEntity<>(errorResponse, status);
     }
 
     /**
-     * To display response in browser or application
-     * @param status response code for the HTTP request
-     * @param responseMessage the message according to response
-     * @param resultMessage whatever the result this message gives you idea about that
+     * Creates a ResponseEntity with the given status, message, and result.
+     *
+     * @param status status code for the HTTP request
+     * @param responseMessage the message with more details about the response
+     * @param result the result for the HTTP request
      * @return ResponseEntity
      */
-    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String resultMessage, String responseMessage) {
-        return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, ResultStatus result) {
+        return createResponseEntity(status, responseMessage, result, new JsonObject());
     }
 
     /**
-     * To initialize in the @{createResponseEntity} method
-     * @param status response code for the HTTP request
-     * @param resultMessage whatever the result this message gives you idea about that
-     * @param errorResponse is to collect all the responses here.
+     * Update the given JSON object with the provided values for
+     * result and message.
+     *
+     * @param status the status code to put in the response
+     * @param result the result to put in the response
+     * @param errorMessage the error message to put in the response
+     * @param errorResponse the error response object to update
      */
-    public void initializeResponse(HttpStatus status, String resultMessage, String errorMessage, JsonObject errorResponse) {
-        errorResponse.addProperty(JSON_STATUS_CODE, status.value());
-        errorResponse.addProperty(JSON_STATUS_RESULT, resultMessage);
-        errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
+    public void initializeResponse(HttpStatus status, ResultStatus result, String errorMessage, JsonObject errorResponse) {
+        errorResponse.addProperty(JSON_STATUS_CODE_FIELD, status.value());
+        errorResponse.addProperty(JSON_STATUS_RESULT_FIELD, result.toString());
+        log.warn("******");
+        log.warn("errorMessage: {}", errorMessage);
+        log.warn("resultMessage: {}", result.toString());
+
+        // If the provided errorMessage is a JSON structure we want to expand this
+        // before returning the response
+        try {
+            log.warn("******");
+            log.warn("trying to parse json: {}", errorMessage);
+            JsonElement parsedError = JsonParser.parseString(errorMessage);
+            errorResponse.add(JSON_ERROR_MESSAGE_FIELD, parsedError);
+        } catch (JsonSyntaxException e) {
+            // Fallback to string if resultMessage is not valid JSON
+            log.warn("failed to parse json, returning string instead!");
+            errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
+        }
     }
 
     /**
@@ -269,7 +290,7 @@ public class RemremGenerateController {
     private ResponseEntity<JsonObject> handleException(Exception e) {
         String exceptionMessage = e.getMessage();
         if (e instanceof ProtocolHandlerNotFoundException) {
-            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, ResultStatus.FAIL);
         }
 
         if (e instanceof REMGenerateException) {
@@ -279,16 +300,16 @@ public class RemremGenerateController {
             );
             for (HttpStatus status : statusList) {
                 if (exceptionMessage.contains(Integer.toString(status.value()))) {
-                    return createResponseEntity(status, exceptionMessage, JSON_ERROR_STATUS);
+                    return createResponseEntity(status, exceptionMessage, ResultStatus.FAIL);
                 }
             }
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, ResultStatus.FAIL);
         } else if (e instanceof JsonSyntaxException) {
             log.error("Failed to parse JSON", exceptionMessage);
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, ResultStatus.FAIL);
         } else {
             log.error("Unexpected exception caught", exceptionMessage);
-            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, ResultStatus.FAIL);
         }
     }
 
@@ -457,7 +478,7 @@ public class RemremGenerateController {
         }
         return array;
     }
-	
+
     /**
      * Returns available Eiffel event types as listed in EiffelEventType enum.
      *
@@ -533,7 +554,7 @@ public class RemremGenerateController {
 
     /**
      * To display pretty formatted json in browser
-     * 
+     *
      * @param rawJson
      *            json content
      * @return html formatted json string
@@ -546,7 +567,7 @@ public class RemremGenerateController {
 
     /**
      * To display response in browser or application
-     * 
+     *
      * @param message
      *            json content
      * @param status
