@@ -1,3 +1,6 @@
+## NEXT VERSION
+- Uplifted OpenApi Spec and Swagger-UI to latest version
+
 ## 2.1.18
 - Validation of PURLs of EiffelArtifactCreatedEvent introduced.
 
