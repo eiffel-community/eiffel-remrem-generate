@@ -254,7 +254,8 @@ public class RemremGenerateController {
 
     /**
      * Update the given JSON object with the provided values for
-     * result and message.
+     * result and message. If the provided errorMessage is a JSON structure it is
+     * expanded for a nicely formatted response.
      *
      * @param status the status code to put in the response
      * @param result the result to put in the response
@@ -264,20 +265,12 @@ public class RemremGenerateController {
     public void initializeResponse(HttpStatus status, ResultStatus result, String errorMessage, JsonObject errorResponse) {
         errorResponse.addProperty(JSON_STATUS_CODE_FIELD, status.value());
         errorResponse.addProperty(JSON_STATUS_RESULT_FIELD, result.toString());
-        log.warn("******");
-        log.warn("errorMessage: {}", errorMessage);
-        log.warn("resultMessage: {}", result.toString());
 
-        // If the provided errorMessage is a JSON structure we want to expand this
-        // before returning the response
         try {
-            log.warn("******");
-            log.warn("trying to parse json: {}", errorMessage);
             JsonElement parsedError = JsonParser.parseString(errorMessage);
             errorResponse.add(JSON_ERROR_MESSAGE_FIELD, parsedError);
         } catch (JsonSyntaxException e) {
-            // Fallback to string if resultMessage is not valid JSON
-            log.warn("failed to parse json, returning string instead!");
+            // Fallback to string if errorMessage is not valid JSON
             errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
         }
     }
