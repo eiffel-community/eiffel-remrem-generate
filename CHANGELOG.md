@@ -1,4 +1,8 @@
 ## 2.1.18
+- Error API responses are returned in JSON format
+- The "message" key in unsuccessful API responses contain error details
+
+## 2.1.17
 - Validation of PURLs of EiffelArtifactCreatedEvent introduced.
 
 ## 2.1.16

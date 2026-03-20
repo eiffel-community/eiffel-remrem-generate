@@ -351,6 +351,17 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 503,
+             "message": "Handler of Eiffel protocol 'other' not found",
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 

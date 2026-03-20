@@ -163,7 +163,7 @@ public class RemremGenerateController {
         JsonArray generatedEventResults = new JsonArray();
         try {
             if (lookupLimit <= 0) {
-                return new ResponseEntity<>("Parameter 'lookupLimit' must be > 0", HttpStatus.BAD_REQUEST);
+                return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'lookupLimit' must be > 0", ResultStatus.FAIL);
             }
             if (inputData == null) {
                 return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'inputData' must not be null",
@@ -377,7 +377,7 @@ public class RemremGenerateController {
                                 log.info("The result from Event Repository is: " + response.getStatusCodeValue());
                             }
                         } catch (Exception e) {
-                            log.error("unable to connect configured Event Repository URL" + e.getMessage());
+                            log.error("Unable to connect to configured Event Repository URL " + e.getMessage());
                             response = null;
                         }
                         if (response == null) {
