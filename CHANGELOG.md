@@ -1,9 +1,7 @@
 ## NEXT VERSION
 - Uplifted OpenApi Spec and Swagger-UI to latest version
-
-## 2.1.18
-- Error API responses are returned in JSON format
-- The "message" key in unsuccessful API responses contain error details
+- Error API responses are returned in JSON format with the "message" key containing details
+- Add input and response examples for the /mp API endpoint
 
 ## 2.1.17
 - Validation of PURLs of EiffelArtifactCreatedEvent introduced.
