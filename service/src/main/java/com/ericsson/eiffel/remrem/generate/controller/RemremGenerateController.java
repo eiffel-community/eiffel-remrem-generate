@@ -28,7 +28,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 
 import ch.qos.logback.classic.Logger;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -46,8 +50,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import springfox.documentation.annotations.ApiIgnore;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +59,7 @@ import java.util.Map.Entry;
 import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
 @RestController
 @RequestMapping("/*")
-@Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
+@Tag(name = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
     static Logger log = (Logger) LoggerFactory.getLogger(RemremGenerateController.class);
@@ -107,23 +109,21 @@ public class RemremGenerateController {
      * <p>
      * Returns: The event information as a json element
      */
-
-    @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Event sent successfully"),
-            @ApiResponse(code = 400, message = "Malformed JSON"),
-            @ApiResponse(code = 207, message = "Partial success/failure in response"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid")})
+    @Operation(summary = "To generate Eiffel event based on the message protocol")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Event sent successfully"),
+            @ApiResponse(responseCode = "207", description = "Partial success/failure in response"),
+            @ApiResponse(responseCode = "400", description = "Malformed JSON"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Message protocol is invalid")})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-                                      @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
-                                      @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
-                                      @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
-                                      @ApiParam(value = "Ignore PURL validation") @RequestParam(value = "ignorePURLValidation", required = false, defaultValue = "${ignorePURLValidation:true}") final Boolean ignorePurlValidation,
-                                      @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
+    public ResponseEntity<?> generate(@Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @Parameter(description = "message type", required = true) @RequestParam("msgType") final String msgType,
+                                      @Parameter(description = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
+                                      @Parameter(description = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+                                      @Parameter(description = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
+                                      @Parameter(description = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+                                      @Parameter(description = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
+                                      @Parameter(description = "JSON message", required = true) @RequestBody String body) {
         try {
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
                     .Feature.STRICT_DUPLICATE_DETECTION);
@@ -441,7 +441,7 @@ public class RemremGenerateController {
      *
      * @return json with version details.
      */
-    @ApiOperation(value = "To get versions of generate and all loaded protocols", response = String.class)
+    @Operation(summary = "To get versions of generate and all loaded protocols")
     @RequestMapping(value = "/versions", method = RequestMethod.GET)
     public JsonElement getVersions() {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
@@ -453,7 +453,7 @@ public class RemremGenerateController {
      *
      * @return json with service names and respective edition details.
      */
-    @ApiOperation(value = "To get the available message protocol list and edition names", response = String.class)
+    @Operation(summary = "To get the available message protocol list and edition names")
     @RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
     public JsonElement getMessageProtocols() {
         JsonArray array = new JsonArray();
@@ -477,14 +477,14 @@ public class RemremGenerateController {
      *
      * @return string collection with event types.
      */
-    @ApiOperation(value = "To get available eiffel event types based on the message protocol", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event  types got successfully"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+    @Operation(summary = "To get available eiffel event types based on the message protocol")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Event  types got successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Message protocol is invalid") })
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypes(
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiIgnore final RequestEntity requestEntity) {
+            @Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+            @Parameter(hidden = true) final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
             if (msgService != null) {
@@ -505,16 +505,16 @@ public class RemremGenerateController {
      *
      * @return json containing eiffel event template.
      */
-    @ApiOperation(value = "To get eiffel event template of specified event type", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Template got successfully"),
-            @ApiResponse(code = 400, message = "Requested template is not available"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+    @Operation(summary = "To get eiffel event template of specified event type")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Template got successfully"),
+            @ApiResponse(responseCode = "400", description = "Requested template is not available"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Message protocol is invalid") })
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypeTemplate(
-            @ApiParam(value = "message type", required = true) @PathVariable("type") final String msgType,
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiIgnore final RequestEntity requestEntity) {
+            @Parameter(description = "message type", required = true) @PathVariable("type") final String msgType,
+            @Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+            @Parameter(hidden = true) final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
             if (msgService != null) {

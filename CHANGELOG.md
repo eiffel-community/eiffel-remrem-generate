@@ -1,3 +1,6 @@
+## NEXT VERSION
+- Uplifted OpenApi Spec and Swagger-UI to latest version
+
 ## 2.1.18
 - Error API responses are returned in JSON format
 - The "message" key in unsuccessful API responses contain error details
