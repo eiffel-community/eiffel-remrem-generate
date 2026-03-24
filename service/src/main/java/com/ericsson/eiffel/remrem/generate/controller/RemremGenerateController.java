@@ -30,6 +30,8 @@ import com.google.gson.*;
 import ch.qos.logback.classic.Logger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,6 +59,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
+import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateResponseExamples.*;
 @RestController
 @RequestMapping("/*")
 @Tag(name = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
@@ -110,11 +113,47 @@ public class RemremGenerateController {
      * Returns: The event information as a json element
      */
     @Operation(summary = "To generate Eiffel event based on the message protocol")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Event sent successfully"),
-            @ApiResponse(responseCode = "207", description = "Partial success/failure in response"),
-            @ApiResponse(responseCode = "400", description = "Malformed JSON"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Message protocol is invalid")})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Event sent successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(name = "Single event response", value = RESPONSE_200_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event response", value = RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "400", description = "Malformed JSON",
+            content = @Content(mediaType = "application/json",
+                examples = {
+                    @ExampleObject(name = "Single event failure", value = RESPONSE_400_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event failures", value = RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "207", description = "Partial success/failure in response",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = RESPONSE_207_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content= @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = RESPONSE_500_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content= @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = RESPONSE_503_EXAMPLE)
+                }
+            )
+        )})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
                                       @Parameter(description = "message type", required = true) @RequestParam("msgType") final String msgType,
@@ -123,7 +162,20 @@ public class RemremGenerateController {
                                       @Parameter(description = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
                                       @Parameter(description = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
                                       @Parameter(description = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
-                                      @Parameter(description = "JSON message", required = true) @RequestBody String body) {
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                              description = "JSON message",
+                                              required = true,
+                                              content = @Content(
+                                                      mediaType = "application/json",
+                                                      examples = {
+                                                              @ExampleObject(
+                                                                      name = "Single event",
+                                                                      value = REQUEST_INPUT_EXAMPLE
+                                                              )
+                                                      }
+                                              )
+                                      ) @RequestBody String body
+                                    ) {
         try {
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
                     .Feature.STRICT_DUPLICATE_DETECTION);
