@@ -118,15 +118,15 @@ public class RemremGenerateController {
             content = @Content(
                 mediaType = "application/json",
                 examples = {
-                    @ExampleObject(name = "Single event response", value = RESPONSE_200_SINGLE_EVENT_EXAMPLE),
-                    @ExampleObject(name = "Multiple event response", value = RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE)}
+                    @ExampleObject(name = "Single event response", value = MP_RESPONSE_200_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event response", value = MP_RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE)}
             )
         ),
         @ApiResponse(responseCode = "400", description = "Malformed JSON",
             content = @Content(mediaType = "application/json",
                 examples = {
-                    @ExampleObject(name = "Single event failure", value = RESPONSE_400_SINGLE_EVENT_EXAMPLE),
-                    @ExampleObject(name = "Multiple event failures", value = RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE)
+                    @ExampleObject(name = "Single event failure", value = MP_RESPONSE_400_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event failures", value = MP_RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE)
                 }
             )
         ),
@@ -134,7 +134,7 @@ public class RemremGenerateController {
             content = @Content(
                 mediaType = "application/json",
                 examples = {
-                    @ExampleObject(value = RESPONSE_207_EXAMPLE)
+                    @ExampleObject(value = MP_RESPONSE_207_EXAMPLE)
                 }
             )
         ),
@@ -142,7 +142,7 @@ public class RemremGenerateController {
             content= @Content(
                 mediaType = "application/json",
                 examples = {
-                    @ExampleObject(value = RESPONSE_500_EXAMPLE)
+                    @ExampleObject(value = MP_RESPONSE_500_EXAMPLE)
                 }
             )
         ),
@@ -150,7 +150,7 @@ public class RemremGenerateController {
             content= @Content(
                 mediaType = "application/json",
                 examples = {
-                    @ExampleObject(value = RESPONSE_503_EXAMPLE)
+                    @ExampleObject(value = MP_RESPONSE_503_EXAMPLE)
                 }
             )
         )})
@@ -170,7 +170,7 @@ public class RemremGenerateController {
                                                       examples = {
                                                               @ExampleObject(
                                                                       name = "Single event",
-                                                                      value = REQUEST_INPUT_EXAMPLE
+                                                                      value = MP_REQUEST_INPUT_EXAMPLE
                                                               )
                                                       }
                                               )
@@ -494,6 +494,14 @@ public class RemremGenerateController {
      * @return json with version details.
      */
     @Operation(summary = "To get versions of generate and all loaded protocols")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Versions retrieved",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = VERSIONS_RESPONSE_200_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/versions", method = RequestMethod.GET)
     public JsonElement getVersions() {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
@@ -506,6 +514,14 @@ public class RemremGenerateController {
      * @return json with service names and respective edition details.
      */
     @Operation(summary = "To get the available message protocol list and edition names")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Versions retrieved",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = MESSAGE_PROTOCOLS_RESPONSE_200_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
     public JsonElement getMessageProtocols() {
         JsonArray array = new JsonArray();
@@ -529,10 +545,27 @@ public class RemremGenerateController {
      *
      * @return string collection with event types.
      */
-    @Operation(summary = "To get available eiffel event types based on the message protocol")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Event  types got successfully"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Message protocol is invalid") })
+    @Operation(summary = "To get available Eiffel event types based on the message protocol")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Event  types got successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_200_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_500_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_503_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypes(
             @Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
@@ -555,13 +588,35 @@ public class RemremGenerateController {
     /**
      * Returns an eiffel event template matching the type specified in the path.
      *
-     * @return json containing eiffel event template.
+     * @return json containing Eiffel event template.
      */
-    @Operation(summary = "To get eiffel event template of specified event type")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Template got successfully"),
-            @ApiResponse(responseCode = "400", description = "Requested template is not available"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Message protocol is invalid") })
+    @Operation(summary = "To get Eiffel event template of specified event type")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Template got successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_200_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "404", description = "Requested template is not available",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_404_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_500_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_503_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypeTemplate(
             @Parameter(description = "message type", required = true) @PathVariable("type") final String msgType,

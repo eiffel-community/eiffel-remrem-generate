@@ -16,7 +16,7 @@ package com.ericsson.eiffel.remrem.generate.constants;
 
 public final class RemremGenerateResponseExamples {
 
-    public static final String RESPONSE_200_SINGLE_EVENT_EXAMPLE = """
+    public static final String MP_RESPONSE_200_SINGLE_EVENT_EXAMPLE = """
         {
             "meta": {
                 "type": "EiffelActivityFinishedEvent",
@@ -33,7 +33,7 @@ public final class RemremGenerateResponseExamples {
         }
     """;
 
-    public static final String RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE = """
+    public static final String MP_RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE = """
         [{
             "meta": {
                 "type": "EiffelActivityFinishedEvent",
@@ -64,7 +64,7 @@ public final class RemremGenerateResponseExamples {
         }]
     """;
 
-    public static final String RESPONSE_207_EXAMPLE = """
+    public static final String MP_RESPONSE_207_EXAMPLE = """
         [
           {
             "meta": {
@@ -102,7 +102,7 @@ public final class RemremGenerateResponseExamples {
         ]
     """;
 
-    public static final String RESPONSE_400_SINGLE_EVENT_EXAMPLE = """
+    public static final String MP_RESPONSE_400_SINGLE_EVENT_EXAMPLE = """
         {
             "status code": 400,
              "message": {
@@ -113,7 +113,7 @@ public final class RemremGenerateResponseExamples {
         }
     """;
 
-    public static final String RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE = """
+    public static final String MP_RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE = """
         [
             {
                 "status code": 400,
@@ -134,7 +134,7 @@ public final class RemremGenerateResponseExamples {
         ]
     """;
 
-    public static final String RESPONSE_500_EXAMPLE = """
+    public static final String MP_RESPONSE_500_EXAMPLE = """
         {
             "status code": 500,
             "message": "Error while processing the request",
@@ -142,7 +142,7 @@ public final class RemremGenerateResponseExamples {
         }
     """;
 
-    public static final String RESPONSE_503_EXAMPLE = """
+    public static final String MP_RESPONSE_503_EXAMPLE = """
         {
             "status code": 503,
              "message": "Handler of Eiffel protocol 'other' not found",
@@ -150,13 +150,133 @@ public final class RemremGenerateResponseExamples {
         }
     """;
 
-    public static final String REQUEST_INPUT_EXAMPLE = """
+    public static final String MP_REQUEST_INPUT_EXAMPLE = """
         {
             "msgParams": {"meta": {"type": "EiffelActivityFinishedEvent"}},
             "eventParams": {
                 "data": {"outcome": {"conclusion": "SUCCESSFUL"}},
                 "links": [{"type":"ACTIVITY_EXECUTION", "target": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee1"}]
             }
+        }
+    """;
+
+    // Response examples for /versions API endpoint
+
+    public static final String VERSIONS_RESPONSE_200_EXAMPLE = """
+        {
+          "serviceVersion": {
+            "serviceVersion": "0.0.1"
+          },
+          "endpointVersions": {
+            "semanticsVersion": "0.0.1"
+          }
+        }
+    """;
+
+    // Response examples for /template/{type/{mp} API endpoint
+
+    public static final String TEMPLATE_RESPONSE_200_EXAMPLE = """
+        {
+          "msgParams": {
+            "meta": {
+              "type": "EiffelAnnouncementPublishedEvent",
+              "version": "3.0.0",
+              "tags": [
+                ""
+              ],
+              "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+              }
+            }
+          },
+          "eventParams": {
+            "data": {
+              "heading": "required",
+              "body": "required",
+              "uri": "",
+              "severity": "required, can be anyone of MINOR,MAJOR,CRITICAL,BLOCKER,CLOSED,CANCELED ",
+              "customData": [
+                {
+                  "key": "required if customData present",
+                  "value": "required if customData present"
+                }
+              ]
+            },
+            "links": [
+              {
+                "type": "CAUSE or CONTEXT or FLOW_CONTEXT or MODIFIED_ANNOUNCEMENT - optional",
+                "target": "required - UUID if type is present"
+              }
+            ]
+          }
+        }
+    """;
+
+    public static final String TEMPLATE_RESPONSE_404_EXAMPLE = """
+        {
+          "status_code": 404,
+          "result": "FAIL",
+          "message": "Requested template is not available"
+        }
+    """;
+
+    public static final String TEMPLATE_RESPONSE_500_EXAMPLE = """
+        {
+          "status_code": 500,
+          "result": "FAIL",
+          "message": "Internal server error"
+        }
+    """;
+
+    public static final String TEMPLATE_RESPONSE_503_EXAMPLE = """
+        {
+          "status_code": 503,
+          "result": "FAIL",
+          "message": "No protocol has been found registered"
+        }
+    """;
+
+    // Response examples for /message_protocols API endpoint
+
+    public static final String MESSAGE_PROTOCOLS_RESPONSE_200_EXAMPLE = """
+        [
+          {
+            "name": "eiffelsemantics",
+            "edition": "Paris"
+          }
+        ]
+    """;
+
+    // Response examples for /event_types/{mp} API endpoint
+
+    public static final String EVENT_TYPES_RESPONSE_200_EXAMPLE = """
+        [
+          "EiffelArtifactPublishedEvent",
+          "EiffelActivityFinishedEvent",
+          "EiffelActivityCanceledEvent",
+          "EiffelArtifactCreatedEvent",
+          "EiffelActivityTriggeredEvent",
+          "EiffelConfidenceLevelModifiedEvent",
+          "EiffelActivityStartedEvent"
+        ]
+    """;
+
+    public static final String EVENT_TYPES_RESPONSE_500_EXAMPLE = """
+        {
+          "status_code": 500,
+          "result": "FAIL",
+          "message": "Internal Server Error"
+        }
+    """;
+
+    public static final String EVENT_TYPES_RESPONSE_503_EXAMPLE = """
+        {
+          "status_code": 503,
+          "result": "FAIL",
+          "message": "No protocol service has been found registered"
         }
     """;
 
