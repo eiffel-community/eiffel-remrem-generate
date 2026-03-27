@@ -2,7 +2,9 @@
 
 ## Usage
 
-REMReM Generate Service allows generating of Eiffel messages that will be sent by [Eiffel REMReM Publish](https://github.com/eiffel-community/eiffel-remrem-publish) to RabbitMQ.
+REMReM Generate is a service responsible for creating Eiffel protocol messages.
+The generated messages can subsequently be published using the [Eiffel REMReM Publish](https://github.com/eiffel-community/eiffel-remrem-publish)
+service to RabbitMQ.
 
 Information about the REMReM Generate Service all endpoints can be got and easily accessed using next links:
 
