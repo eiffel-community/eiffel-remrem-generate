@@ -21,7 +21,7 @@ public final class RemremGenerateResponseExamples {
             "meta": {
                 "type": "EiffelActivityFinishedEvent",
                 "id": "aaaaaaaa-bbbb-5ccc-8ddd-eeeeeeeeeee0",
-                "version":"",
+                "version":"3.3.0",
                 "time": 1495061797000,
                 "tags": [],
                     "source": {
