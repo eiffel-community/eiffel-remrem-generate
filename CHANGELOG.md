@@ -1,4 +1,4 @@
-## NEXT VERSION
+## 2.1.19
 - Uplifted OpenApi Spec and Swagger-UI to latest version
 
 ## 2.1.18
