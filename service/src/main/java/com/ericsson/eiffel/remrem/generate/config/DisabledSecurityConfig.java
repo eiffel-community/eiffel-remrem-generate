@@ -15,11 +15,12 @@
 package com.ericsson.eiffel.remrem.generate.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * This class is used to disable the ldap authentication based on property
@@ -31,20 +32,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @ConditionalOnProperty(value = "activedirectory.generate.enabled", havingValue = "false", matchIfMissing = true)
 @Configuration
 @EnableWebSecurity
-public class DisabledSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .anyRequest()
-            .permitAll()
-            .and()
-            .csrf()
-            // The application uses non-browser clients. Yes, there is swagger interface,
-            // but is's used only for testing/tuning.
-            //
-            // From https://docs.spring.io/spring-security/reference/features/exploits/csrf.html
-            // "If you are creating a service that is used only by non-browser clients,
-            //  you likely want to disable CSRF protection."
-            .disable();
+public class DisabledSecurityConfig {
+    @Bean
+    public SecurityFilterChain disabledSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+            .csrf(csrf -> csrf.disable());
+        return http.build();
     }
 }
