@@ -1,7 +1,10 @@
 ## 2.1.19
 - Uplifted OpenApi Spec and Swagger-UI to latest version
+- Error API responses are now returned in proper JSON format with the "message" key containing details
+- Add input and response examples for all API endpoints in the Web UI
+- Update user documentation with new API response examples
 
-## 2.1.18
+## 2.1.17
 - Validation of PURLs of EiffelArtifactCreatedEvent introduced.
 
 ## 2.1.16
