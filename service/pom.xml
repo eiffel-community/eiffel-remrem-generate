@@ -59,6 +59,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
+            <version>7.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
