@@ -52,13 +52,13 @@ public class GsonHttpMessageConverterWithValidate extends GsonHttpMessageConvert
 	protected Object readInternal(Type resolvedType, Reader reader) throws Exception {
     	try {
             final String json = IOUtils.toString(reader);
-            if (resolvedType == String.class) {
-                return json;
-            }
             // do the actual validation
             final ObjectMapper mapper = new ObjectMapper();
             mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
             mapper.readTree(json);
+            if (resolvedType == String.class) {
+                return json;
+            }
     		return this.gson.fromJson(json, resolvedType);
         } catch (JsonParseException ex) {
             throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex, null);
