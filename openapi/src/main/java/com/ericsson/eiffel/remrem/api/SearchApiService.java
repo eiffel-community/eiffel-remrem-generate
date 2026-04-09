@@ -1,6 +1,6 @@
 package com.ericsson.eiffel.remrem.api;
 
-import com.ericsson.eiffel.remrem.model.InlineResponse2001;
+import com.ericsson.eiffel.remrem.model.SearchUsingPOST200Response;
 import com.ericsson.eiffel.remrem.model.SearchParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +27,7 @@ public class SearchApiService implements SearchApiDelegate {
             summary = "To get upstream/downstream events for an event based on the searchParameters passed",
             tags = { "API" },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  InlineResponse2001.class))),
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  SearchUsingPOST200Response.class))),
                     @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "403", description = "Forbidden"),
@@ -41,7 +41,7 @@ public class SearchApiService implements SearchApiDelegate {
             produces = { "application/json" },
             consumes = { "application/json" }
     )
-    public ResponseEntity<InlineResponse2001> searchUsingPOST(
+    public ResponseEntity<SearchUsingPOST200Response> searchUsingPOST(
             @Parameter(name = "id", description = "Id of the event.", required = true, schema = @Schema(description = "")) @PathVariable("id") String id,
             @Parameter(name = "limit", description = "Determines the maximum amount of events to be fetched. Use `-1` for maximum amount of the events the server can provide. ", schema = @Schema(description = "", defaultValue = "-1")) @Valid @RequestParam(value = "limit", required = false, defaultValue = "-1") Integer limit,
             @Parameter(name = "levels", description = "Determines the maximum amount of levels to search. Use `-1` for maximum amount of levels the server can search ", schema = @Schema(description = "", defaultValue = "-1")) @Valid @RequestParam(value = "levels", required = false, defaultValue = "-1") Integer levels,

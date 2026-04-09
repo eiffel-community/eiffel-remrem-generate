@@ -56,9 +56,20 @@ public class GsonHttpMessageConverterWithValidate extends GsonHttpMessageConvert
             final ObjectMapper mapper = new ObjectMapper();
             mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
             mapper.readTree(json);
+            if (resolvedType == String.class) {
+                return json;
+            }
     		return this.gson.fromJson(json, resolvedType);
         } catch (JsonParseException ex) {
-            throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
+            throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex, null);
         }
+	}
+
+	@Override
+	public boolean canWrite(Class<?> clazz, org.springframework.http.MediaType mediaType) {
+		if (clazz == byte[].class) {
+			return false;
+		}
+		return super.canWrite(clazz, mediaType);
 	}
 }
