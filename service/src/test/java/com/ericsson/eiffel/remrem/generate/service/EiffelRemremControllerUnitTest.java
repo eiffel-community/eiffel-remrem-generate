@@ -1,5 +1,5 @@
 /*
-    Copyright 2019 Ericsson AB.
+    Copyright 2019-2026 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,18 +14,13 @@
 */
 package com.ericsson.eiffel.remrem.generate.service;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,8 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -135,14 +128,13 @@ class Eiffel3MsgService implements MsgService {
 
 @RunWith(SpringRunner.class)
 public class EiffelRemremControllerUnitTest {
-    
+
     @InjectMocks
     RemremGenerateController unit = new RemremGenerateController();
 
-    
     @Mock
     MsgService service;
-    
+
 //    @Mock
     Eiffel3MsgService service2 = new Eiffel3MsgService();
 
@@ -162,20 +154,9 @@ public class EiffelRemremControllerUnitTest {
         msgServices.add(service2);
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
 
-        URL jsonInputURL = getClass().getClassLoader().getResource("successInput.json");
-        String inputFilePath = jsonInputURL.getPath().replace("%20"," ");
-        File jsonFile = new File(inputFilePath);
-        String successOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
-
-        jsonInputURL = getClass().getClassLoader().getResource("errorInput.json");
-        inputFilePath = jsonInputURL.getPath().replace("%20"," ");
-        jsonFile = new File(inputFilePath);
-        String errorOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
-
-        URL lv_jsonInputURL = getClass().getClassLoader().getResource("lv_successInput.json");
-        String lv_inputFilePath = lv_jsonInputURL.getPath().replace("%20"," ");
-        File lv_jsonFile = new File(lv_inputFilePath);
-        String lv_successOutput = new BufferedReader(new FileReader(lv_jsonFile)).readLine();
+        String successOutput = Files.readString(Path.of("src/test/resources/successInput.json"));
+        String errorOutput = Files.readString(Path.of("src/test/resources/errorResponse.json"));
+        String lv_successOutput = Files.readString(Path.of("src/test/resources/lv_successInput.json"));
 
         Mockito.when(service.generateMsg(
                 eq("eiffelactivityfinished"),
@@ -230,6 +211,20 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 400,
+             "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+             },
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -241,6 +236,29 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+        String response = """
+        [
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            },
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            }
+        ]
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -274,6 +292,20 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 400,
+             "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+             },
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -285,6 +317,30 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        [
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            },
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            }
+        ]
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     @Test
@@ -295,6 +351,17 @@ public class EiffelRemremControllerUnitTest {
         ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent",
             false, false, true, 1,
             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 503,
+             "message": "Handler of Eiffel protocol 'other' not found",
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 

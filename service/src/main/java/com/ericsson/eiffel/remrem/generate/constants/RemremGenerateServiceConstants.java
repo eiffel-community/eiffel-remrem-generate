@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Ericsson AB.
+    Copyright 2018-2026 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ public final class RemremGenerateServiceConstants {
 
         public static final String NO_SERVICE_ERROR = "{\"status_code\": 503, \"result\": \"FAIL\", "
                 + "\"message\":\"No protocol service has been found registered\"}";
-        
+
         public static final String NO_ER = "{\"status_code\": 503, \"result\": \"FAIL\", "
                 + "\"message\":\"ER is down\"}";
 
@@ -31,8 +31,6 @@ public final class RemremGenerateServiceConstants {
         public static final String INTERNAL_SERVER_ERROR = "{\"status_code\": 500, \"result\": \"FAIL\", "
                 + "\"message\":\"Internal server error\"}";
 
-        public static final String JSON_ERROR_MESSAGE_FIELD = "message";
-
         public static final String DOCUMENTATION_URL = "https://github.com/eiffel-community/eiffel-remrem-generate/blob/master/wiki/markdown/index.md";
 
         public static final String UNAVAILABLE_FOR_FAILIFMULTIPLEFOUND = "{\"status_code\": 417, \"result\": \"FAIL\", "
@@ -40,7 +38,7 @@ public final class RemremGenerateServiceConstants {
 
         public static final String UNAVAILABLE_FOR_FAILIFNONEFOUND = "{\"status_code\": 406, \"result\": \"FAIL\", "
                 + "\"message\":\"No event ID found with ERLookup properties\"}";
-        
+
         public static final String NOT_ACCEPTABLE = "{\"status_code\": 406, \"result\": \"FAIL\", "
                 + "\"message\":\"Not Acceptable - Lenient validation is not enabled in the configuration, your not allowed to use this option\"}";
 
@@ -53,18 +51,19 @@ public final class RemremGenerateServiceConstants {
 
         public static final String LOOKUP_IN_EXTERNAL_ERS = "Determines if external ER's should be used to compile the results of query."
                 + "Use true to use External ER's.";
-        
+
         public static final String LenientValidation = "okToLeaveOutInvalidOptionalFields true will remove the optional "
                 + "event fields from the input event data that does not validate successfully, "
                 + "and add those removed field information into customData/remremGenerateFailures";
 
-        public static final String JSON_STATUS_CODE = "status code";
+        public static final String JSON_ERROR_MESSAGE_FIELD = "message";
 
-        public static final String JSON_STATUS_RESULT = "result";
+        public static final String JSON_STATUS_CODE_FIELD = "status code";
 
-        public static final String META = "meta";
+        public static final String JSON_STATUS_RESULT_FIELD = "result";
 
-        public static final String JSON_ERROR_STATUS = "FAIL";
-
-        public static final String JSON_FATAL_STATUS = "FATAL";
+        public enum ResultStatus {
+                FAIL,
+                FATAL
+        }
 }
