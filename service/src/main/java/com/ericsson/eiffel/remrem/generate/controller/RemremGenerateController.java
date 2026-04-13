@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Ericsson AB.
+    Copyright 2018-2026 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConsta
 import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundException;
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
+import com.ericsson.eiffel.remrem.semantics.util.PropertiesUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +28,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 
 import ch.qos.logback.classic.Logger;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -44,17 +52,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import springfox.documentation.annotations.ApiIgnore;
-
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
+import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateResponseExamples.*;
 @RestController
 @RequestMapping("/*")
-@Api(value = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
+@Tag(name = "REMReM Generate Service", description = "REST API for generating Eiffel messages")
 public class RemremGenerateController {
 
     static Logger log = (Logger) LoggerFactory.getLogger(RemremGenerateController.class);
@@ -71,9 +79,12 @@ public class RemremGenerateController {
     private ErLookUpConfig erlookupConfig;
 
     private static ResponseEntity<String> response;
-    
+
     @Value("${lenientValidationEnabledToUsers:false}")
     private boolean lenientValidationEnabledToUsers;
+
+    @Value("${ignorePURLValidation:true}")
+    private boolean ignorePurlValidation;
 
     @Value("${maxSizeOfInputArray:250}")
     private int maxSizeOfInputArray = 250;
@@ -101,21 +112,70 @@ public class RemremGenerateController {
      * <p>
      * Returns: The event information as a json element
      */
-
-    @ApiOperation(value = "To generate eiffel event based on the message protocol", response = String.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Event sent successfully"),
-            @ApiResponse(code = 400, message = "Malformed JSON"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid")})
+    @Operation(summary = "To generate Eiffel event based on the message protocol")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Event sent successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(name = "Single event response", value = MP_RESPONSE_200_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event response", value = MP_RESPONSE_200_MULTIPLE_EVENTS_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "400", description = "Malformed JSON",
+            content = @Content(mediaType = "application/json",
+                examples = {
+                    @ExampleObject(name = "Single event failure", value = MP_RESPONSE_400_SINGLE_EVENT_EXAMPLE),
+                    @ExampleObject(name = "Multiple event failures", value = MP_RESPONSE_400_MULTIPLE_EVENTS_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "207", description = "Partial success/failure in response",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = MP_RESPONSE_207_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content= @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = MP_RESPONSE_500_EXAMPLE)
+                }
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content= @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(value = MP_RESPONSE_503_EXAMPLE)
+                }
+            )
+        )})
     @RequestMapping(value = "/{mp" + REGEX + "}", method = RequestMethod.POST)
-    public ResponseEntity<?> generate(@ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-                                      @ApiParam(value = "message type", required = true) @RequestParam("msgType") final String msgType,
-                                      @ApiParam(value = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
-                                      @ApiParam(value = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
-                                      @ApiParam(value = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
-                                      @ApiParam(value = "JSON message", required = true) @RequestBody String body) {
+    public ResponseEntity<?> generate(@Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+                                      @Parameter(description = "message type", required = true) @RequestParam("msgType") final String msgType,
+                                      @Parameter(description = "ER lookup result multiple found, Generate will fail") @RequestParam(value = "failIfMultipleFound", required = false, defaultValue = "false") final Boolean failIfMultipleFound,
+                                      @Parameter(description = "ER lookup result none found, Generate will fail") @RequestParam(value = "failIfNoneFound", required = false, defaultValue = "false") final Boolean failIfNoneFound,
+                                      @Parameter(description = RemremGenerateServiceConstants.LOOKUP_IN_EXTERNAL_ERS) @RequestParam(value = "lookupInExternalERs", required = false, defaultValue = "false") final Boolean lookupInExternalERs,
+                                      @Parameter(description = RemremGenerateServiceConstants.LOOKUP_LIMIT) @RequestParam(value = "lookupLimit", required = false, defaultValue = "1") final int lookupLimit,
+                                      @Parameter(description = RemremGenerateServiceConstants.LenientValidation) @RequestParam(value = "okToLeaveOutInvalidOptionalFields", required = false, defaultValue = "false") final Boolean okToLeaveOutInvalidOptionalFields,
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                              description = "JSON message",
+                                              required = true,
+                                              content = @Content(
+                                                      mediaType = "application/json",
+                                                      examples = {
+                                                              @ExampleObject(
+                                                                      name = "Single event",
+                                                                      value = MP_REQUEST_INPUT_EXAMPLE
+                                                              )
+                                                      }
+                                              )
+                                      ) @RequestBody String body
+                                    ) {
         try {
             JsonFactory jsonFactory = JsonFactory.builder().build().enable(com.fasterxml.jackson.core.JsonParser
                     .Feature.STRICT_DUPLICATE_DETECTION);
@@ -123,13 +183,16 @@ public class RemremGenerateController {
             JsonNode node = mapper.readTree(body);
             Gson gson = new Gson();
             JsonElement inputJson = gson.fromJson(node.toString(), JsonElement.class);
+            HashMap<String, Object> generateProperties = new HashMap<>();
+            generateProperties.put(SemanticsService.LENIENT_VALIDATION, okToLeaveOutInvalidOptionalFields);
+            generateProperties.put(SemanticsService.VALIDATE_PURL_FOR_ART_C, !ignorePurlValidation);
             return generate(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound, lookupInExternalERs,
-                    lookupLimit, okToLeaveOutInvalidOptionalFields, inputJson);
+                    lookupLimit, generateProperties, inputJson);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             String exceptionMessage = e.getMessage();
             log.error("Invalid JSON parse data format due to", exceptionMessage);
             return createResponseEntity(HttpStatus.BAD_REQUEST, "Invalid JSON parse data format due to: "
-                    + exceptionMessage, JSON_FATAL_STATUS);
+                    + exceptionMessage, ResultStatus.FATAL);
         }
     }
 
@@ -147,25 +210,26 @@ public class RemremGenerateController {
      */
     public ResponseEntity<?> generate(final String msgProtocol, final String msgType, final Boolean failIfMultipleFound,
                                       final Boolean failIfNoneFound, final Boolean lookupInExternalERs, final int lookupLimit,
-                                      final Boolean okToLeaveOutInvalidOptionalFields, JsonElement inputData) {
+                                      final HashMap<String, Object> generateProperties, JsonElement inputData) {
 
         JsonArray generatedEventResults = new JsonArray();
         try {
             if (lookupLimit <= 0) {
-                return new ResponseEntity<>("Parameter 'lookupLimit' must be > 0", HttpStatus.BAD_REQUEST);
+                return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'lookupLimit' must be > 0", ResultStatus.FAIL);
             }
             if (inputData == null) {
                 return createResponseEntity(HttpStatus.BAD_REQUEST, "Parameter 'inputData' must not be null",
-                        JSON_ERROR_STATUS);
+                        ResultStatus.FAIL);
             }
 
             if (inputData.isJsonArray()) {
                 JsonArray inputEventJsonArray = inputData.getAsJsonArray();
 
                 if (inputEventJsonArray.size() > maxSizeOfInputArray) {
-                    return createResponseEntity(HttpStatus.BAD_REQUEST, JSON_ERROR_STATUS,
+                    return createResponseEntity(HttpStatus.BAD_REQUEST,
                             "The number of events in the input array is too high: " + inputEventJsonArray.size() + " > "
-                                    + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.");
+                                    + maxSizeOfInputArray + "; you can modify the property 'maxSizeOfInputArray' to increase it.",
+                            ResultStatus.FAIL);
                 }
                 int successCount = 0;
                 int failedCount = 0;
@@ -173,7 +237,7 @@ public class RemremGenerateController {
                     try {
                         JsonObject generatedEvent = generateEvent(msgProtocol, msgType,
                                 failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit,
-                                okToLeaveOutInvalidOptionalFields, element.getAsJsonObject());
+                                generateProperties, element.getAsJsonObject());
                         generatedEventResults.add(generatedEvent);
                         successCount++;
                     } catch (ProtocolHandlerNotFoundException e) {
@@ -184,7 +248,7 @@ public class RemremGenerateController {
                         // Something went wrong. Add failure description to array of results.
                         failedCount++;
                         JsonObject response = new JsonObject();
-                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), JSON_ERROR_STATUS, response);
+                        createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage(), ResultStatus.FAIL, response);
                         generatedEventResults.add(response);
                     }
                 }
@@ -201,12 +265,12 @@ public class RemremGenerateController {
             } else if (inputData.isJsonObject()) {
                 JsonObject inputJsonObject = inputData.getAsJsonObject();
                 JsonObject processedJson = generateEvent(msgProtocol, msgType, failIfMultipleFound, failIfNoneFound,
-                        lookupInExternalERs, lookupLimit, okToLeaveOutInvalidOptionalFields, inputJsonObject);
+                        lookupInExternalERs, lookupLimit, generateProperties, inputJsonObject);
                 return new ResponseEntity<>(processedJson, HttpStatus.OK);
             } else {
                 return createResponseEntity(HttpStatus.BAD_REQUEST,
                         "Invalid JSON format,expected either single template or array of templates",
-                        JSON_ERROR_STATUS);
+                        ResultStatus.FAIL);
             }
         } catch (REMGenerateException | JsonSyntaxException e) {
             return handleException(e);
@@ -214,40 +278,53 @@ public class RemremGenerateController {
     }
 
     /**
-     * To display response in browser or application
-     * @param status response code for the HTTP request
-     * @param responseMessage the message according to response
-     * @param resultMessage whatever the result this message gives you idea about that
-     * @param errorResponse is to collect all the responses here.
+     * Creates a ResponseEntity containing an error response with the given status, message, and result.
+     *
+     * @param status status code for the HTTP request
+     * @param responseMessage the message with more details about the response
+     * @param result the result for the HTTP request
+     * @param errorResponse the existing response object to update
      * @return ResponseEntity
      */
-    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, String resultMessage,
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, ResultStatus result,
                                                            JsonObject errorResponse) {
-        initializeResponse(status, resultMessage, responseMessage, errorResponse);
+        initializeResponse(status, result, responseMessage, errorResponse);
         return new ResponseEntity<>(errorResponse, status);
     }
 
     /**
-     * To display response in browser or application
-     * @param status response code for the HTTP request
-     * @param responseMessage the message according to response
-     * @param resultMessage whatever the result this message gives you idea about that
+     * Creates a ResponseEntity with the given status, message, and result.
+     *
+     * @param status status code for the HTTP request
+     * @param responseMessage the message with more details about the response
+     * @param result the result for the HTTP request
      * @return ResponseEntity
      */
-    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String resultMessage, String responseMessage) {
-        return createResponseEntity(status, responseMessage, resultMessage, new JsonObject());
+    public ResponseEntity<JsonObject> createResponseEntity(HttpStatus status, String responseMessage, ResultStatus result) {
+        return createResponseEntity(status, responseMessage, result, new JsonObject());
     }
 
     /**
-     * To initialize in the @{createResponseEntity} method
-     * @param status response code for the HTTP request
-     * @param resultMessage whatever the result this message gives you idea about that
-     * @param errorResponse is to collect all the responses here.
+     * Update the given JSON object with the provided values for
+     * result and message. If the provided errorMessage is a JSON structure it is
+     * expanded for a nicely formatted response.
+     *
+     * @param status the status code to put in the response
+     * @param result the result to put in the response
+     * @param errorMessage the error message to put in the response
+     * @param errorResponse the error response object to update
      */
-    public void initializeResponse(HttpStatus status, String resultMessage, String errorMessage, JsonObject errorResponse) {
-        errorResponse.addProperty(JSON_STATUS_CODE, status.value());
-        errorResponse.addProperty(JSON_STATUS_RESULT, resultMessage);
-        errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
+    public void initializeResponse(HttpStatus status, ResultStatus result, String errorMessage, JsonObject errorResponse) {
+        errorResponse.addProperty(JSON_STATUS_CODE_FIELD, status.value());
+        errorResponse.addProperty(JSON_STATUS_RESULT_FIELD, result.toString());
+
+        try {
+            JsonElement parsedError = JsonParser.parseString(errorMessage);
+            errorResponse.add(JSON_ERROR_MESSAGE_FIELD, parsedError);
+        } catch (JsonSyntaxException e) {
+            // Fallback to string if errorMessage is not valid JSON
+            errorResponse.addProperty(JSON_ERROR_MESSAGE_FIELD, errorMessage);
+        }
     }
 
     /**
@@ -258,7 +335,7 @@ public class RemremGenerateController {
     private ResponseEntity<JsonObject> handleException(Exception e) {
         String exceptionMessage = e.getMessage();
         if (e instanceof ProtocolHandlerNotFoundException) {
-            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.SERVICE_UNAVAILABLE, exceptionMessage, ResultStatus.FAIL);
         }
 
         if (e instanceof REMGenerateException) {
@@ -268,16 +345,16 @@ public class RemremGenerateController {
             );
             for (HttpStatus status : statusList) {
                 if (exceptionMessage.contains(Integer.toString(status.value()))) {
-                    return createResponseEntity(status, exceptionMessage, JSON_ERROR_STATUS);
+                    return createResponseEntity(status, exceptionMessage, ResultStatus.FAIL);
                 }
             }
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, ResultStatus.FAIL);
         } else if (e instanceof JsonSyntaxException) {
             log.error("Failed to parse JSON", exceptionMessage);
-            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.BAD_REQUEST, exceptionMessage, ResultStatus.FAIL);
         } else {
             log.error("Unexpected exception caught", exceptionMessage);
-            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, JSON_ERROR_STATUS);
+            return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exceptionMessage, ResultStatus.FAIL);
         }
     }
 
@@ -295,7 +372,7 @@ public class RemremGenerateController {
      */
     public JsonObject generateEvent(String msgProtocol, String msgType, Boolean failIfMultipleFound,
                                     Boolean failIfNoneFound, Boolean lookupInExternalERs, int lookupLimit,
-                                    Boolean okToLeaveOutInvalidOptionalFields, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
+                                    HashMap<String, Object> generateProperties, JsonObject jsonObject) throws REMGenerateException, JsonSyntaxException {
         JsonElement parsedResponse;
 
         JsonObject event = erLookup(jsonObject, failIfMultipleFound, failIfNoneFound, lookupInExternalERs, lookupLimit);
@@ -304,7 +381,20 @@ public class RemremGenerateController {
         if (msgService == null) {
             throw new ProtocolHandlerNotFoundException("Handler of Eiffel protocol '" + msgProtocol + "' not found");
         }
-        String response = msgService.generateMsg(msgType, event, isLenientEnabled(okToLeaveOutInvalidOptionalFields));
+
+        log.debug("Event template: \n{}", event.toString());
+
+        String response;
+        try {
+            // Try new API, i.e. with list of properties.
+            response = msgService.generateMsg(msgType, event, generateProperties);
+        } catch (AbstractMethodError e) {
+            // This is a fallback for old API, i.e. with one boolean only, without properties list.
+            log.warn("Using old API for generating message.", e);
+            // Use old API, i.e. with one boolean only, without properties list.
+            boolean lenientValidation = PropertiesUtil.getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
+            response = msgService.generateMsg(msgType, event, lenientValidation);
+        }
         parsedResponse = JsonParser.parseString(response);
         JsonObject parsedJson = parsedResponse.getAsJsonObject();
 
@@ -339,7 +429,7 @@ public class RemremGenerateController {
                                 log.info("The result from Event Repository is: " + response.getStatusCodeValue());
                             }
                         } catch (Exception e) {
-                            log.error("unable to connect configured Event Repository URL" + e.getMessage());
+                            log.error("Unable to connect to configured Event Repository URL " + e.getMessage());
                             response = null;
                         }
                         if (response == null) {
@@ -403,7 +493,15 @@ public class RemremGenerateController {
      *
      * @return json with version details.
      */
-    @ApiOperation(value = "To get versions of generate and all loaded protocols", response = String.class)
+    @Operation(summary = "To get versions of generate and all loaded protocols")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Versions retrieved",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = VERSIONS_RESPONSE_200_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/versions", method = RequestMethod.GET)
     public JsonElement getVersions() {
         Map<String, Map<String, String>> versions = new VersionService().getMessagingVersions();
@@ -415,7 +513,15 @@ public class RemremGenerateController {
      *
      * @return json with service names and respective edition details.
      */
-    @ApiOperation(value = "To get the available message protocol list and edition names", response = String.class)
+    @Operation(summary = "To get the available message protocol list and edition names")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Versions retrieved",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = MESSAGE_PROTOCOLS_RESPONSE_200_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/message_protocols", method = RequestMethod.GET)
     public JsonElement getMessageProtocols() {
         JsonArray array = new JsonArray();
@@ -433,20 +539,37 @@ public class RemremGenerateController {
         }
         return array;
     }
-	
+
     /**
      * Returns available Eiffel event types as listed in EiffelEventType enum.
      *
      * @return string collection with event types.
      */
-    @ApiOperation(value = "To get available eiffel event types based on the message protocol", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Event  types got successfully"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+    @Operation(summary = "To get available Eiffel event types based on the message protocol")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Event  types got successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_200_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_500_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = EVENT_TYPES_RESPONSE_503_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/event_types/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypes(
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiIgnore final RequestEntity requestEntity) {
+            @Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+            @Parameter(hidden = true) final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
             if (msgService != null) {
@@ -465,18 +588,40 @@ public class RemremGenerateController {
     /**
      * Returns an eiffel event template matching the type specified in the path.
      *
-     * @return json containing eiffel event template.
+     * @return json containing Eiffel event template.
      */
-    @ApiOperation(value = "To get eiffel event template of specified event type", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Template got successfully"),
-            @ApiResponse(code = 400, message = "Requested template is not available"),
-            @ApiResponse(code = 500, message = "Internal server error"),
-            @ApiResponse(code = 503, message = "Message protocol is invalid") })
+    @Operation(summary = "To get Eiffel event template of specified event type")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Template got successfully",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_200_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "404", description = "Requested template is not available",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_404_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_500_EXAMPLE)}
+            )
+        ),
+        @ApiResponse(responseCode = "503", description = "Message protocol is invalid",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {@ExampleObject(value = TEMPLATE_RESPONSE_503_EXAMPLE)}
+            )
+        )
+    })
     @RequestMapping(value = "/template/{type}/{mp}", method = RequestMethod.GET)
     public ResponseEntity<?> getEventTypeTemplate(
-            @ApiParam(value = "message type", required = true) @PathVariable("type") final String msgType,
-            @ApiParam(value = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
-            @ApiIgnore final RequestEntity requestEntity) {
+            @Parameter(description = "message type", required = true) @PathVariable("type") final String msgType,
+            @Parameter(description = "message protocol", required = true) @PathVariable("mp") final String msgProtocol,
+            @Parameter(hidden = true) final RequestEntity requestEntity) {
         MsgService msgService = getMessageService(msgProtocol);
         try {
             if (msgService != null) {
@@ -509,7 +654,7 @@ public class RemremGenerateController {
 
     /**
      * To display pretty formatted json in browser
-     * 
+     *
      * @param rawJson
      *            json content
      * @return html formatted json string
@@ -522,7 +667,7 @@ public class RemremGenerateController {
 
     /**
      * To display response in browser or application
-     * 
+     *
      * @param message
      *            json content
      * @param status

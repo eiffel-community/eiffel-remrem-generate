@@ -36,6 +36,12 @@ public class EiffelTemplateGenerateTest {
 
     private Logger log = (Logger) LoggerFactory.getLogger(EiffelTemplateGenerateTest.class);
 
+    /**
+     * Tests all Eiffel event types by iterating through the EiffelEventType enum values
+     * and validating each event type's template generation.
+     *
+     * @throws IOException if an I/O error occurs during event type testing
+     */
     @Test
     public void testEiffelSemanticsTemplate() throws IOException {
         for (EiffelEventType enumValue:EiffelEventType.values()) {

@@ -1,5 +1,5 @@
 /*
-    Copyright 2019 Ericsson AB.
+    Copyright 2019-2026 Ericsson AB.
     For a full list of individual contributors, please see the commit history.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,29 +14,27 @@
 */
 package com.ericsson.eiffel.remrem.generate.service;
 
-
 import static org.junit.Assert.assertEquals;
-
-import java.io.BufferedReader;
+import static org.mockito.ArgumentMatchers.eq;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
+import com.ericsson.eiffel.remrem.protocol.ValidationResult;
+import com.ericsson.eiffel.remrem.semantics.SemanticsService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,17 +44,99 @@ import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.google.gson.JsonElement;
 
+class Eiffel3MsgService implements MsgService {
+
+    public String successOutput = null;
+    public String errorOutput = null;
+
+    @Override
+    public String generateMsg(String s, JsonObject jsonObject) {
+        return "";
+    }
+
+    @Override
+    public String generateMsg(String s, JsonObject jsonObject, Boolean aBoolean) {
+        if (s.equals("eiffelartifactnew")) {
+            return successOutput;
+        } else if (s.equals("eiffelartifactnewevent")) {
+            return errorOutput;
+        }
+
+        return "";
+    }
+
+    @Override
+    public String generateMsg(String s, JsonObject jsonObject, HashMap<String, Object> hashMap) {
+        throw new AbstractMethodError("Not implemented by " + getClass());
+    }
+
+    @Override
+    public String getEventId(JsonObject jsonObject) {
+        return "";
+    }
+
+    @Override
+    public String getEventType(JsonObject jsonObject) {
+        return "";
+    }
+
+    @Override
+    public Collection<String> getSupportedEventTypes() {
+        return List.of();
+    }
+
+    @Override
+    public JsonElement getEventTemplate(String s) {
+        return null;
+    }
+
+    @Override
+    public String getProtocolEdition() {
+        return "";
+    }
+
+    @Override
+    public String getServiceName() {
+        return "eiffel3";
+    }
+
+    @Override
+    public ValidationResult validateMsg(String s, JsonObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public ValidationResult validateMsg(String s, JsonObject jsonObject, Boolean aBoolean) {
+        return null;
+    }
+
+    @Override
+    public ValidationResult validateMsg(String s, JsonObject jsonObject, HashMap<String, Object> hashMap) {
+        return null;
+    }
+
+    @Override
+    public String generateRoutingKey(JsonObject jsonObject, String s, String s1, String s2) {
+        return "";
+    }
+
+    @Override
+    public String generateRoutingKey(JsonObject jsonObject, String s, String s1, String s2, String s3) {
+        return "";
+    }
+}
+
 @RunWith(SpringRunner.class)
 public class EiffelRemremControllerUnitTest {
-    
+
     @InjectMocks
     RemremGenerateController unit = new RemremGenerateController();
-    
+
     @Mock
     MsgService service;
-    
-    @Mock
-    MsgService service2;
+
+//    @Mock
+    Eiffel3MsgService service2 = new Eiffel3MsgService();
 
     @Spy
     private List<MsgService> msgServices = new ArrayList<MsgService>();
@@ -73,42 +153,31 @@ public class EiffelRemremControllerUnitTest {
         msgServices.add(service);
         msgServices.add(service2);
         Mockito.when(service.getServiceName()).thenReturn("eiffelsemantics");
-        Mockito.when(service2.getServiceName()).thenReturn("eiffel3");
 
-        URL jsonInputURL = getClass().getClassLoader().getResource("successInput.json");
-        String inputFilePath = jsonInputURL.getPath().replace("%20"," ");
-        File jsonFile = new File(inputFilePath);
-        String successOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
-
-        jsonInputURL = getClass().getClassLoader().getResource("errorInput.json");
-        inputFilePath = jsonInputURL.getPath().replace("%20"," ");
-        jsonFile = new File(inputFilePath);
-        String errorOutput = new BufferedReader(new FileReader(jsonFile)).readLine();
-
-        URL lv_jsonInputURL = getClass().getClassLoader().getResource("lv_successInput.json");
-        String lv_inputFilePath = lv_jsonInputURL.getPath().replace("%20"," ");
-        File lv_jsonFile = new File(lv_inputFilePath);
-        String lv_successOutput = new BufferedReader(new FileReader(lv_jsonFile)).readLine();
+        String successOutput = Files.readString(Path.of("src/test/resources/successInput.json"));
+        String errorOutput = Files.readString(Path.of("src/test/resources/errorResponse.json"));
+        String lv_successOutput = Files.readString(Path.of("src/test/resources/lv_successInput.json"));
 
         Mockito.when(service.generateMsg(
-                Mockito.eq("eiffelactivityfinished"),
-                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
+                eq("eiffelactivityfinished"),
+                Mockito.any(), (HashMap<String, Object>) Mockito.any())).thenReturn(successOutput);
 
         Mockito.when(service.generateMsg(
-                Mockito.eq("EiffelActivityFinished"),
-                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
+                eq("EiffelActivityFinished"),
+                Mockito.any(), (HashMap<String, Object>) Mockito.any())).thenReturn(errorOutput);
 
-        Mockito.when(service2.generateMsg(
-                Mockito.eq("eiffelartifactnew"),
-                Mockito.any(), Mockito.anyBoolean())).thenReturn(successOutput);
-
-        Mockito.when(service2.generateMsg(
-                Mockito.eq("eiffelartifactnewevent"),
-                Mockito.any(), Mockito.anyBoolean())).thenReturn(errorOutput);
+        service2.successOutput = successOutput;
+        service2.errorOutput = errorOutput;
 
         Mockito.when(service.generateMsg(
-                Mockito.eq("EiffelArtifactCreatedEvent"),
-                Mockito.any(), Mockito.anyBoolean())).thenReturn(lv_successOutput);
+                eq("EiffelArtifactCreatedEvent"),
+                Mockito.any(), (HashMap<String, Object>) Mockito.any())).thenReturn(lv_successOutput);
+    }
+
+    private HashMap<String, Object> newHashMap(String key, Object value) {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(key, value);
+        return properties;
     }
 
     @Test
@@ -116,7 +185,9 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished",
+           false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -125,7 +196,9 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
         JsonParser parser = new JsonParser();
         JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "eiffelactivityfinished",
+            false, false, true, 1,
+             newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -135,7 +208,23 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 400,
+             "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+             },
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -144,7 +233,32 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
         JsonParser parser = new JsonParser();
         JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelActivityFinished",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+        String response = """
+        [
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            },
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            }
+        ]
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -153,7 +267,9 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -162,7 +278,9 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
         JsonParser parser = new JsonParser();
         JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnew",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -171,7 +289,23 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelOutput.json");
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 400,
+             "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+             },
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
@@ -180,7 +314,33 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ErlookupConfidenceLevelArrayOutput.json");
         JsonParser parser = new JsonParser();
         JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
-        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("eiffel3", "eiffelartifactnewevent",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        [
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            },
+            {
+                "status code": 400,
+                "message": {
+                 "message": "Missing fields found in body JSON",
+                 "cause": "eventParams or msgParams or msgParams.meta are missed"
+                },
+                "result": "FAIL"
+            }
+        ]
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     @Test
@@ -188,7 +348,20 @@ public class EiffelRemremControllerUnitTest {
         File file = new File("src/test/resources/ArtifactCreated.json");
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
-        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent", false, false, true, 1, false, json);
+        ResponseEntity<?> elem = unit.generate("other", "EiffelActivityFinishedEvent",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
+
+        String response = """
+        {
+            "status code": 503,
+             "message": "Handler of Eiffel protocol 'other' not found",
+             "result": "FAIL"
+        }
+        """;
+
+        JsonElement expectedBody = JsonParser.parseString(response);
+        assertEquals(expectedBody, elem.getBody());
         assertEquals(elem.getStatusCode(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
@@ -198,7 +371,9 @@ public class EiffelRemremControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(new FileReader(file)).getAsJsonObject();
         unit.setLenientValidationEnabledToUsers(true);
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
 
@@ -208,7 +383,9 @@ public class EiffelRemremControllerUnitTest {
         JsonParser parser = new JsonParser();
         JsonArray json = parser.parse(new FileReader(file)).getAsJsonArray();
         unit.setLenientValidationEnabledToUsers(true);
-        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent", false, false, true, 1, true, json);
+        ResponseEntity<?> elem = unit.generate("eiffelsemantics", "EiffelArtifactCreatedEvent",
+            false, false, true, 1,
+            newHashMap(SemanticsService.LENIENT_VALIDATION, false), json);
         assertEquals(elem.getStatusCode(), HttpStatus.OK);
     }
     @Test
