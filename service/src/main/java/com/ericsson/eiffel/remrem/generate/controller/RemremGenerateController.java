@@ -360,7 +360,7 @@ public class RemremGenerateController {
     /**
      * HOTFIX
      * DIRTY - copied from PropertiesUtil.java (eiffel-remrem-semantics) as this package
-     * isn't available for eiffel gen1 installation.
+     * might not be available for some Eiffel protocol implementations.
      *
      * @param validationProperties
      * @param property
