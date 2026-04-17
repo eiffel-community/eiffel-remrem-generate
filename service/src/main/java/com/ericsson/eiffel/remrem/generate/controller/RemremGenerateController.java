@@ -20,7 +20,6 @@ import com.ericsson.eiffel.remrem.generate.exception.ProtocolHandlerNotFoundExce
 import com.ericsson.eiffel.remrem.generate.exception.REMGenerateException;
 import com.ericsson.eiffel.remrem.protocol.MsgService;
 import com.ericsson.eiffel.remrem.semantics.SemanticsService;
-import com.ericsson.eiffel.remrem.semantics.util.PropertiesUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -359,6 +358,31 @@ public class RemremGenerateController {
     }
 
     /**
+     * HOTFIX
+     * DIRTY - copied from PropertiesUtil.java (eiffel-remrem-semantics) as this package
+     * isn't available for eiffel gen1 installation.
+     *
+     * @param validationProperties
+     * @param property
+     * @param defValue
+     * @return
+     * @param <T>
+     */
+    public static <T> T getProperty(HashMap<String, Object> validationProperties, String property, T defValue) {
+        Object object = validationProperties.get(property);
+        if (object == null)
+            return defValue;
+        if (object instanceof Boolean) {
+            return (T)object;
+        }
+        else {
+            log.error("Value of property '{}' should be a boolean, but is '{}'; returning default value '{}'",
+                    property, object.getClass().getName(), defValue);
+            return defValue;
+        }
+    }
+
+    /**
      * This helper method basically generate or process single event
      * @param msgProtocol The message protocol, which tells us which service to invoke
      * @param msgType The type of message that needs to be generated. inputData
@@ -388,11 +412,11 @@ public class RemremGenerateController {
         try {
             // Try new API, i.e. with list of properties.
             response = msgService.generateMsg(msgType, event, generateProperties);
-        } catch (AbstractMethodError e) {
+        } catch (AbstractMethodError | NoSuchMethodError e) {
             // This is a fallback for old API, i.e. with one boolean only, without properties list.
             log.warn("Using old API for generating message.", e);
             // Use old API, i.e. with one boolean only, without properties list.
-            boolean lenientValidation = PropertiesUtil.getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
+            boolean lenientValidation = getProperty(generateProperties, MsgService.LENIENT_VALIDATION, false);
             response = msgService.generateMsg(msgType, event, lenientValidation);
         }
         parsedResponse = JsonParser.parseString(response);
