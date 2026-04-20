@@ -1,3 +1,6 @@
+## 2.1.19
+- Align openapi specification filename and fix some contextpath handling for Openapi and Swagger-UI.
+
 ## 2.1.18
 - Uplifted OpenApi Spec and Swagger-UI to latest version
 - Error API responses are now returned in proper JSON format with the "message" key containing details
