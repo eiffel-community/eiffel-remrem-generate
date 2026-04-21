@@ -1,4 +1,4 @@
-## 2.1.19
+## 2.1.20
 - Align openapi specification filename and fix some contextpath handling for Openapi and Swagger-UI.
 
 ## 2.1.18
