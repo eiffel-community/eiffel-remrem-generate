@@ -1,3 +1,9 @@
+## 2.1.20
+ - Catch up release numbering in pom.xml
+
+## 2.1.19
+ - Improve event generation robustness
+
 ## 2.1.18
 - Uplifted OpenApi Spec and Swagger-UI to latest version
 - Error API responses are now returned in proper JSON format with the "message" key containing details
