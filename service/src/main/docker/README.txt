@@ -1,16 +1,11 @@
-A: Build RemRem-Generate Docker image based on RemRem-Generate artifact from an Artifactory, e.g. Jitpack:
-cd (git root dir)/service
-docker build -t remrem-generate:<version> --build-arg URL=https://jitpack.io/com/github/eiffel-community/eiffel-remrem-generate/generate-service/<version>/generate-service-<version>.war -f src/main/docker/Dockerfile .
-
-
-
-B: Build RemRem-Generate based on local RemRem-Generate source code changes
+Build RemRem-Generate Docker image:
 1. Build RemRem-Generate service artifact:
-cd (git root dir)/service
-mvn package -DskipTests
+cd (git root dir)/
+mvn clean package -DskipTests -pl service/ -am
 
 2. Build RemRem-Generate Docker image:
-cd (git root dir)/service
-docker build -t remrem-generate --build-arg URL=./target/generate-service-<version>.war -f src/main/docker/Dockerfile .
+cd (git root dir)
+docker build -t remrem-generate:<version> --build-arg URL=./service/target/generate-service-<version>.war -f src/main/docker/Dockerfile .
 
-
+3. Run RemRem-Generate
+docker run --name remrem-generate -p 8080:8080 -v ./service/src/main/resources/application.properties:/usr/local/tomcat/config/application.properties  remrem-generate:<version>
