@@ -19,15 +19,16 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 import org.springdoc.core.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${app.version:Unknown}")
-    private String appVersion;
+    @Autowired
+    private BuildProperties buildProperties;
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -40,7 +41,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Eiffel REMReM Generate Service")
                         .description(remremDescription.toString())
-                        .version(appVersion))
+                        .version(buildProperties.getVersion()))
                 .openapi("3.1.0");
     }
 
