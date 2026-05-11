@@ -18,13 +18,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.ldap.LdapBindAuthenticationManagerFactory;
+import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.security.web.SecurityFilterChain;
 
 import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
 
@@ -37,7 +41,7 @@ import com.ericsson.eiffel.remrem.generate.controller.RemremGenerateController;
 @Configuration
 @ConditionalOnProperty(value = "activedirectory.generate.enabled")
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
@@ -55,27 +59,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${activedirectory.userSearchFilter}")
     private String userSearchFilter;
-    
+
     @Value("${activedirectory.rootDn}")
     private String rootDn;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    @Bean
+    public DefaultSpringSecurityContextSource contextSource() {
         final String jasyptKey = RemremGenerateController.readJasyptKeyFile(jasyptKeyFilePath);
         if (managerPassword.startsWith("{ENC(") && managerPassword.endsWith("}")) {
             managerPassword = DecryptionUtils.decryptString(managerPassword.substring(1, managerPassword.length() - 1), jasyptKey);
         }
-        LOGGER.debug("LDAP server url: "+ldapUrl);
-        auth.ldapAuthentication().userSearchFilter(userSearchFilter).contextSource().managerDn(managerDn).root(rootDn)
-                .managerPassword(managerPassword).url(ldapUrl);
+        LOGGER.debug("LDAP server url: " + ldapUrl);
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(ldapUrl);
+        contextSource.setUserDn(managerDn);
+        contextSource.setPassword(managerPassword);
+        contextSource.setBase(rootDn);
+        return contextSource;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        LOGGER.debug("LDAP authentication enabled");
-        http.authorizeRequests().anyRequest().authenticated().and().sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and().httpBasic().and().csrf().disable();
-        
+    @Bean
+    public AuthenticationManager authenticationManager(BaseLdapPathContextSource contextSource) {
+        LdapBindAuthenticationManagerFactory factory = new LdapBindAuthenticationManagerFactory(contextSource);
+        factory.setUserSearchFilter(userSearchFilter);
+        return factory.createAuthenticationManager();
     }
-    
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        LOGGER.debug("LDAP authentication enabled");
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+            .httpBasic(httpBasic -> {})
+            .csrf(csrf -> csrf.disable());
+        return http.build();
+    }
+
 }

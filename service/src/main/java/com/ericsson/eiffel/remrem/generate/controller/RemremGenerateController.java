@@ -450,7 +450,7 @@ public class RemremGenerateController {
                         try {
                             response = restTemplate.getForEntity(url, String.class);
                             if (response.getStatusCode() == HttpStatus.OK) {
-                                log.info("The result from Event Repository is: " + response.getStatusCodeValue());
+                                log.info("The result from Event Repository is: " + response.getStatusCode().value());
                             }
                         } catch (Exception e) {
                             log.error("Unable to connect to configured Event Repository URL " + e.getMessage());

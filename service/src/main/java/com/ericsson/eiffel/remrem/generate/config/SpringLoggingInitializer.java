@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.endpoint.jmx.EndpointMBean;
 import org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener;
-import org.springframework.boot.context.config.ConfigFileApplicationListener;
+import org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -41,7 +41,7 @@ public class SpringLoggingInitializer implements ApplicationContextInitializer {
      */
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-        Class[] loggers = { SpringApplication.class, App.class, ConfigFileApplicationListener.class,
+        Class[] loggers = { SpringApplication.class, App.class, ConfigDataEnvironmentPostProcessor.class,
         		EndpointMBean.class, ConditionEvaluationReportLoggingListener.class };
         Logger log = (Logger) LoggerFactory.getLogger("ROOT");
         log.setLevel(Level.ERROR);

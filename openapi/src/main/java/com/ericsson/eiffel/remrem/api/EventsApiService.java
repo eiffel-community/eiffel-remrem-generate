@@ -1,6 +1,6 @@
 package com.ericsson.eiffel.remrem.api;
 
-import com.ericsson.eiffel.remrem.model.InlineResponse200;
+import com.ericsson.eiffel.remrem.model.GetHohohoUsingGET200Response;
 import com.ericsson.eiffel.remrem.model.EiffelEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -104,7 +104,7 @@ public class EventsApiService implements EventsApiDelegate {
             value = "/events",
             produces = { "application/json" }
     )
-    public ResponseEntity<InlineResponse200> getEventsUsingGET(
+    public ResponseEntity<GetHohohoUsingGET200Response> getEventsUsingGET(
         @Parameter(name = "pageSize", description = "The number of events to be displayed per page.", schema = @Schema(description = "", defaultValue = "500")) @Valid @RequestParam(value = "pageSize", required = false, defaultValue = "500") Integer pageSize,
         @Parameter(name = "params", description = "", schema = @Schema(description = "")) @Valid @RequestParam(value = "", required = false) Map<String, String> params) {
         String keysToIgnore[] = { "pageSize", "shallow" };
@@ -161,7 +161,7 @@ public class EventsApiService implements EventsApiDelegate {
             }
         }
 
-        InlineResponse200 response = new InlineResponse200();
+        GetHohohoUsingGET200Response response = new GetHohohoUsingGET200Response();
         response.pageSize(1).pageNo(1).items(matchedEvents);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
