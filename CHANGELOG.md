@@ -1,3 +1,15 @@
+## 2.1.22
+- Fix configuration issue when executed with external Tomcat instance.
+
+## 2.1.21
+- Align openapi specification filename and fix some contextpath handling for Openapi and Swagger-UI.
+
+## 2.1.20
+- Catch up release numbering in pom.xml
+
+## 2.1.19
+ - Improve event generation robustness
+
 ## 2.1.18
 - Uplifted OpenApi Spec and Swagger-UI to latest version
 - Error API responses are now returned in proper JSON format with the "message" key containing details

@@ -20,9 +20,9 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = {"com.ericsson.eiffel.remrem", "com.ericsson.eiffel.remrem.semantics"})
@@ -30,22 +30,26 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "file:${catalina.home}/conf/config.properties", ignoreResourceNotFound = true)
 public class App extends SpringBootServletInitializer {
 
+    @Override
+    protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
+        return application.sources(App.class)
+                .properties("springdoc.swagger-ui.enabled=false",
+                            "springdoc.api-docs.path=/openapi.json");  // For loading default config with external Tomcat instance
+    }
+
+
 	public static void main(String[] args) {
 		startService(args);
 	}
 
 	private static void startService(String[] args) {
-		String appVersion = App.class.getPackage().getImplementationVersion();
-		if (appVersion == null) {
-			appVersion = "Unknown";
-		}
 		SpringApplication application = new SpringApplication(App.class);
 		application.setBannerMode(Banner.Mode.OFF);
 		application.setLogStartupInfo(false);
 		application.setWebApplicationType(WebApplicationType.SERVLET);
 		application.setDefaultProperties(java.util.Map.of(
 			"springdoc.swagger-ui.enabled", "false",
-			"app.version", appVersion
+			"springdoc.api-docs.path", "/openapi.json"
 		));
 		ApplicationContext ctx = application.run(args);
 	}

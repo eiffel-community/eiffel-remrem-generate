@@ -10,8 +10,8 @@
     </parent>
 
     <properties>
-        <eiffel-remrem-generate.version>2.1.19</eiffel-remrem-generate.version>
-        <eiffel-remrem-semantics.version>2.4.6</eiffel-remrem-semantics.version>
+        <eiffel-remrem-generate.version>2.1.22</eiffel-remrem-generate.version>
+        <eiffel-remrem-semantics.version>2.4.5</eiffel-remrem-semantics.version>
         <jackson.databind.version>2.21.2</jackson.databind.version>
     </properties>
     <artifactId>eiffel-remrem-generate</artifactId>
@@ -52,6 +52,14 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
