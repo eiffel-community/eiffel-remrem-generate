@@ -70,6 +70,9 @@
                                 ApiUtil.java
                             </supportingFilesToGenerate>
                             <configOptions>
+                                <!--Without this flag, the generator would produce code with javax.servlet, javax.validation etc.,
+                                which don't exist in Spring Boot 3+ / 4.x (they migrated to jakarta.*). The name says "SpringBoot3" but it applies to Spring Boot 4.x
+                                as well — it's just the flag name the openapi-generator uses to mean "use Jakarta EE namespace". There's no separate useSpringBoot4 option.-->
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <useSpringController>true</useSpringController>
                                 <delegatePattern>true</delegatePattern>
