@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-            <version>2.7.7</version>
+            <version>${springboot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,13 +32,12 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.8.0</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>2.7.7</version>
+            <version>${springboot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -56,7 +55,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>7.12.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -71,6 +70,10 @@
                                 ApiUtil.java
                             </supportingFilesToGenerate>
                             <configOptions>
+                                <!--Without this flag, the generator would produce code with javax.servlet, javax.validation etc.,
+                                which don't exist in Spring Boot 3+ / 4.x (they migrated to jakarta.*). The name says "SpringBoot3" but it applies to Spring Boot 4.x
+                                as well — it's just the flag name the openapi-generator uses to mean "use Jakarta EE namespace". There's no separate useSpringBoot4 option.-->
+                                <useSpringBoot3>true</useSpringBoot3>
                                 <useSpringController>true</useSpringController>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>
