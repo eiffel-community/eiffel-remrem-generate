@@ -13,8 +13,9 @@
     limitations under the License.
 */
 window.onload = function() {
+  var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/swagger-ui"));
   window.ui = SwaggerUIBundle({
-    url: "/v3/api-docs",
+    url: contextPath + "/openapi.json",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
@@ -24,6 +25,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-    layout: "StandaloneLayout"
+    layout: "StandaloneLayout",
+    validatorUrl : null
   });
 };
