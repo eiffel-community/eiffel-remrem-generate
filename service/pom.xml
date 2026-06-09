@@ -223,9 +223,7 @@
                 <version>2.22.0</version>
                 <configuration>
                     <!-- Allow JUnit to access the test classes -->
-                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
-                    <argLine>--add-opens java.base/jdk.internal.reflect=ALL-UNNAMED</argLine>
-
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/jdk.internal.reflect=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
             <plugin>
