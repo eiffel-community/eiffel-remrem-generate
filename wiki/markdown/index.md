@@ -7,8 +7,8 @@ Eiffel REMReM Generate takes a partial message in JSON format, validates it and 
 
 ## Pre-requisites
 
-*   JDK 8
-*   Tomcat 8
+*   JDK 21
+*   Tomcat 11
 
 For supporting latest features, Eiffel REMReM Generate should use the latest version of [Eiffel REMReM Semantics](https://github.com/eiffel-community/eiffel-remrem-semantics).
 

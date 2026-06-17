@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk21
+FROM tomcat:11-jdk21
 LABEL org.opencontainers.image.authors="Eiffel-Community"
 
 # Expose port 8080. The port can be accessed using option -p or -P of
