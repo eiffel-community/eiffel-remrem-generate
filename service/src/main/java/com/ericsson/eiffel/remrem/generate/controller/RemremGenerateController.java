@@ -51,10 +51,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import jakarta.annotation.PostConstruct;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static com.ericsson.eiffel.remrem.generate.constants.RemremGenerateServiceConstants.*;
@@ -69,8 +68,43 @@ public class RemremGenerateController {
     // regular expression that exclude "swagger-ui.html" from request parameter
     private static final String REGEX = ":^(?!swagger-ui.html).*$";
 
-    @Autowired
-    private List<MsgService> msgServices;
+    // Make @Autowired optional. The services are now instantiated mostly via SPI,
+    // see loadMsgServices().
+    @Autowired(required = false)
+    private List<MsgService> msgServices = new ArrayList<>();
+
+    /**
+     * Loads MsgService implementations at application startup.
+     * Spring-injected services take priority; SPI-discovered services
+     * are added only if no service with the same name is already present.
+     */
+    @PostConstruct
+    private void loadMsgServices() {
+        if (!msgServices.isEmpty()) {
+            StringBuffer services = new StringBuffer();
+            for (MsgService msgService : msgServices) {
+                services.append("'");
+                services.append(msgService.getServiceName());
+                services.append("', ");
+            }
+            int length = services.length();
+            services.setLength(length - 2);
+            log.debug("The following services has been loaded using @Autowired: {}", services);
+        }
+
+        log.info("Loading SPIs for {}", MsgService.class.getCanonicalName());
+        ServiceLoader<MsgService> loader = ServiceLoader.load(MsgService.class, MsgService.class.getClassLoader());
+        loader.forEach(service -> {
+            if (msgServices.stream().noneMatch(s -> s.getServiceName().equals(service.getServiceName()))) {
+                log.debug("Adding service; {}, {}", service.getServiceName(), service.getProtocolEdition());
+                msgServices.add(service);
+            }
+        });
+        log.info("{} implementations of MsgService loaded", msgServices.size());
+        for (MsgService msgService : msgServices) {
+            log.info("    {}, {}", msgService.getServiceName(), msgService.getProtocolEdition());
+        }
+    }
 
     private JsonParser parser = new JsonParser();
 
@@ -390,7 +424,6 @@ public class RemremGenerateController {
      * @param failIfNoneFound
      * @param lookupInExternalERs
      * @param lookupLimit
-     * @param okToLeaveOutInvalidOptionalFields
      * @param jsonObject The content of the message which is used in creating the event details.
      * @return JsonObject generated event
      */

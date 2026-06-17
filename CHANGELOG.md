@@ -1,3 +1,6 @@
+## 2.1.27
+- Use SPI to detect available messaging services
+
 ## 2.1.23
 - Disable OpenAPI validation that relies on online validation tool
 
