@@ -10,7 +10,7 @@
     </parent>
 
     <properties>
-        <eiffel-remrem-generate.version>2.1.25</eiffel-remrem-generate.version>
+        <eiffel-remrem-generate.version>2.1.26</eiffel-remrem-generate.version>
         <eiffel-remrem-semantics.version>2.4.9</eiffel-remrem-semantics.version>
     </properties>
     <artifactId>eiffel-remrem-generate</artifactId>
@@ -64,8 +64,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
              <plugin>
